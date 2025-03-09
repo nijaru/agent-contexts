@@ -35,4 +35,4 @@ Contributions are welcome! Please follow these guidelines:
 
 ## License
 
-[MIT License](./LICENSE) - Feel free to use, modify, and share these context files for any AI coding assistant.
+This repository is licensed under the [Apache License, Version 2.0](./LICENSE). You are free to use, modify, and distribute these context files for any AI coding assistant in accordance with the terms of this license.
