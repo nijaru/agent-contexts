@@ -12,6 +12,8 @@ This document provides a concise reference of the built-in types, traits, and fu
 - [String Operations](#string-operations)
 - [Error Handling](#error-handling)
 - [Type System](#type-system)
+- [SIMD Types and Operations](#simd-types-and-operations)
+- [Floating Point Types](#floating-point-types)
 
 ## Basic Types
 
@@ -74,6 +76,29 @@ Constants:
 
 Methods and operations are similar to Int but with unsigned semantics.
 
+### Integer Types
+
+Mojo provides fixed-width integer types:
+
+```mojo
+Int8, UInt8       # 8-bit signed/unsigned integer
+Int16, UInt16     # 16-bit signed/unsigned integer
+Int32, UInt32     # 32-bit signed/unsigned integer
+Int64, UInt64     # 64-bit signed/unsigned integer
+Int128, UInt128   # 128-bit signed/unsigned integer
+Int256, UInt256   # 256-bit signed/unsigned integer
+```
+
+Each of these types supports standard integer operations and constants.
+
+### Byte
+
+Alias for UInt8, represents a single byte of data.
+
+```mojo
+var b: Byte = 65  # Same as UInt8(65)
+```
+
 ### StringLiteral
 
 Compile-time string constant.
@@ -106,8 +131,12 @@ Common types:
 - `DType.bool`
 - `DType.int8`, `DType.int16`, `DType.int32`, `DType.int64`
 - `DType.uint8`, `DType.uint16`, `DType.uint32`, `DType.uint64`
+- `DType.int128`, `DType.uint128`
+- `DType.int256`, `DType.uint256`
 - `DType.float16`, `DType.float32`, `DType.float64`
 - `DType.bfloat16`
+- `DType.float8_e5m2`, `DType.float8_e4m3fn`
+- `DType.float8_e5m2fnuz`, `DType.float8_e4m3fnuz`
 - `DType.index`
 
 Methods:
@@ -212,6 +241,25 @@ trait FloatableRaising:
 
 trait Indexer:
     fn __index__(self) -> __mlir_type.index
+
+trait Absable:
+    fn __abs__(self) -> Self
+
+trait Hashable:
+    fn __hash__(self) -> UInt
+
+trait Ceilable:
+    fn __ceil__(self) -> Self
+
+trait CeilDivable:
+    fn __ceildiv__(self, denominator: Self) -> Self
+
+trait Floorable:
+    fn __floor__(self) -> Self
+
+trait Roundable:
+    fn __round__(self) -> Self
+    fn __round__(self, ndigits: Int) -> Self
 ```
 
 ### Collection Traits
@@ -400,3 +448,183 @@ rebind[dest_type](src) -> dest_type
 ```
 
 Converts between types at a low level.
+
+## SIMD Types and Operations
+
+### Scalar
+
+The Scalar type represents a single-element SIMD vector:
+
+```mojo
+Scalar[DType.float32]  # Single-precision float scalar
+Scalar[DType.int32]    # 32-bit integer scalar
+```
+
+Scalar is a specialization of the SIMD type with size=1.
+
+### SIMD
+
+SIMD (Single Instruction Multiple Data) enables parallel operations on vectors of data.
+
+```mojo
+# Create a SIMD vector with 4 float32 elements
+var v = SIMD[DType.float32, 4](1.0, 2.0, 3.0, 4.0)
+```
+
+#### Initialization
+
+```mojo
+# Default initialization (zeros)
+var v1 = SIMD[DType.int32, 4]()
+
+# Value broadcast
+var v2 = SIMD[DType.float32, 4](3.14)
+
+# Element-wise initialization
+var v3 = SIMD[DType.int8, 4](1, 2, 3, 4)
+
+# Cast from another SIMD
+var v4 = SIMD[DType.int16, 4](v3)
+
+# From bits
+var v5 = SIMD[DType.float32, 1].from_bits(SIMD[DType.uint32, 1](0x3f800000))
+```
+
+#### Constants
+```mojo
+SIMD[DType.float32, 4].MAX       # Maximum representable value (or +inf)
+SIMD[DType.float32, 4].MIN       # Minimum representable value (or -inf)
+SIMD[DType.float32, 4].MAX_FINITE # Maximum finite value
+SIMD[DType.float32, 4].MIN_FINITE # Minimum finite value
+```
+
+#### Element Access
+```mojo
+var x = v[2]  # Get element at index 2
+v[1] = 42     # Set element at index 1
+```
+
+#### Arithmetic Operations
+```mojo
+var sum = v1 + v2        # Element-wise addition
+var diff = v1 - v2       # Element-wise subtraction
+var prod = v1 * v2       # Element-wise multiplication
+var quot = v1 / v2       # Element-wise division
+var fdiv = v1 // v2      # Element-wise floor division
+var mod = v1 % v2        # Element-wise modulo
+var neg = -v1            # Element-wise negation
+var pow = v1**2          # Element-wise power
+```
+
+#### Comparison Operations
+```mojo
+var eq = v1 == v2        # Element-wise equality
+var ne = v1 != v2        # Element-wise inequality
+var lt = v1 < v2         # Element-wise less than
+var le = v1 <= v2        # Element-wise less than or equal
+var gt = v1 > v2         # Element-wise greater than
+var ge = v1 >= v2        # Element-wise greater than or equal
+```
+
+#### Bitwise Operations
+```mojo
+var and_result = v1 & v2  # Element-wise AND
+var or_result = v1 | v2   # Element-wise OR
+var xor_result = v1 ^ v2  # Element-wise XOR
+var not_result = ~v1      # Element-wise NOT
+var shl = v1 << SIMD[DType.int32, 4](2)  # Element-wise left shift
+var shr = v1 >> SIMD[DType.int32, 4](2)  # Element-wise right shift
+```
+
+#### Special Methods
+```mojo
+v.cast[DType.float64]()       # Cast to different element type
+v.to_bits()                   # Convert to integer representation
+v.clamp(min_val, max_val)     # Clamp values to range
+v.fma(multiplier, acc)        # Fused multiply-add
+
+# Mathematical functions
+v.__abs__()                   # Element-wise absolute value
+v.__floor__()                 # Element-wise floor
+v.__ceil__()                  # Element-wise ceiling
+v.__trunc__()                 # Element-wise truncation
+v.__round__()                 # Element-wise rounding
+v.roundeven()                 # Element-wise banker's rounding
+```
+
+#### Vector Manipulation
+```mojo
+# Slicing
+var slice = v.slice[2, offset=1]()    # Extract 2 elements starting at index 1
+
+# Insertion
+var new_v = v.insert[offset=1](SIMD[DType.float32, 2](5.0, 6.0))
+
+# Combining vectors
+var joined = v1.join(v2)              # Concatenate two vectors
+var interleaved = v1.interleave(v2)   # Interleave elements
+
+# Splitting and deinterleaving
+var halves = v.split()                # Split into two halves
+var even_odd = v.deinterleave()       # Separate even and odd elements
+
+# Element reordering
+var mask = IndexList[4](3, 2, 1, 0)
+var reversed = v.shuffle[mask]()      # Reverse order of elements
+var rotated = v.rotate_left[1]()      # Rotate elements left
+var shifted = v.shift_right[2]()      # Shift elements right, filling with zeros
+```
+
+#### Reduction Operations
+```mojo
+var sum = v.reduce_add()       # Sum of all elements
+var product = v.reduce_mul()   # Product of all elements
+var maximum = v.reduce_max()   # Maximum element
+var minimum = v.reduce_min()   # Minimum element
+var all_true = v.reduce_and()  # Logical AND of all elements
+var any_true = v.reduce_or()   # Logical OR of all elements
+var bit_count = v.reduce_bit_count() # Count of set bits across all elements
+```
+
+#### Conditional Operations
+```mojo
+var mask = SIMD[DType.bool, 4](True, False, True, False)
+var result = mask.select(v1, v2)  # Select from v1 or v2 based on mask
+```
+
+## Floating Point Types
+
+Mojo supports various floating-point formats:
+
+### Float16, Float32, Float64
+
+Standard IEEE 754 floating-point types:
+
+```mojo
+var f16 = Float16(1.5)    # 16-bit half precision
+var f32 = Float32(3.14)   # 32-bit single precision
+var f64 = Float64(2.718)  # 64-bit double precision
+```
+
+### BFloat16
+
+Brain floating-point format (bfloat16) optimized for machine learning applications:
+
+```mojo
+var bf16 = BFloat16(1.5)  # 16-bit brain floating point
+```
+
+Compared to Float16, BFloat16 has fewer mantissa bits but the same exponent range as Float32.
+
+### Float8 Formats
+
+Mojo supports several 8-bit floating point formats:
+
+```mojo
+var e5m2 = Float8_e5m2(1.0)           # 1-bit sign, 5-bit exponent, 2-bit mantissa
+var e4m3 = Float8_e4m3fn(0.5)         # 1-bit sign, 4-bit exponent, 3-bit mantissa, finite only
+var e5m2fnuz = Float8_e5m2fnuz(0.25)  # e5m2 with finite-only, unsigned-zero
+var e4m3fnuz = Float8_e4m3fnuz(0.125) # e4m3 with finite-only, unsigned-zero
+```
+
+These 8-bit formats provide more compact storage for applications where reduced precision is acceptable, such as in certain machine learning workloads.
