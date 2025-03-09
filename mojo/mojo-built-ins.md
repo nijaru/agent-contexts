@@ -1,6 +1,6 @@
 # Mojo Built-ins Reference Guide
 
-This document provides a concise reference of the built-in types, traits, and functions in Mojo. These are available without needing to import them.
+This document provides a concise reference of the built-in types, traits, and functions in Mojo that are important for developers. These are available without needing to import them.
 
 ## Table of Contents
 
@@ -11,7 +11,6 @@ This document provides a concise reference of the built-in types, traits, and fu
 - [Collections and Iteration](#collections-and-iteration)
 - [String Operations](#string-operations)
 - [Error Handling](#error-handling)
-- [Type System](#type-system)
 - [SIMD Types and Operations](#simd-types-and-operations)
 - [Floating Point Types](#floating-point-types)
 
@@ -185,107 +184,28 @@ divmod(a, b)   # Return (a//b, a%b)
 
 ## Core Traits
 
-### Type System Traits
+### Common Traits
 
 ```mojo
-trait Movable:
-    fn __moveinit__(out self, owned existing: Self)
-
 trait Copyable:
     fn __copyinit__(out self, existing: Self)
 
-trait ExplicitlyCopyable:
-    fn copy(self) -> Self
+trait Movable:
+    fn __moveinit__(out self, owned existing: Self)
 
 trait Defaultable:
     fn __init__(out self)
 
-trait CollectionElement(Copyable, Movable): pass
-```
-
-### Operator Traits
-
-```mojo
-trait Boolable:
-    fn __bool__(self) -> Bool
-
-trait ImplicitlyBoolable(Boolable):
-    fn __as_bool__(self) -> Bool
-
-trait Comparable(EqualityComparable, LessThanComparable, ...): pass
-
-trait EqualityComparable:
-    fn __eq__(self, other: Self) -> Bool
-    fn __ne__(self, other: Self) -> Bool
+trait Comparable: pass
 
 trait Stringable:
     fn __str__(self) -> String
 
-trait StringableRaising:
-    fn __str__(self) raises -> String
-
 trait Representable:
     fn __repr__(self) -> String
 
-trait Intable:
-    fn __int__(self) -> Int
-
-trait IntableRaising:
-    fn __int__(self) raises -> Int
-
-trait Floatable:
-    fn __float__(self) -> Float64
-
-trait FloatableRaising:
-    fn __float__(self) raises -> Float64
-
-trait Indexer:
-    fn __index__(self) -> __mlir_type.index
-
-trait Absable:
-    fn __abs__(self) -> Self
-
 trait Hashable:
     fn __hash__(self) -> UInt
-
-trait Ceilable:
-    fn __ceil__(self) -> Self
-
-trait CeilDivable:
-    fn __ceildiv__(self, denominator: Self) -> Self
-
-trait Floorable:
-    fn __floor__(self) -> Self
-
-trait Roundable:
-    fn __round__(self) -> Self
-    fn __round__(self, ndigits: Int) -> Self
-```
-
-### Collection Traits
-
-```mojo
-trait Sized:
-    fn __len__(self) -> Int
-
-trait SizedRaising:
-    fn __len__(self) raises -> Int
-
-trait UIntSized:
-    fn __len__(self) -> UInt
-
-trait ReversibleRange:
-    fn __reversed__(self) -> _StridedRange
-```
-
-### IO Traits
-
-```mojo
-trait Writable:
-    fn write_to[W: Writer](self, mut writer: W)
-
-trait Writer:
-    fn write_bytes(mut self, bytes: Span[Byte, _])
 ```
 
 ## Core Functions
@@ -322,7 +242,6 @@ sort(array, cmp_fn=None, stable=False) # Sort in-place
 
 ```mojo
 swap(mut a, mut b)                   # Swap values
-rebind[dest_type](src) -> dest_type  # Convert between types
 ```
 
 ### Binary String Representation
@@ -418,36 +337,6 @@ except e:
 Methods:
 - `__str__()`: Error message
 - `__bool__()`: True if error is set
-- `unsafe_cstr_ptr()`: Get C-string pointer
-
-## Type System
-
-### Type Constraints
-
-```mojo
-constrained[cond: Bool, msg: StringLiteral = "param assertion failed"]()
-```
-
-Constrains parameters at compile-time.
-
-### Origin System
-
-```mojo
-alias ImmutableOrigin = Origin[False]
-alias MutableOrigin = Origin[True]
-alias ImmutableAnyOrigin = __mlir_attr.`#lit.any.origin : !lit.origin<0>`
-alias MutableAnyOrigin = __mlir_attr.`#lit.any.origin : !lit.origin<1>`
-```
-
-Origins track mutability and provide memory safety.
-
-### Type Rebinding
-
-```mojo
-rebind[dest_type](src) -> dest_type
-```
-
-Converts between types at a low level.
 
 ## SIMD Types and Operations
 
