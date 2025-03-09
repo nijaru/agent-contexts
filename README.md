@@ -1,4 +1,4 @@
-# agent-contexts
+# Agent Contexts
 
 A collection of markdown files to provide context to AI coding assistants like GitHub Copilot, Cursor, and Claude Code.
 
