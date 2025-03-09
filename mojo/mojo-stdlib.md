@@ -7,10 +7,14 @@
 - [bit](#bit)
 - [hashlib](#hashlib)
 - [math](#math)
+- [memory](#memory)
+- [os](#os)
 - [pathlib](#pathlib)
 - [pwd](#pwd)
+- [python](#python)
 - [random](#random)
 - [stat](#stat)
+- [sys](#sys)
 - [tempfile](#tempfile)
 - [testing](#testing)
 - [time](#time)
@@ -219,6 +223,182 @@ fn scalb[type: DType, simd_width: Int](arg0: SIMD[type, simd_width], arg1: SIMD[
 fn polynomial_evaluate[dtype: DType, simd_width: Int, coefficients: List[SIMD[dtype, simd_width], *_]](x: SIMD[dtype, simd_width]) -> SIMD[dtype, simd_width]
 ```
 
+## memory
+
+Provides several pointer types and utility functions for memory management.
+
+### Types
+
+```mojo
+struct ArcPointer[T: Movable]
+    # Reference-counted pointer that owns an instance of T on the heap
+    # Methods
+    fn __init__(out self, owned value: T)
+    fn copy(self) -> Self
+    fn __getitem__[self_life: ImmutableOrigin](ref [self_life]self) -> ref [MutableOrigin.cast_from[self_life].result] T
+    fn unsafe_ptr(self) -> UnsafePointer[T]
+    fn count(self) -> UInt64
+    fn __is__(self, rhs: Self) -> Bool
+    fn __isnot__(self, rhs: Self) -> Bool
+
+struct OwnedPointer[T: AnyType]
+    # A safe, owning smart pointer
+    # Methods
+    fn __init__[T: Movable](mut self: OwnedPointer[T], owned value: T)
+    fn __init__[T: ExplicitlyCopyable](mut self: OwnedPointer[T], *, copy_value: T)
+    fn __init__[T: Copyable, U: NoneType = None](mut self: OwnedPointer[T], value: T)
+    fn __init__[T: ExplicitlyCopyable](mut self: OwnedPointer[T], *, other: OwnedPointer[T])
+    fn __getitem__(ref [AddressSpace.GENERIC]self) -> ref [self, AddressSpace.GENERIC] T
+    fn unsafe_ptr(self) -> UnsafePointer[T]
+    fn take[T: Movable](owned self: OwnedPointer[T]) -> T
+    fn steal_data(owned self) -> UnsafePointer[T]
+
+struct UnsafeMaybeUninitialized[ElementType: AnyType]
+    # A memory location that may or may not be initialized
+    # Methods
+    fn __init__(out self)
+    fn __init__[MovableType: Movable](mut self: UnsafeMaybeUninitialized[MovableType], owned value: MovableType)
+    fn copy_from[CopyableType: ExplicitlyCopyable](mut self: UnsafeMaybeUninitialized[CopyableType], other: UnsafeMaybeUninitialized[CopyableType])
+    fn copy_from[CopyableType: ExplicitlyCopyable](mut self: UnsafeMaybeUninitialized[CopyableType], other: CopyableType)
+    fn move_from[MovableType: Movable](mut self: UnsafeMaybeUninitialized[MovableType], mut other: UnsafeMaybeUninitialized[MovableType])
+    fn move_from[MovableType: Movable](mut self: UnsafeMaybeUninitialized[MovableType], other: UnsafePointer[MovableType])
+    fn write[MovableType: Movable](mut self: UnsafeMaybeUninitialized[MovableType], owned value: MovableType)
+    fn assume_initialized(ref self) -> ref [self] Self.ElementType
+    fn unsafe_ptr(self) -> UnsafePointer[Self.ElementType]
+    fn assume_initialized_destroy(mut self)
+
+struct Pointer[mut: Bool, type: AnyType, origin: Origin[mut], address_space: AddressSpace = AddressSpace.GENERIC]
+    # Non-nullable safe pointer
+    # Methods
+    fn address_of(ref [origin, address_space]value: type) -> Self
+    fn __getitem__(self) -> ref [origin, address_space] type
+
+struct Span[mut: Bool, T: CollectionElement, origin: Origin[mut], *, address_space: AddressSpace = AddressSpace.GENERIC, alignment: Int = _default_alignment[T]()]
+    # A non-owning view of contiguous data
+    # Methods
+    fn __getitem__[I: Indexer](self, idx: I) -> ref [origin, address_space] T
+    fn __getitem__(self, slc: Slice) -> Self
+    fn __len__(self) -> Int
+    fn unsafe_ptr(self) -> UnsafePointer[T, mut=mut, origin=origin, address_space=address_space, alignment=alignment]
+    fn as_ref(self) -> Pointer[T, origin, address_space=address_space]
+    fn copy_from[origin: MutableOrigin](self: Span[T, origin], other: Span[T, _])
+    fn fill[origin: MutableOrigin](self: Span[T, origin], value: T)
+    fn get_immutable(self) -> Span[T, ImmutableOrigin.cast_from[origin].result, address_space=address_space, alignment=alignment]
+
+@register_passable("trivial")
+struct UnsafePointer[type: AnyType, *, address_space: AddressSpace = AddressSpace.GENERIC, alignment: Int = _default_alignment[type](), mut: Bool = True, origin: Origin[mut] = Origin[mut].cast_from[MutableAnyOrigin].result]
+    # Unsafe pointer representing an indirect reference to values of type T
+    # Methods
+    fn __init__(out self)
+    fn alloc(count: Int) -> UnsafePointer[type, address_space = AddressSpace.GENERIC, alignment=alignment, origin = MutableOrigin.empty]
+    fn __getitem__(self) -> ref [origin, address_space] type
+    fn offset[I: Indexer](self, idx: I) -> Self
+    fn __getitem__[I: Indexer](self, offset: I) -> ref [origin, address_space] type
+    fn load[type: DType, width: Int = 1](self: UnsafePointer[Scalar[type], **_]) -> SIMD[type, width]
+    fn store[type: DType, width: Int = 1](self: UnsafePointer[Scalar[type], **_], val: SIMD[type, width])
+    fn bitcast[T: AnyType = Self.type](self) -> UnsafePointer[T, address_space=address_space, alignment=alignment, mut=mut, origin=origin]
+    fn free(self: UnsafePointer[_, address_space = AddressSpace.GENERIC, **_])
+    fn destroy_pointee(self: UnsafePointer[type, address_space = AddressSpace.GENERIC, **_])
+    fn take_pointee[T: Movable](self: UnsafePointer[T, address_space = AddressSpace.GENERIC, **_]) -> T
+    fn init_pointee_move[T: Movable](self: UnsafePointer[T, address_space = AddressSpace.GENERIC, **_], owned value: T)
+    fn init_pointee_copy[T: Copyable](self: UnsafePointer[T, address_space = AddressSpace.GENERIC, **_], value: T)
+    fn init_pointee_explicit_copy[T: ExplicitlyCopyable](self: UnsafePointer[T, address_space = AddressSpace.GENERIC, **_], value: T)
+```
+
+### Functions
+
+```mojo
+# Memory operations
+fn memcmp[type: AnyType, address_space: AddressSpace](s1: UnsafePointer[type, address_space=address_space], s2: UnsafePointer[type, address_space=address_space], count: Int) -> Int
+fn memcpy[T: AnyType](dest: UnsafePointer[T, address_space = AddressSpace.GENERIC, **_], src: UnsafePointer[T, address_space = AddressSpace.GENERIC, **_], count: Int)
+fn memset[type: AnyType, address_space: AddressSpace](ptr: UnsafePointer[type, address_space=address_space], value: Byte, count: Int)
+fn memset_zero[type: AnyType, address_space: AddressSpace](ptr: UnsafePointer[type, address_space=address_space], count: Int)
+fn stack_allocation[count: Int, type: DType, alignment: Int = alignof[type]() if is_gpu() else 1, address_space: AddressSpace = AddressSpace.GENERIC]() -> UnsafePointer[Scalar[type], address_space=address_space]
+fn stack_allocation[count: Int, type: AnyType, name: Optional[StringLiteral] = None, alignment: Int = alignof[type]() if is_gpu() else 1, address_space: AddressSpace = AddressSpace.GENERIC]() -> UnsafePointer[type, address_space=address_space]
+
+# Type conversions
+fn bitcast[type: DType, width: Int, new_type: DType, new_width: Int = width](val: SIMD[type, width]) -> SIMD[new_type, new_width]
+fn pack_bits[width: Int, new_type: DType = _uint(width)](val: SIMD[DType.bool, width]) -> Scalar[new_type]
+```
+
+## os
+
+Provides operating system interfaces, including environment variables, file operations, and atomic operations.
+
+### Constants and Types
+
+```mojo
+# File-related constants
+alias sep = "\\" if os_is_windows() else "/"
+alias SEEK_SET: UInt8 = 0
+alias SEEK_CUR: UInt8 = 1
+alias SEEK_END: UInt8 = 2
+
+# File descriptors
+alias stdout: FileDescriptor = 1
+alias stderr: FileDescriptor = 2
+
+# Stat result
+struct stat_result:
+    var st_mode: Int
+    var st_ino: Int
+    var st_dev: Int
+    var st_nlink: Int
+    var st_uid: Int
+    var st_gid: Int
+    var st_size: Int
+    var st_atimespec: _CTimeSpec
+    var st_mtimespec: _CTimeSpec
+    var st_ctimespec: _CTimeSpec
+    var st_birthtimespec: _CTimeSpec
+    var st_blocks: Int
+    var st_blksize: Int
+    var st_rdev: Int
+    var st_flags: Int
+
+# Atomic operations
+struct Atomic[type: DType, *, scope: StringLiteral = ""]:
+    var value: Scalar[type]
+    fn load(self) -> Scalar[type]
+    fn fetch_add(self, rhs: Scalar[type]) -> Scalar[type]
+    fn fetch_sub(self, rhs: Scalar[type]) -> Scalar[type]
+    fn compare_exchange_weak(self, mut expected: Scalar[type], desired: Scalar[type]) -> Bool
+    fn max(self, rhs: Scalar[type])
+    fn min(self, rhs: Scalar[type])
+```
+
+### Traits
+
+```mojo
+trait PathLike:
+    fn __fspath__(self) -> String
+```
+
+### Functions
+
+```mojo
+# Environment functions
+fn getenv(name: String, default: String = "") -> String
+fn setenv(name: String, value: String, overwrite: Bool = True) -> Bool
+fn unsetenv(name: String) -> Bool
+
+# File system operations
+fn stat[PathLike: os.PathLike](path: PathLike) raises -> stat_result
+fn lstat[PathLike: os.PathLike](path: PathLike) raises -> stat_result
+fn listdir[PathLike: os.PathLike](path: PathLike) raises -> List[String]
+fn remove[PathLike: os.PathLike](path: PathLike) raises
+fn unlink[PathLike: os.PathLike](path: PathLike) raises
+fn mkdir[PathLike: os.PathLike](path: PathLike, mode: Int = 0o777) raises
+fn makedirs[PathLike: os.PathLike](path: PathLike, mode: Int = 0o777, exist_ok: Bool = False) -> None
+fn rmdir[PathLike: os.PathLike](path: PathLike) raises
+fn removedirs[PathLike: os.PathLike](path: PathLike) -> None
+
+# System information
+fn getuid() -> Int
+fn abort[result: AnyType = NoneType._mlir_type]() -> result
+fn abort[result: AnyType = NoneType._mlir_type, *Ts: Writable](*messages: *Ts) -> result
+```
+
 ## pathlib
 
 Provides filesystem path manipulation.
@@ -317,6 +497,101 @@ fn getpwnam(name: String) raises -> Passwd
 fn getpwuid(uid: Int) raises -> Passwd
 ```
 
+## python
+
+Provides Python interoperability.
+
+### Types
+
+```mojo
+@register_passable
+struct PythonObject(ImplicitlyBoolable, ImplicitlyIntable, Indexer, KeyElement, SizedRaising, Stringable, Writable, _HashableWithHasher):
+    # Methods
+    fn __init__(out self)  # Initialize with None
+    fn __init__(out self, ptr: PyObjectPtr)
+    fn __init__(out self, none: NoneType)
+    fn __init__(out self, value: Bool)
+    fn __init__(out self, integer: Int)
+    fn __init__[dt: DType](mut self, value: SIMD[dt, 1])
+    fn __init__(out self, value: StringLiteral)
+    fn __init__(out self, value: String)
+    fn __init__(out self, string: StringSlice)
+    fn __init__[*Ts: CollectionElement](mut self, value: ListLiteral[*Ts])
+    fn __init__[*Ts: CollectionElement](mut self, value: Tuple[*Ts])
+    fn __init__(out self, slice: Slice)
+    fn __init__(out self, value: Dict[Self, Self])
+
+    # Conversion methods
+    fn __bool__(self) -> Bool
+    fn __int__(self) -> Int
+    fn __float__(self) -> Float64
+    fn __str__(self) -> String
+
+    # Python operations
+    fn __getattr__(self, name: StringLiteral) raises -> PythonObject
+    fn __setattr__(self, name: StringLiteral, new_value: PythonObject) raises
+    fn __getitem__(self, *args: PythonObject) raises -> PythonObject
+    fn __getitem__(self, *args: Slice) raises -> PythonObject
+    fn __setitem__(mut self, *args: PythonObject, value: PythonObject) raises
+    fn __call__(self, *args: PythonObject, **kwargs: PythonObject) raises -> PythonObject
+    fn __iter__(self) raises -> _PyIter
+    fn __contains__(self, rhs: PythonObject) raises -> Bool
+
+    # Arithmetic operations
+    fn __add__(self, rhs: PythonObject) raises -> PythonObject
+    fn __sub__(self, rhs: PythonObject) raises -> PythonObject
+    fn __mul__(self, rhs: PythonObject) raises -> PythonObject
+    fn __truediv__(self, rhs: PythonObject) raises -> PythonObject
+    fn __floordiv__(self, rhs: PythonObject) raises -> PythonObject
+    fn __mod__(self, rhs: PythonObject) raises -> PythonObject
+    fn __pow__(self, exp: PythonObject) raises -> PythonObject
+
+@register_passable
+struct TypedPythonObject[type_hint: StringLiteral](SizedRaising):
+    var _obj: PythonObject
+
+    # Specialized methods for different type hints
+    fn __getitem__(self: TypedPythonObject["Tuple"], pos: I) raises -> PythonObject
+```
+
+### Functions
+
+```mojo
+struct Python:
+    # Evaluation functions
+    fn eval(mut self, code: StringSlice) -> Bool
+    @staticmethod
+    fn evaluate(expr: StringSlice, file: Bool = False, name: StringSlice[StaticConstantOrigin] = "__main__") raises -> PythonObject
+
+    # Path functions
+    @staticmethod
+    fn add_to_path(dir_path: StringSlice) raises
+
+    # Module operations
+    @staticmethod
+    fn import_module(module: StringSlice) raises -> PythonObject
+    @staticmethod
+    fn create_module(name: String) raises -> TypedPythonObject["Module"]
+    @staticmethod
+    fn add_functions(mut module: TypedPythonObject["Module"], owned functions: List[PyMethodDef]) raises
+    @staticmethod
+    fn add_object(mut module: TypedPythonObject["Module"], name: StringLiteral, value: PythonObject) raises
+
+    # Container creation
+    @staticmethod
+    fn dict() -> PythonObject
+    @staticmethod
+    fn list() -> PythonObject
+
+    # Utility methods
+    @staticmethod
+    fn none() -> PythonObject
+    @staticmethod
+    fn is_type(x: PythonObject, y: PythonObject) -> Bool
+    @staticmethod
+    fn type(obj: PythonObject) -> PythonObject
+```
+
 ## random
 
 Provides random number generation.
@@ -373,6 +648,173 @@ fn S_ISCHR[intable: Intable](mode: intable) -> Bool  # Is a character device
 fn S_ISBLK[intable: Intable](mode: intable) -> Bool  # Is a block device
 fn S_ISFIFO[intable: Intable](mode: intable) -> Bool  # Is a FIFO
 fn S_ISSOCK[intable: Intable](mode: intable) -> Bool  # Is a socket
+```
+
+## sys
+
+Provides system information, intrinsics, and utilities for interacting with the operating system.
+
+### Types
+
+```mojo
+# FFI types
+alias c_char = Int8
+alias c_uchar = UInt8
+alias c_int = Int32
+alias c_uint = UInt32
+alias c_short = Int16
+alias c_ushort = UInt16
+alias c_long = Scalar[_c_long_dtype()]
+alias c_long_long = Scalar[_c_long_long_dtype()]
+alias c_size_t = UInt
+alias c_ssize_t = Int
+alias c_float = Float32
+alias c_double = Float64
+alias OpaquePointer = UnsafePointer[NoneType]
+
+# Dynamic library loading
+struct RTLD:
+    alias LAZY = 1
+    alias NOW = 2
+    alias LOCAL = 4
+    alias GLOBAL = 256 if os_is_linux() else 8
+
+@value
+@register_passable("trivial")
+struct DLHandle(CollectionElement, CollectionElementNew, Boolable):
+    # Methods
+    fn __init__(out self, path: String, flags: Int = DEFAULT_RTLD)
+    fn check_symbol(self, name: String) -> Bool
+    fn close(mut self)
+    fn get_function[result_type: AnyTrivialRegType](self, name: String) -> result_type
+    fn get_symbol[result_type: AnyType](self, name: StringLiteral) -> UnsafePointer[result_type]
+    fn call[name: StringLiteral, return_type: AnyTrivialRegType = NoneType, *T: AnyType](self, *args: *T) -> return_type
+
+# Prefetch options
+@register_passable("trivial")
+struct PrefetchLocality:
+    var value: Int32
+    alias NONE = PrefetchLocality(0)
+    alias LOW = PrefetchLocality(1)
+    alias MEDIUM = PrefetchLocality(2)
+    alias HIGH = PrefetchLocality(3)
+
+@register_passable("trivial")
+struct PrefetchRW:
+    var value: Int32
+    alias READ = PrefetchRW(0)
+    alias WRITE = PrefetchRW(1)
+
+@register_passable("trivial")
+struct PrefetchCache:
+    var value: Int32
+    alias INSTRUCTION = PrefetchCache(0)
+    alias DATA = PrefetchCache(1)
+
+@register_passable("trivial")
+struct PrefetchOptions:
+    var rw: PrefetchRW
+    var locality: PrefetchLocality
+    var cache: PrefetchCache
+    # Methods
+    fn for_read(self) -> Self
+    fn for_write(self) -> Self
+    fn no_locality(self) -> Self
+    fn low_locality(self) -> Self
+    fn medium_locality(self) -> Self
+    fn high_locality(self) -> Self
+    fn to_data_cache(self) -> Self
+    fn to_instruction_cache(self) -> Self
+```
+
+### Variables and Constants
+
+```mojo
+alias DEFAULT_RTLD = RTLD.NOW | RTLD.GLOBAL
+alias is_compile_time = __mlir_op.`kgen.is_compile_time`
+alias OptimizationLevel = _OptimizationLevel()
+alias DebugLevel = _DebugLevel()
+alias stdout: FileDescriptor = 1
+alias stderr: FileDescriptor = 2
+alias argv = () -> VariadicList[StringSlice[StaticConstantOrigin]]  # Command line arguments
+```
+
+### Functions
+
+```mojo
+# FFI utilities
+fn external_call[callee: StringLiteral, return_type: AnyTrivialRegType, *types: AnyType](*args: *types) -> return_type
+
+# System information
+fn is_x86() -> Bool
+fn has_sse4() -> Bool
+fn has_avx() -> Bool
+fn has_avx2() -> Bool
+fn has_avx512f() -> Bool
+fn has_fma() -> Bool
+fn has_vnni() -> Bool
+fn has_neon() -> Bool
+fn has_neon_int8_dotprod() -> Bool
+fn has_neon_int8_matmul() -> Bool
+fn is_apple_m1() -> Bool
+fn is_apple_m2() -> Bool
+fn is_apple_m3() -> Bool
+fn is_apple_silicon() -> Bool
+fn is_neoverse_n1() -> Bool
+fn has_intel_amx() -> Bool
+fn os_is_macos() -> Bool
+fn os_is_linux() -> Bool
+fn os_is_windows() -> Bool
+fn is_nvidia_gpu() -> Bool
+fn is_amd_gpu() -> Bool
+fn is_gpu() -> Bool
+fn is_little_endian[target: __mlir_type.`!kgen.target` = _current_target()]() -> Bool
+fn is_big_endian[target: __mlir_type.`!kgen.target` = _current_target()]() -> Bool
+fn is_32bit[target: __mlir_type.`!kgen.target` = _current_target()]() -> Bool
+fn is_64bit[target: __mlir_type.`!kgen.target` = _current_target()]() -> Bool
+fn simdbitwidth[target: __mlir_type.`!kgen.target` = _current_target()]() -> Int
+fn simdbytewidth[target: __mlir_type.`!kgen.target` = _current_target()]() -> Int
+fn sizeof[type: AnyType, target: __mlir_type.`!kgen.target` = _current_target()]() -> Int
+fn alignof[type: AnyType, target: __mlir_type.`!kgen.target` = _current_target()]() -> Int
+fn bitwidthof[type: AnyTrivialRegType, target: __mlir_type.`!kgen.target` = _current_target()]() -> Int
+fn simdwidthof[type: AnyTrivialRegType, target: __mlir_type.`!kgen.target` = _current_target()]() -> Int
+fn num_physical_cores() -> Int
+fn num_logical_cores() -> Int
+fn num_performance_cores() -> Int
+fn has_accelerator() -> Bool
+fn has_amd_gpu_accelerator() -> Bool
+fn has_nvidia_gpu_accelerator() -> Bool
+
+# SIMD and memory operations
+fn gather[type: DType, size: Int](owned base: SIMD[DType.index, size], mask: SIMD[DType.bool, size], passthrough: SIMD[type, size], alignment: Int = 0) -> SIMD[type, size]
+fn scatter[type: DType, size: Int](value: SIMD[type, size], owned base: SIMD[DType.index, size], mask: SIMD[DType.bool, size], alignment: Int = 0)
+fn prefetch[type: DType](addr: UnsafePointer[Scalar[type], **_])
+fn masked_load[type: DType](addr: UnsafePointer[Scalar[type], **_], mask: SIMD[DType.bool, size], passthrough: SIMD[type, size], alignment: Int = 1) -> SIMD[type, size]
+fn masked_store[size: Int](value: SIMD, addr: UnsafePointer[Scalar[value.type], **_], mask: SIMD[DType.bool, size], alignment: Int = 1)
+fn compressed_store[type: DType, size: Int](value: SIMD[type, size], addr: UnsafePointer[Scalar[type], **_], mask: SIMD[DType.bool, size])
+fn strided_load[type: DType](addr: UnsafePointer[Scalar[type], **_], stride: Int, mask: SIMD[DType.bool, simd_width] = True) -> SIMD[type, simd_width]
+fn strided_store[type: DType](value: SIMD[type, simd_width], addr: UnsafePointer[Scalar[type], **_], stride: Int, mask: SIMD[DType.bool, simd_width] = True)
+
+# Debug and optimization
+fn breakpointhook()
+fn expect[T: AnyTrivialRegType](val: T) -> T
+fn likely(val: Bool) -> Bool
+fn unlikely(val: Bool) -> Bool
+fn assume(val: Bool)
+
+# Parameter environment
+fn is_defined[name: StringLiteral]() -> Bool
+fn env_get_bool[name: StringLiteral]() -> Bool
+fn env_get_bool[name: StringLiteral, default: Bool]() -> Bool
+fn env_get_int[name: StringLiteral]() -> Int
+fn env_get_int[name: StringLiteral, default: Int]() -> Int
+fn env_get_string[name: StringLiteral]() -> StringLiteral
+fn env_get_string[name: StringLiteral, default: StringLiteral]() -> StringLiteral
+fn env_get_dtype[name: StringLiteral, default: DType]() -> DType
+
+# Process control
+fn exit()
+fn exit[intable: Intable](code: intable)
 ```
 
 ## tempfile
