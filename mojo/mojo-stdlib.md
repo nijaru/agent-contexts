@@ -1,10 +1,10 @@
-
 # Mojo Standard Library Documentation
 
 ## Table of Contents
 
 - [base64](#base64)
 - [bit](#bit)
+- [collections](#collections)
 - [hashlib](#hashlib)
 - [math](#math)
 - [memory](#memory)
@@ -74,6 +74,488 @@ fn rotate_bits_left[shift: Int](x: Int) -> Int
 fn rotate_bits_left[type: DType, width: Int, shift: Int](x: SIMD[type, width]) -> SIMD[type, width]
 fn rotate_bits_right[shift: Int](x: Int) -> Int
 fn rotate_bits_right[type: DType, width: Int, shift: Int](x: SIMD[type, width]) -> SIMD[type, width]
+```
+
+## collections
+
+Provides collection data types for storing and manipulating data.
+
+### Types and Traits
+
+```mojo
+trait KeyElement(CollectionElement, Hashable, EqualityComparable):
+    # Trait for types that can be used as dictionary keys
+
+trait IntervalElement(CollectionElement, Writable, Intable, Comparable, _CopyableGreaterThanComparable):
+    # Trait for interval bounds
+    fn __sub__(self, rhs: Self) -> Self
+
+trait IntervalPayload(CollectionElement, Stringable, Comparable):
+    # Trait for data associated with intervals
+```
+
+### Counter
+
+```mojo
+struct Counter[V: KeyElement](Sized, CollectionElement, Boolable):
+    # Fields
+    var _data: Dict[V, Int]  # Underlying dictionary
+
+    # Constructors
+    fn __init__(out self)  # Create empty Counter
+    fn __init__(out self, items: List[V, *_])  # Create from list of items
+    fn copy(self) -> Self  # Create a copy
+
+    # Static methods
+    fn fromkeys(keys: List[V, *_], value: Int) -> Self
+
+    # Operators
+    fn __getitem__(self, key: V) -> Int  # Get count of key
+    fn __setitem__(mut self, value: V, count: Int)  # Set count for value
+    fn __iter__(self) -> _DictKeyIter[V, Int, __origin_of(self._data)]
+    fn __contains__(self, key: V) -> Bool
+    fn __len__(self) -> Int
+    fn __bool__(self) -> Bool
+    fn __eq__(self, other: Self) -> Bool
+    fn __ne__(self, other: Self) -> Bool
+    fn __le__(self, other: Self) -> Bool  # Check if all counts are less than or equal
+    fn __lt__(self, other: Self) -> Bool  # Check if all counts are less than
+    fn __gt__(self, other: Self) -> Bool
+    fn __ge__(self, other: Self) -> Bool
+    fn __add__(self, other: Self) -> Self  # Add counts
+    fn __iadd__(mut self, other: Self)  # Add counts in place
+    fn __sub__(self, other: Self) -> Self  # Subtract counts
+    fn __isub__(mut self, other: Self)  # Subtract counts in place
+    fn __and__(self, other: Self) -> Self  # Intersection: minimum counts
+    fn __iand__(mut self, other: Self)
+    fn __or__(self, other: Self) -> Self  # Union: maximum counts
+    fn __ior__(mut self, other: Self)
+    fn __pos__(self) -> Self  # Return copy with positive counts
+    fn __neg__(self) -> Self  # Return copy with negative counts flipped
+
+    # Methods
+    fn get(self, value: V) -> Optional[Int]
+    fn get(self, value: V, default: Int) -> Int
+    fn pop(mut self, value: V) raises -> Int
+    fn pop(mut self, value: V, owned default: Int) raises -> Int
+    fn keys(ref self) -> _DictKeyIter[V, Int, __origin_of(self._data)]
+    fn values(ref self) -> _DictValueIter[V, Int, __origin_of(self._data)]
+    fn items(self) -> _DictEntryIter[V, Int, __origin_of(self._data)]
+    fn clear(mut self)
+    fn popitem(mut self) raises -> CountTuple[V]
+    fn total(self) -> Int  # Sum of all counts
+    fn most_common(self, n: Int) -> List[CountTuple[V]]
+    fn elements(self) -> List[V]  # Expand each element based on its count
+    fn update(mut self, other: Self)  # Add counts from other
+    fn subtract(mut self, other: Self)  # Subtract counts from other
+
+    # Internal methods
+    fn _keep_positive(mut self)  # Remove zero and negative counts
+
+struct CountTuple[V: KeyElement](CollectionElement):
+    # Fields
+    var _value: V
+    var _count: Int
+
+    # Methods
+    fn __getitem__(self, idx: Int) -> Variant[V, Int]
+```
+
+### Deque
+
+```mojo
+struct Deque[ElementType: CollectionElement](Movable, ExplicitlyCopyable, Sized, Boolable):
+    # A double-ended queue implementation
+
+    # Fields
+    var _data: UnsafePointer[ElementType]  # Underlying storage
+    var _head: Int  # Index of the first element
+    var _tail: Int  # Index after the last element
+    var _capacity: Int  # Total capacity
+    var _min_capacity: Int  # Minimum capacity
+    var _maxlen: Int  # Maximum length (-1 for unlimited)
+    var _shrink: Bool  # Whether to shrink when possible
+
+    # Constructors
+    fn __init__(out self, *, owned elements: Optional[List[ElementType]] = None,
+                capacity: Int = default_capacity, min_capacity: Int = default_capacity,
+                maxlen: Int = -1, shrink: Bool = True)
+    fn __init__(out self, owned *values: ElementType)
+    fn copy(self) -> Self
+
+    # Operators
+    fn __add__(self, other: Self) -> Self
+    fn __iadd__(mut self, other: Self)
+    fn __mul__(self, n: Int) -> Self
+    fn __imul__(mut self, n: Int)
+    fn __eq__(self, other: Self) -> Bool
+    fn __ne__(self, other: Self) -> Bool
+    fn __contains__(self, value: ElementType) -> Bool
+    fn __iter__(ref self) -> _DequeIter[ElementType, __origin_of(self)]
+    fn __reversed__(ref self) -> _DequeIter[ElementType, __origin_of(self), False]
+    fn __bool__(self) -> Bool
+    fn __len__(self) -> Int
+    fn __getitem__(ref self, idx: Int) -> ref [self] ElementType
+
+    # Methods
+    fn append(mut self, owned value: ElementType)  # Add to right side
+    fn appendleft(mut self, owned value: ElementType)  # Add to left side
+    fn clear(mut self)  # Remove all elements
+    fn count(self, value: ElementType) -> Int
+    fn extend(mut self, owned values: List[ElementType])  # Add all elements to right
+    fn extendleft(mut self, owned values: List[ElementType])  # Add all elements to left (reversed)
+    fn index(self, value: ElementType, start: Int = 0, stop: Optional[Int] = None) raises -> Int
+    fn insert(mut self, idx: Int, owned value: ElementType) raises  # Insert at index
+    fn remove(mut self, value: ElementType) raises  # Remove first occurrence
+    fn peek(self) raises -> ElementType  # Get rightmost element without removing
+    fn peekleft(self) raises -> ElementType  # Get leftmost element without removing
+    fn pop(mut self) raises -> ElementType  # Remove and return rightmost element
+    fn popleft(mut self) raises -> ElementType  # Remove and return leftmost element
+    fn reverse(mut self)  # Reverse in place
+    fn rotate(mut self, n: Int = 1)  # Rotate n steps right (negative = left)
+
+    # Internal methods
+    fn _physical_index(self, logical_index: Int) -> Int
+    fn _realloc(mut self, new_capacity: Int)
+```
+
+### Dict
+
+```mojo
+struct Dict[K: KeyElement, V: CollectionElement](Sized, CollectionElement, CollectionElementNew, Boolable):
+    # A dictionary mapping keys to values
+
+    # Fields
+    var size: Int  # Number of elements
+    var _n_entries: Int  # Number of entries allocated
+    var _index: _DictIndex  # Index structure
+    var _entries: List[Optional[DictEntry[K, V]]]  # Storage for entries
+
+    # Constructors
+    fn __init__(out self)  # Empty dictionary
+    fn __init__(out self, *, power_of_two_initial_capacity: Int)  # Pre-reserved capacity
+    fn copy(self) -> Self
+
+    # Static methods
+    fn fromkeys(keys: List[K, *_], value: V) -> Self
+    fn fromkeys(keys: List[K, *_], value: Optional[V] = None) -> Dict[K, Optional[V]]
+
+    # Operators
+    fn __getitem__(self, key: K) raises -> ref V
+    fn __setitem__(mut self, owned key: K, owned value: V)
+    fn __contains__(self, key: K) -> Bool
+    fn __iter__(ref self) -> _DictKeyIter[K, V, __origin_of(self)]
+    fn __reversed__(ref self) -> _DictKeyIter[K, V, __origin_of(self), False]
+    fn __or__(self, other: Self) -> Self  # Merge dictionaries
+    fn __ior__(mut self, other: Self)  # Update with other dictionary
+    fn __len__(self) -> Int
+    fn __bool__(self) -> Bool
+
+    # Methods
+    fn find(self, key: K) -> Optional[V]  # Find value by key
+    fn _find_ref(ref self, key: K) raises -> ref V  # Find value reference
+    fn get_ptr(ref self, key: K) -> Optional[Pointer[V, __origin_of(self._entries[0].value().value)]]
+    fn get(self, key: K) -> Optional[V]
+    fn get(self, key: K, default: V) -> V
+    fn pop(mut self, key: K, owned default: V) -> V
+    fn pop(mut self, key: K) raises -> V
+    fn popitem(mut self) raises -> DictEntry[K, V]
+    fn keys(ref self) -> _DictKeyIter[K, V, __origin_of(self)]
+    fn values(ref self) -> _DictValueIter[K, V, __origin_of(self)]
+    fn items(ref self) -> _DictEntryIter[K, V, __origin_of(self)]
+    fn update(mut self, other: Self)
+    fn clear(mut self)
+    fn setdefault(mut self, key: K, owned default: V) raises -> ref V
+
+    # Internal methods
+    fn _insert(mut self, owned key: K, owned value: V)
+    fn _maybe_resize(mut self)
+    fn _compact(mut self)
+```
+
+### InlineArray
+
+```mojo
+struct InlineArray[ElementType: CollectionElement, size: Int, *, run_destructors: Bool = False](Sized, Movable, Copyable, ExplicitlyCopyable):
+    # A fixed-size array with compile-time size checking
+
+    # Fields
+    var _array: Self.type  # Underlying storage
+
+    # Constructors
+    fn __init__(out self, *, uninitialized: Bool)
+    fn __init__(out self, *, owned unsafe_assume_initialized: InlineArray[UnsafeMaybeUninitialized[ElementType], size])
+    fn __init__(out self, fill: ElementType)
+    fn __init__(out self, owned *elems: ElementType)
+    fn copy(self) -> Self
+
+    # Operators
+    fn __getitem__(ref self, idx: I) -> ref [self] ElementType
+    fn __contains__(self, value: ElementType) -> Bool
+
+    # Methods
+    fn __len__(self) -> Int
+    fn unsafe_get(ref self, idx: Int) -> ref [self] ElementType  # No bounds checking
+    fn unsafe_ptr(ref self) -> UnsafePointer[ElementType, ...]
+```
+
+### Interval & IntervalTree
+
+```mojo
+struct Interval[T: IntervalElement](CollectionElement):
+    # A half-open interval [start, end)
+
+    # Fields
+    var start: T  # Inclusive start
+    var end: T  # Exclusive end
+
+    # Constructors
+    fn __init__(out self, start: T, end: T)
+    fn __init__(out self, interval: Tuple[T, T])
+
+    # Operators
+    fn __contains__(self, other: T) -> Bool
+    fn __contains__(self, other: Self) -> Bool
+    fn __eq__(self, other: Self) -> Bool
+    fn __ne__(self, other: Self) -> Bool
+    fn __le__(self, other: Self) -> Bool
+    fn __ge__(self, other: Self) -> Bool
+    fn __lt__(self, other: Self) -> Bool
+    fn __gt__(self, other: Self) -> Bool
+    fn __len__(self) -> Int
+    fn __bool__(self) -> Bool
+
+    # Methods
+    fn overlaps(self, other: Self) -> Bool
+    fn union(self, other: Self) -> Self
+    fn intersection(self, other: Self) -> Self
+
+struct IntervalTree[T: IntervalElement, U: IntervalPayload]:
+    # An interval tree for efficient range queries
+
+    # Fields
+    var _root: UnsafePointer[_IntervalNode[T, U]]
+    var _len: Int
+
+    # Constructors
+    fn __init__(out self)
+
+    # Methods
+    fn insert(mut self, interval: Tuple[T, T], data: U)
+    fn insert(mut self, interval: Interval[T], data: U)
+    fn search(self, interval: Tuple[T, T]) raises -> List[U]
+    fn search(self, interval: Interval[T]) raises -> List[U]
+    fn depth(self) -> Int
+
+    # Internal methods
+    fn _left_rotate(mut self, rotation_node: UnsafePointer[_IntervalNode[T, U]])
+    fn _right_rotate(mut self, rotation_node: UnsafePointer[_IntervalNode[T, U]])
+    fn _insert_fixup(mut self, current_node: UnsafePointer[_IntervalNode[T, U]])
+```
+
+### LinkedList
+
+```mojo
+struct LinkedList[ElementType: CollectionElement]:
+    # A doubly-linked list
+
+    # Fields
+    var _head: UnsafePointer[Node[ElementType]]
+    var _tail: UnsafePointer[Node[ElementType]]
+    var _size: Int
+
+    # Constructors
+    fn __init__(out self)
+    fn __init__(mut self, owned *elements: ElementType)
+    fn __copyinit__(mut self, read other: Self)
+    fn copy(self) -> Self
+
+    # Operators
+    fn __len__(self) -> Int
+    fn __bool__(self) -> Bool
+    fn __getitem__(ref self, index: Int) -> ref [self] ElementType
+    fn __setitem__(mut self, index: Int, owned value: ElementType)
+    fn __iter__(self) -> _LinkedListIter[ElementType, __origin_of(self)]
+    fn __reversed__(self) -> _LinkedListIter[ElementType, __origin_of(self), False]
+    fn __contains__(self, value: ElementType) -> Bool
+    fn __eq__(self, other: Self) -> Bool
+    fn __ne__(self, other: Self) -> Bool
+
+    # Methods
+    fn append(mut self, owned value: ElementType)
+    fn prepend(mut self, owned value: ElementType)
+    fn reverse(mut self)
+    fn pop(mut self) raises -> ElementType
+    fn pop(mut self, owned i: Int) raises -> ElementType
+    fn maybe_pop(mut self) -> Optional[ElementType]
+    fn maybe_pop(mut self, owned i: Int) -> Optional[ElementType]
+    fn clear(mut self)
+    fn insert(mut self, idx: Int, owned elem: ElementType) raises
+    fn extend(mut self, owned other: Self)
+    fn count(self, read elem: ElementType) -> UInt
+```
+
+### List
+
+```mojo
+struct List[T: CollectionElement, hint_trivial_type: Bool = False](CollectionElement, CollectionElementNew, Sized, Boolable):
+    # A dynamically-allocated list
+
+    # Fields
+    var data: UnsafePointer[T]  # Underlying storage
+    var _len: Int  # Number of elements
+    var capacity: Int  # Current capacity
+
+    # Constructors
+    fn __init__(out self)
+    fn __init__(out self, *, capacity: Int)
+    fn __init__(out self, owned *values: T)
+    fn __init__(out self, span: Span[T])
+    fn copy(self) -> Self
+
+    # Operators
+    fn __mul__(self, x: Int) -> Self
+    fn __imul__(mut self, x: Int)
+    fn __add__(self, owned other: Self) -> Self
+    fn __iadd__(mut self, owned other: Self)
+    fn __iter__(ref self) -> _ListIter[T, hint_trivial_type, __origin_of(self)]
+    fn __reversed__(ref self) -> _ListIter[T, hint_trivial_type, __origin_of(self), False]
+    fn __eq__(self, other: Self) -> Bool
+    fn __ne__(self, other: Self) -> Bool
+    fn __contains__(self, value: T) -> Bool
+    fn __len__(self) -> Int
+    fn __bool__(self) -> Bool
+    fn __getitem__(self, span: Slice) -> Self
+    fn __getitem__(ref self, idx: Int) -> ref [self] T
+
+    # Methods
+    fn byte_length(self) -> Int
+    fn append(mut self, owned value: T)
+    fn insert(mut self, i: Int, owned value: T)
+    fn extend(mut self, owned other: List[T, *_])
+    fn extend(mut self, value: SIMD[DType, _])
+    fn extend(mut self, value: Span[Scalar[DType]])
+    fn pop(mut self, i: Int = -1) -> T
+    fn reserve(mut self, new_capacity: Int)
+    fn resize(mut self, new_size: Int, value: T)
+    fn resize(mut self, new_size: Int)
+    fn reverse(mut self)
+    fn index(ref self, value: T, start: Int = 0, stop: Optional[Int] = None) raises -> Int
+    fn count(self, value: T) -> Int
+    fn swap_elements(mut self, elt_idx_1: Int, elt_idx_2: Int)
+    fn clear(mut self)
+    fn steal_data(mut self) -> UnsafePointer[T]
+    fn unsafe_get(ref self, idx: Int) -> ref [self] T
+    fn unsafe_set(mut self, idx: Int, owned value: T)
+    fn unsafe_ptr(ref self) -> UnsafePointer[T, ...]
+```
+
+### Optional
+
+```mojo
+struct Optional[T: CollectionElement](CollectionElement, CollectionElementNew, Boolable):
+    # A type modeling a value which may or may not be present
+
+    # Fields
+    var _value: Variant[_NoneType, T]
+
+    # Constructors
+    fn __init__(out self)  # Empty optional
+    fn __init__(out self, owned value: T)  # With value
+    fn __init__(out self, value: NoneType)  # Empty optional
+    fn copy(self) -> Self
+
+    # Operators
+    fn __is__(self, other: NoneType) -> Bool
+    fn __isnot__(self, other: NoneType) -> Bool
+    fn __eq__(self, rhs: NoneType) -> Bool
+    fn __eq__(self, rhs: Optional[T]) -> Bool
+    fn __ne__(self, rhs: NoneType) -> Bool
+    fn __ne__(self, rhs: Optional[T]) -> Bool
+    fn __bool__(self) -> Bool
+    fn __invert__(self) -> Bool
+
+    # Methods
+    fn value(ref self) -> ref [self._value] T  # Get value or abort
+    fn unsafe_value(ref self) -> ref [self._value] T  # Get value without check
+    fn take(mut self) -> T  # Move value out
+    fn unsafe_take(mut self) -> T  # Move value out without check
+    fn or_else(self, default: T) -> T  # Get value or default
+    fn copied(self) -> Optional[T]  # Convert Optional[Pointer[T]] to Optional[T]
+
+struct OptionalReg[T: AnyTrivialRegType](Boolable):
+    # A register-passable optional type
+
+    # Fields
+    var _value: Self._mlir_type
+
+    # Constructors
+    fn __init__(out self)
+    fn __init__(out self, value: T)
+    fn __init__(out self, value: NoneType)
+
+    # Operators
+    fn __is__(self, other: NoneType) -> Bool
+    fn __isnot__(self, other: NoneType) -> Bool
+    fn __bool__(self) -> Bool
+
+    # Methods
+    fn value(self) -> T
+    fn or_else(owned self, owned default: T) -> T
+```
+
+### Set
+
+```mojo
+struct Set[T: KeyElement](Sized, Comparable, Hashable, Boolable):
+    # A set data type
+
+    # Fields
+    var _data: Dict[T, NoneType]
+
+    # Constructors
+    fn __init__(out self, *ts: T)
+    fn __init__(out self, elements: Self)
+    fn __init__(out self, elements: List[T, *_])
+
+    # Operators
+    fn __contains__(self, t: T) -> Bool
+    fn __eq__(self, other: Self) -> Bool
+    fn __ne__(self, other: Self) -> Bool
+    fn __and__(self, other: Self) -> Self  # Intersection
+    fn __iand__(mut self, other: Self)  # In-place intersection
+    fn __or__(self, other: Self) -> Self  # Union
+    fn __ior__(mut self, other: Self)  # In-place union
+    fn __sub__(self, other: Self) -> Self  # Difference
+    fn __isub__(mut self, other: Self)  # In-place difference
+    fn __le__(self, other: Self) -> Bool  # Subset check
+    fn __ge__(self, other: Self) -> Bool  # Superset check
+    fn __gt__(self, other: Self) -> Bool  # Strict superset check
+    fn __lt__(self, other: Self) -> Bool  # Strict subset check
+    fn __xor__(self, other: Self) -> Self  # Symmetric difference
+    fn __ixor__(mut self, other: Self)  # In-place symmetric difference
+    fn __bool__(self) -> Bool
+    fn __len__(self) -> Int
+    fn __hash__(self) -> UInt
+
+    # Methods
+    fn __iter__(ref self) -> _DictKeyIter[T, NoneType, __origin_of(self._data)]
+    fn add(mut self, t: T)
+    fn remove(mut self, t: T) raises
+    fn pop(mut self) raises -> T
+    fn union(self, other: Self) -> Self
+    fn intersection(self, other: Self) -> Self
+    fn difference(self, other: Self) -> Self
+    fn update(mut self, other: Self)
+    fn intersection_update(mut self, other: Self)
+    fn difference_update(mut self, other: Self)
+    fn issubset(self, other: Self) -> Bool
+    fn isdisjoint(self, other: Self) -> Bool
+    fn issuperset(self, other: Self) -> Bool
+    fn symmetric_difference(self, other: Self) -> Self
+    fn symmetric_difference_update(mut self, other: Self)
+    fn discard(mut self, value: T)
+    fn clear(mut self)
 ```
 
 ## hashlib
