@@ -1,6 +1,6 @@
 # Mojo Built-ins Reference Guide
 
-This document provides a concise reference of the built-in types, traits, and functions in Mojo that are important for developers. These are available without needing to import them.
+This document provides a comprehensive reference of all built-in types, methods, traits, and functions in Mojo. For language syntax and programming patterns, see the [Mojo Language Guide](mojo-language-guide.md).
 
 ## Table of Contents
 
@@ -20,11 +20,6 @@ This document provides a concise reference of the built-in types, traits, and fu
 
 A primitive boolean scalar value.
 
-```mojo
-var x: Bool = True
-var y: Bool = False
-```
-
 Methods:
 - `__bool__()`: Convert to Bool (identity)
 - `__int__()`: Convert to Int (1 for True, 0 for False)
@@ -39,11 +34,6 @@ Operations:
 ### Int
 
 Signed integer with platform-specific width.
-
-```mojo
-var a: Int = 42
-var b: Int = -7
-```
 
 Constants:
 - `Int.MIN`: Minimum representable integer value
@@ -65,10 +55,6 @@ Operations:
 
 Unsigned integer with platform-specific width.
 
-```mojo
-var a: UInt = 42
-```
-
 Constants:
 - `UInt.MIN`: 0
 - `UInt.MAX`: Maximum representable unsigned integer value
@@ -79,14 +65,12 @@ Methods and operations are similar to Int but with unsigned semantics.
 
 Mojo provides fixed-width integer types:
 
-```mojo
-Int8, UInt8       # 8-bit signed/unsigned integer
-Int16, UInt16     # 16-bit signed/unsigned integer
-Int32, UInt32     # 32-bit signed/unsigned integer
-Int64, UInt64     # 64-bit signed/unsigned integer
-Int128, UInt128   # 128-bit signed/unsigned integer
-Int256, UInt256   # 256-bit signed/unsigned integer
-```
+- `Int8, UInt8`: 8-bit signed/unsigned integer
+- `Int16, UInt16`: 16-bit signed/unsigned integer
+- `Int32, UInt32`: 32-bit signed/unsigned integer
+- `Int64, UInt64`: 64-bit signed/unsigned integer
+- `Int128, UInt128`: 128-bit signed/unsigned integer
+- `Int256, UInt256`: 256-bit signed/unsigned integer
 
 Each of these types supports standard integer operations and constants.
 
@@ -94,17 +78,9 @@ Each of these types supports standard integer operations and constants.
 
 Alias for UInt8, represents a single byte of data.
 
-```mojo
-var b: Byte = 65  # Same as UInt8(65)
-```
-
 ### StringLiteral
 
 Compile-time string constant.
-
-```mojo
-var s: StringLiteral = "hello"
-```
 
 Methods:
 - `byte_length()`: Length in bytes
@@ -121,10 +97,6 @@ Methods:
 ### DType
 
 Represents data types for SIMD operations.
-
-```mojo
-var type_value: DType = DType.float32
-```
 
 Common types:
 - `DType.bool`
@@ -150,10 +122,6 @@ Methods:
 
 Represents absence of a value.
 
-```mojo
-var n: NoneType = None
-```
-
 Methods:
 - `__str__()`: Returns "None"
 - `__repr__()`: Returns "None"
@@ -161,10 +129,6 @@ Methods:
 ### Slice
 
 Represents a slice expression for indexing.
-
-```mojo
-var slice_obj = Slice(1, 5)  # Equivalent to [1:5]
-```
 
 Methods:
 - `indices(length)`: Returns normalized (start, stop, step) tuple
@@ -265,10 +229,6 @@ all(iterable) -> Bool                # True if all elements are truthy
 
 Fixed-size heterogeneous collection.
 
-```mojo
-var t = Tuple(1, "hello", True)
-```
-
 Methods:
 - `__len__()`: Number of elements
 - `__getitem__[idx: Int]()`: Access element by index
@@ -278,10 +238,6 @@ Methods:
 
 List literal expression type.
 
-```mojo
-var list = [1, 2, 3]  # Type is ListLiteral
-```
-
 Methods:
 - `__len__()`: Number of elements
 - `get[i, T]()`: Get element at index with type T
@@ -289,12 +245,6 @@ Methods:
 ### Range
 
 Iterator for numeric sequences.
-
-```mojo
-for i in range(10): print(i)        # 0 to 9
-for i in range(5, 10): print(i)     # 5 to 9
-for i in range(0, 10, 2): print(i)  # 0, 2, 4, 6, 8
-```
 
 Methods:
 - `__iter__()`: Get iterator
@@ -325,15 +275,6 @@ String operations (available on StringLiteral):
 
 Represents an error with a message.
 
-```mojo
-raise Error("Something went wrong")
-
-try:
-    # Code that might raise
-except e:
-    print(e)  # Print error message
-```
-
 Methods:
 - `__str__()`: Error message
 - `__bool__()`: True if error is set
@@ -344,21 +285,11 @@ Methods:
 
 The Scalar type represents a single-element SIMD vector:
 
-```mojo
-Scalar[DType.float32]  # Single-precision float scalar
-Scalar[DType.int32]    # 32-bit integer scalar
-```
-
 Scalar is a specialization of the SIMD type with size=1.
 
 ### SIMD
 
 SIMD (Single Instruction Multiple Data) enables parallel operations on vectors of data.
-
-```mojo
-# Create a SIMD vector with 4 float32 elements
-var v = SIMD[DType.float32, 4](1.0, 2.0, 3.0, 4.0)
-```
 
 #### Initialization
 
@@ -487,21 +418,11 @@ Mojo supports various floating-point formats:
 
 ### Float16, Float32, Float64
 
-Standard IEEE 754 floating-point types:
-
-```mojo
-var f16 = Float16(1.5)    # 16-bit half precision
-var f32 = Float32(3.14)   # 32-bit single precision
-var f64 = Float64(2.718)  # 64-bit double precision
-```
+Standard IEEE 754 floating-point types.
 
 ### BFloat16
 
-Brain floating-point format (bfloat16) optimized for machine learning applications:
-
-```mojo
-var bf16 = BFloat16(1.5)  # 16-bit brain floating point
-```
+Brain floating-point format (bfloat16) optimized for machine learning applications.
 
 Compared to Float16, BFloat16 has fewer mantissa bits but the same exponent range as Float32.
 
@@ -509,11 +430,9 @@ Compared to Float16, BFloat16 has fewer mantissa bits but the same exponent rang
 
 Mojo supports several 8-bit floating point formats:
 
-```mojo
-var e5m2 = Float8_e5m2(1.0)           # 1-bit sign, 5-bit exponent, 2-bit mantissa
-var e4m3 = Float8_e4m3fn(0.5)         # 1-bit sign, 4-bit exponent, 3-bit mantissa, finite only
-var e5m2fnuz = Float8_e5m2fnuz(0.25)  # e5m2 with finite-only, unsigned-zero
-var e4m3fnuz = Float8_e4m3fnuz(0.125) # e4m3 with finite-only, unsigned-zero
-```
+- `Float8_e5m2`: 1-bit sign, 5-bit exponent, 2-bit mantissa
+- `Float8_e4m3fn`: 1-bit sign, 4-bit exponent, 3-bit mantissa, finite only
+- `Float8_e5m2fnuz`: e5m2 with finite-only, unsigned-zero
+- `Float8_e4m3fnuz`: e4m3 with finite-only, unsigned-zero
 
 These 8-bit formats provide more compact storage for applications where reduced precision is acceptable, such as in certain machine learning workloads.

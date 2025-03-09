@@ -1,8 +1,8 @@
-# Mojo Programming Language Reference
+# Mojo Language Guide
 
 ## Overview
 
-Mojo combines Python's syntax and ease of use with systems programming features like memory safety, value semantics, and performance. This reference covers core Mojo concepts, syntax, and patterns.
+Mojo combines Python's syntax and ease of use with systems programming features like memory safety, value semantics, and performance. This guide covers core Mojo concepts, syntax, and programming patterns. For detailed API references of built-in types and functions, see the [Mojo Built-ins Reference](mojo-built-ins.md).
 
 ## Language Basics
 
@@ -16,15 +16,7 @@ var y = 3.14  # Type inference
 # Implicitly declared variables (function-scoped)
 z = 10  # Type inference
 
-# Basic types
-var i: Int = 42
-var f: Float64 = 3.14
-var b: Bool = True
-var s: String = "Hello"
-
 # Literals
-# (IntLiteral and FloatLiteral are compile-time types
-# that materialize to Int and Float64 at runtime)
 var hex = 0xFF
 var binary = 0b1010
 var octal = 0o755
@@ -350,22 +342,9 @@ if with_value:
 print(no_value.or_else(0))
 ```
 
-## Numeric Types
-
-```mojo
-# Basic numeric types
-var i: Int = 42        # CPU word-sized integer
-var i8: Int8 = 127     # 8-bit integer
-var u8: UInt8 = 255    # 8-bit unsigned integer
-var f32: Float32 = 1.0 # 32-bit float
-var f64: Float64 = 3.14159265359 # 64-bit float
-
-# SIMD vectors (basis for other numeric types)
-var vec = SIMD[DType.float32, 4](1.0, 2.0, 3.0, 4.0)
-var sum_vec = vec + vec  # [2.0, 4.0, 6.0, 8.0]
-```
-
 ## Strings
+
+Basic string usage and creation:
 
 ```mojo
 # Create String values
@@ -378,15 +357,12 @@ var greeting = s1 + ", " + s2 + "!"
 # Multiple arguments to String constructor
 var message = String("The answer is: ", 42)
 
-# String operations
-var upper = greeting.upper()
-var length = len(greeting)
-var contains = "World" in greeting
-
 # String indexing and slicing
 var first_char = greeting[0]
 var substring = greeting[7:12]  # "World"
 ```
+
+For detailed string operations, see the [Mojo Built-ins Reference](mojo-built-ins.md).
 
 ## Python Integration
 
