@@ -98,9 +98,6 @@ trait IntervalPayload(CollectionElement, Stringable, Comparable):
 
 ```mojo
 struct Counter[V: KeyElement](Sized, CollectionElement, Boolable):
-    # Fields
-    var _data: Dict[V, Int]  # Underlying dictionary
-
     # Constructors
     fn __init__(out self)  # Create empty Counter
     fn __init__(out self, items: List[V, *_])  # Create from list of items
@@ -112,7 +109,7 @@ struct Counter[V: KeyElement](Sized, CollectionElement, Boolable):
     # Operators
     fn __getitem__(self, key: V) -> Int  # Get count of key
     fn __setitem__(mut self, value: V, count: Int)  # Set count for value
-    fn __iter__(self) -> _DictKeyIter[V, Int, __origin_of(self._data)]
+    fn __iter__(self) -> _  # Return iterator over keys
     fn __contains__(self, key: V) -> Bool
     fn __len__(self) -> Int
     fn __bool__(self) -> Bool
@@ -138,9 +135,9 @@ struct Counter[V: KeyElement](Sized, CollectionElement, Boolable):
     fn get(self, value: V, default: Int) -> Int
     fn pop(mut self, value: V) raises -> Int
     fn pop(mut self, value: V, owned default: Int) raises -> Int
-    fn keys(ref self) -> _DictKeyIter[V, Int, __origin_of(self._data)]
-    fn values(ref self) -> _DictValueIter[V, Int, __origin_of(self._data)]
-    fn items(self) -> _DictEntryIter[V, Int, __origin_of(self._data)]
+    fn keys(ref self) -> _  # Return iterator over keys
+    fn values(ref self) -> _  # Return iterator over values
+    fn items(self) -> _  # Return iterator over items
     fn clear(mut self)
     fn popitem(mut self) raises -> CountTuple[V]
     fn total(self) -> Int  # Sum of all counts
@@ -148,9 +145,6 @@ struct Counter[V: KeyElement](Sized, CollectionElement, Boolable):
     fn elements(self) -> List[V]  # Expand each element based on its count
     fn update(mut self, other: Self)  # Add counts from other
     fn subtract(mut self, other: Self)  # Subtract counts from other
-
-    # Internal methods
-    fn _keep_positive(mut self)  # Remove zero and negative counts
 
 struct CountTuple[V: KeyElement](CollectionElement):
     # Fields
@@ -167,15 +161,6 @@ struct CountTuple[V: KeyElement](CollectionElement):
 struct Deque[ElementType: CollectionElement](Movable, ExplicitlyCopyable, Sized, Boolable):
     # A double-ended queue implementation
 
-    # Fields
-    var _data: UnsafePointer[ElementType]  # Underlying storage
-    var _head: Int  # Index of the first element
-    var _tail: Int  # Index after the last element
-    var _capacity: Int  # Total capacity
-    var _min_capacity: Int  # Minimum capacity
-    var _maxlen: Int  # Maximum length (-1 for unlimited)
-    var _shrink: Bool  # Whether to shrink when possible
-
     # Constructors
     fn __init__(out self, *, owned elements: Optional[List[ElementType]] = None,
                 capacity: Int = default_capacity, min_capacity: Int = default_capacity,
@@ -191,8 +176,8 @@ struct Deque[ElementType: CollectionElement](Movable, ExplicitlyCopyable, Sized,
     fn __eq__(self, other: Self) -> Bool
     fn __ne__(self, other: Self) -> Bool
     fn __contains__(self, value: ElementType) -> Bool
-    fn __iter__(ref self) -> _DequeIter[ElementType, __origin_of(self)]
-    fn __reversed__(ref self) -> _DequeIter[ElementType, __origin_of(self), False]
+    fn __iter__(ref self) -> _  # Return iterator
+    fn __reversed__(ref self) -> _  # Return reversed iterator
     fn __bool__(self) -> Bool
     fn __len__(self) -> Int
     fn __getitem__(ref self, idx: Int) -> ref [self] ElementType
@@ -213,10 +198,6 @@ struct Deque[ElementType: CollectionElement](Movable, ExplicitlyCopyable, Sized,
     fn popleft(mut self) raises -> ElementType  # Remove and return leftmost element
     fn reverse(mut self)  # Reverse in place
     fn rotate(mut self, n: Int = 1)  # Rotate n steps right (negative = left)
-
-    # Internal methods
-    fn _physical_index(self, logical_index: Int) -> Int
-    fn _realloc(mut self, new_capacity: Int)
 ```
 
 ### Dict
@@ -224,12 +205,6 @@ struct Deque[ElementType: CollectionElement](Movable, ExplicitlyCopyable, Sized,
 ```mojo
 struct Dict[K: KeyElement, V: CollectionElement](Sized, CollectionElement, CollectionElementNew, Boolable):
     # A dictionary mapping keys to values
-
-    # Fields
-    var size: Int  # Number of elements
-    var _n_entries: Int  # Number of entries allocated
-    var _index: _DictIndex  # Index structure
-    var _entries: List[Optional[DictEntry[K, V]]]  # Storage for entries
 
     # Constructors
     fn __init__(out self)  # Empty dictionary
@@ -244,8 +219,8 @@ struct Dict[K: KeyElement, V: CollectionElement](Sized, CollectionElement, Colle
     fn __getitem__(self, key: K) raises -> ref V
     fn __setitem__(mut self, owned key: K, owned value: V)
     fn __contains__(self, key: K) -> Bool
-    fn __iter__(ref self) -> _DictKeyIter[K, V, __origin_of(self)]
-    fn __reversed__(ref self) -> _DictKeyIter[K, V, __origin_of(self), False]
+    fn __iter__(ref self) -> _  # Return iterator over keys
+    fn __reversed__(ref self) -> _  # Return reversed iterator over keys
     fn __or__(self, other: Self) -> Self  # Merge dictionaries
     fn __ior__(mut self, other: Self)  # Update with other dictionary
     fn __len__(self) -> Int
@@ -253,24 +228,18 @@ struct Dict[K: KeyElement, V: CollectionElement](Sized, CollectionElement, Colle
 
     # Methods
     fn find(self, key: K) -> Optional[V]  # Find value by key
-    fn _find_ref(ref self, key: K) raises -> ref V  # Find value reference
-    fn get_ptr(ref self, key: K) -> Optional[Pointer[V, __origin_of(self._entries[0].value().value)]]
+    fn get_ptr(ref self, key: K) -> Optional[Pointer[V, _]]
     fn get(self, key: K) -> Optional[V]
     fn get(self, key: K, default: V) -> V
     fn pop(mut self, key: K, owned default: V) -> V
     fn pop(mut self, key: K) raises -> V
     fn popitem(mut self) raises -> DictEntry[K, V]
-    fn keys(ref self) -> _DictKeyIter[K, V, __origin_of(self)]
-    fn values(ref self) -> _DictValueIter[K, V, __origin_of(self)]
-    fn items(ref self) -> _DictEntryIter[K, V, __origin_of(self)]
+    fn keys(ref self) -> _  # Return iterator over keys
+    fn values(ref self) -> _  # Return iterator over values
+    fn items(ref self) -> _  # Return iterator over items
     fn update(mut self, other: Self)
     fn clear(mut self)
     fn setdefault(mut self, key: K, owned default: V) raises -> ref V
-
-    # Internal methods
-    fn _insert(mut self, owned key: K, owned value: V)
-    fn _maybe_resize(mut self)
-    fn _compact(mut self)
 ```
 
 ### InlineArray
@@ -278,9 +247,6 @@ struct Dict[K: KeyElement, V: CollectionElement](Sized, CollectionElement, Colle
 ```mojo
 struct InlineArray[ElementType: CollectionElement, size: Int, *, run_destructors: Bool = False](Sized, Movable, Copyable, ExplicitlyCopyable):
     # A fixed-size array with compile-time size checking
-
-    # Fields
-    var _array: Self.type  # Underlying storage
 
     # Constructors
     fn __init__(out self, *, uninitialized: Bool)
@@ -333,10 +299,6 @@ struct Interval[T: IntervalElement](CollectionElement):
 struct IntervalTree[T: IntervalElement, U: IntervalPayload]:
     # An interval tree for efficient range queries
 
-    # Fields
-    var _root: UnsafePointer[_IntervalNode[T, U]]
-    var _len: Int
-
     # Constructors
     fn __init__(out self)
 
@@ -346,11 +308,6 @@ struct IntervalTree[T: IntervalElement, U: IntervalPayload]:
     fn search(self, interval: Tuple[T, T]) raises -> List[U]
     fn search(self, interval: Interval[T]) raises -> List[U]
     fn depth(self) -> Int
-
-    # Internal methods
-    fn _left_rotate(mut self, rotation_node: UnsafePointer[_IntervalNode[T, U]])
-    fn _right_rotate(mut self, rotation_node: UnsafePointer[_IntervalNode[T, U]])
-    fn _insert_fixup(mut self, current_node: UnsafePointer[_IntervalNode[T, U]])
 ```
 
 ### LinkedList
@@ -358,11 +315,6 @@ struct IntervalTree[T: IntervalElement, U: IntervalPayload]:
 ```mojo
 struct LinkedList[ElementType: CollectionElement]:
     # A doubly-linked list
-
-    # Fields
-    var _head: UnsafePointer[Node[ElementType]]
-    var _tail: UnsafePointer[Node[ElementType]]
-    var _size: Int
 
     # Constructors
     fn __init__(out self)
@@ -375,8 +327,8 @@ struct LinkedList[ElementType: CollectionElement]:
     fn __bool__(self) -> Bool
     fn __getitem__(ref self, index: Int) -> ref [self] ElementType
     fn __setitem__(mut self, index: Int, owned value: ElementType)
-    fn __iter__(self) -> _LinkedListIter[ElementType, __origin_of(self)]
-    fn __reversed__(self) -> _LinkedListIter[ElementType, __origin_of(self), False]
+    fn __iter__(self) -> _  # Return iterator
+    fn __reversed__(self) -> _  # Return reversed iterator
     fn __contains__(self, value: ElementType) -> Bool
     fn __eq__(self, other: Self) -> Bool
     fn __ne__(self, other: Self) -> Bool
@@ -401,11 +353,6 @@ struct LinkedList[ElementType: CollectionElement]:
 struct List[T: CollectionElement, hint_trivial_type: Bool = False](CollectionElement, CollectionElementNew, Sized, Boolable):
     # A dynamically-allocated list
 
-    # Fields
-    var data: UnsafePointer[T]  # Underlying storage
-    var _len: Int  # Number of elements
-    var capacity: Int  # Current capacity
-
     # Constructors
     fn __init__(out self)
     fn __init__(out self, *, capacity: Int)
@@ -418,8 +365,8 @@ struct List[T: CollectionElement, hint_trivial_type: Bool = False](CollectionEle
     fn __imul__(mut self, x: Int)
     fn __add__(self, owned other: Self) -> Self
     fn __iadd__(mut self, owned other: Self)
-    fn __iter__(ref self) -> _ListIter[T, hint_trivial_type, __origin_of(self)]
-    fn __reversed__(ref self) -> _ListIter[T, hint_trivial_type, __origin_of(self), False]
+    fn __iter__(ref self) -> _  # Return iterator
+    fn __reversed__(ref self) -> _  # Return reversed iterator
     fn __eq__(self, other: Self) -> Bool
     fn __ne__(self, other: Self) -> Bool
     fn __contains__(self, value: T) -> Bool
@@ -456,9 +403,6 @@ struct List[T: CollectionElement, hint_trivial_type: Bool = False](CollectionEle
 struct Optional[T: CollectionElement](CollectionElement, CollectionElementNew, Boolable):
     # A type modeling a value which may or may not be present
 
-    # Fields
-    var _value: Variant[_NoneType, T]
-
     # Constructors
     fn __init__(out self)  # Empty optional
     fn __init__(out self, owned value: T)  # With value
@@ -486,9 +430,6 @@ struct Optional[T: CollectionElement](CollectionElement, CollectionElementNew, B
 struct OptionalReg[T: AnyTrivialRegType](Boolable):
     # A register-passable optional type
 
-    # Fields
-    var _value: Self._mlir_type
-
     # Constructors
     fn __init__(out self)
     fn __init__(out self, value: T)
@@ -509,9 +450,6 @@ struct OptionalReg[T: AnyTrivialRegType](Boolable):
 ```mojo
 struct Set[T: KeyElement](Sized, Comparable, Hashable, Boolable):
     # A set data type
-
-    # Fields
-    var _data: Dict[T, NoneType]
 
     # Constructors
     fn __init__(out self, *ts: T)
@@ -539,7 +477,7 @@ struct Set[T: KeyElement](Sized, Comparable, Hashable, Boolable):
     fn __hash__(self) -> UInt
 
     # Methods
-    fn __iter__(ref self) -> _DictKeyIter[T, NoneType, __origin_of(self._data)]
+    fn __iter__(ref self) -> _  # Return iterator
     fn add(mut self, t: T)
     fn remove(mut self, t: T) raises
     fn pop(mut self) raises -> T
@@ -895,7 +833,6 @@ alias DIR_SEPARATOR = "\\" if os_is_windows() else "/"
 
 ```mojo
 fn cwd() raises -> Path  # Get current working directory
-fn _dir_of_current_file() raises -> Path  # Get directory of current file
 ```
 
 ### Types
@@ -1318,7 +1255,6 @@ fn mkdtemp(suffix: String = "", prefix: String = "tmp", dir: Optional[String] = 
 ```mojo
 struct TemporaryDirectory:
     var name: String  # The path to the temporary directory
-    var _ignore_cleanup_errors: Bool
 
     # Constructor
     fn __init__(mut self, suffix: String = "", prefix: String = "tmp",
@@ -1330,17 +1266,12 @@ struct TemporaryDirectory:
     fn __exit__(self, err: Error) -> Bool
 
 struct NamedTemporaryFile:
-    var _file_handle: FileHandle
-    var _delete: Bool
     var name: String  # The path to the temporary file
 
     # Constructor
     fn __init__(mut self, mode: String = "w", name: Optional[String] = None,
                 suffix: String = "", prefix: String = "tmp",
                 dir: Optional[String] = None, delete: Bool = True) raises
-
-    # Destructor
-    fn __del__(owned self)
 
     # File operations
     fn close(mut self) raises
@@ -1387,7 +1318,6 @@ fn assert_is_not[T: StringableIdentifiable](lhs: T, rhs: T, msg: String = "", *,
 # Exception testing
 struct assert_raises:
     var message_contains: Optional[String]  # Optional text the error must contain
-    var call_location: _SourceLocation
 
     fn __init__(out self, *, location: Optional[_SourceLocation] = None)
     fn __init__(mut self, *, contains: String, location: Optional[_SourceLocation] = None)
@@ -1437,9 +1367,6 @@ Provides various utility types and functions.
 @value
 @register_passable("trivial")
 struct IndexList[size: Int, *, element_bitwidth: Int = bitwidthof[Int](), unsigned: Bool = False](Sized, Stringable, Writable, Comparable):
-    alias element_type = _type_of_width[element_bitwidth, unsigned]()  # Underlying type
-    var data: StaticTuple[Self._int_type, size]  # Storage
-
     # Constructors
     fn __init__(out self)  # Initialize with zeros
     fn __init__(out self, data: StaticTuple[Self._int_type, size])
@@ -1483,9 +1410,6 @@ struct IndexList[size: Int, *, element_bitwidth: Int = bitwidthof[Int](), unsign
     # Conversion
     fn cast[type: DType](self, out result: IndexList[size, element_bitwidth = bitwidthof[type](), unsigned = _is_unsigned[type]()])
     fn cast[*, element_bitwidth: Int = Self.element_bitwidth, unsigned: Bool = Self.unsigned](self, out result: IndexList[size, element_bitwidth=element_bitwidth, unsigned=unsigned])
-
-    # Hashing
-    fn __hash__[H: _Hasher](self, mut hasher: H)
 ```
 
 ```mojo
@@ -1506,9 +1430,6 @@ fn product[size: Int](tuple: IndexList[size, **_], start_idx: Int, end_idx: Int)
 @value
 @register_passable("trivial")
 struct StaticTuple[element_type: AnyTrivialRegType, size: Int](Sized):
-    alias type = __mlir_type[`!pop.array<`, size.value, `, `, Self.element_type, `>`]
-    var array: Self.type  # Underlying storage
-
     # Constructors
     fn __init__(out self)  # Uninitialized constructor
     fn __init__(out self, array: Self.type)  # From array type
@@ -1542,15 +1463,11 @@ trait Writable:
 
 ```mojo
 struct SpinWaiter:
-    var storage: OpaquePointer  # Pointer to underlying C++ SpinWaiter
-
     fn __init__(out self)
-    fn __del__(owned self)
     fn wait(self)  # Block current task according to wait policy
 
 struct BlockingSpinLock:
     alias UNLOCKED = -1
-    var counter: Atomic[DType.int64]
 
     fn __init__(out self)
     fn lock(mut self, owner: Int)  # Acquire lock with owner ID
@@ -1558,7 +1475,6 @@ struct BlockingSpinLock:
 
 struct BlockingScopedLock:
     alias LockType = BlockingSpinLock
-    var lock: UnsafePointer[Self.LockType]
 
     fn __init__(mut self, lock: UnsafePointer[Self.LockType])
     fn __init__(mut self, mut lock: Self.LockType)
@@ -1584,10 +1500,6 @@ fn unroll[func: fn[idx: Int] () raises capturing [_] -> None, strided_range: _St
 
 ```mojo
 struct Variant[*Ts: CollectionElement](CollectionElement, ExplicitlyCopyable):
-    alias _sentinel: Int = -1
-    alias _mlir_type = __mlir_type[`!kgen.variant<[rebind(:`, __type_of(Ts), ` `, Ts, `)]>`]
-    var _impl: Self._mlir_type
-
     # Constructors
     fn __init__(out self, *, unsafe_uninitialized: ())
     fn __init__[T: CollectionElement](mut self, owned value: T)
@@ -1596,7 +1508,6 @@ struct Variant[*Ts: CollectionElement](CollectionElement, ExplicitlyCopyable):
     fn copy(self, out copy: Self)
     fn __copyinit__(out self, other: Self)
     fn __moveinit__(out self, owned other: Self)
-    fn __del__(owned self)
 
     # Access
     fn __getitem__[T: CollectionElement](ref self) -> ref [self] T
