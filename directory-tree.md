@@ -3,6 +3,7 @@
 This document provides a comprehensive list of all directories in the agent-contexts repository with their paths and descriptions.
 
 ## Table of Contents
+
 - [Active Directories](#active-directories)
   - [Languages](#languages)
   - [Tools](#tools)
@@ -13,6 +14,8 @@ This document provides a comprehensive list of all directories in the agent-cont
 
 ### Languages
 
+- [📁 `/languages/go`](./languages/go)
+  <br>Go programming language, including release notes, standard library documentation, and best practices
 - [📁 `/languages/mojo`](./languages/mojo)
   <br>Mojo programming language, including built-ins, language guide, style guide, and standard library modules
 
@@ -34,6 +37,7 @@ The following directories are planned but not yet implemented:
 ## Contributing New Directories
 
 When adding new directories to this repository:
+
 1. Create a README.md for major subdirectories outlining their purpose and contents (Use [mojo/README.md](./languages/mojo) for an example)
-2. Update this file with the new directory path and description
-3. Follow the style guidelines in [CLAUDE.md](./CLAUDE.md)
+1. Update this file with the new directory path and description
+1. Follow the style guidelines in [CLAUDE.md](./CLAUDE.md)
