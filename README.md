@@ -15,23 +15,38 @@ This repository contains specialized documentation and reference materials forma
 
 ## Repository Structure
 
-```
-/languages        - Programming language specifics
-/frameworks       - Web, mobile and other frameworks
-/tools            - Dev tools, build systems, etc.
-/patterns         - Design patterns and architecture
-/best-practices   - Coding standards and conventions
-```
+### Active Directories
 
-For a comprehensive list of all directories with detailed descriptions, see [Directory Tree](./directory-tree.md).
+#### Languages
+
+- [📁 `/languages/go`](./languages/go)
+  <br>Go programming language, including release notes, standard library documentation, and best practices
+- [📁 `/languages/mojo`](./languages/mojo)
+  <br>Mojo programming language, including built-ins, language guide, style guide, and standard library modules
+
+#### Tools
+
+- [📁 `/tools/python`](./tools/python)
+  <br>Python development tools
+  - [📁 `/tools/python/uv`](./tools/python/uv/uv.md)
+    <br> uv package installer and environment manager
+
+### Planned Directories
+
+The following directories are planned but not yet implemented:
+
+- 📁 `/frameworks` - Web, mobile and other frameworks
+- 📁 `/patterns` - Design patterns and architecture
+- 📁 `/best-practices` - Coding standards and conventions
 
 ## Contributing
 
 Contributions are welcome! Please follow these guidelines:
 - Use clear, concise language optimized for AI consumption
-- Format using standard markdown
+- Format using standard markdown following our [Style Guide](./STYLE-GUIDE.md)
 - Focus on technical accuracy and current best practices
 - Include relevant code examples where helpful
+- Run validation tools mentioned in the [Style Guide](./STYLE-GUIDE.md) before submitting
 
 ## License
 
