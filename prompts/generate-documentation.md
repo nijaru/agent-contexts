@@ -57,6 +57,7 @@ VERSION: [version number/date]
 RELEASED: [YYYY-MM-DD] (if applicable for release notes)
 COMPATIBILITY: [runtime requirements, dependencies, breaking changes]
 DOCUMENTATION_SOURCE: [primary URL referenced]
+MODEL: [Claude-3.7-Sonnet-Thinking]
 ```
 
 ### Conceptual Overview
