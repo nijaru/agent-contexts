@@ -259,6 +259,29 @@ Choose the appropriate grouping based on documentation purpose:
    - Include security-focused code examples showing proper validation, escaping, etc.
    - Mark components requiring special security review with `[SECURITY-SENSITIVE]`
 
+10. **Links to Further Documentation:**
+    - Include links to official or authoritative documentation for each major component
+    - Provide links to more detailed API references when abbreviated information is presented
+    - Include links to tutorials, guides, and working examples when available
+    - Link to relevant specifications, RFCs, or standards documents that inform the implementation
+    - Add links to GitHub repositories, issue trackers, or discussion forums for community support
+    - Include version-specific documentation links when behavior differs across versions
+    - Format links consistently using markdown: `[Link text](URL)`
+    - Include link context to explain what information can be found at the destination
+    - Group related links under clear headings
+    - Include permanent links to documentation whenever possible (versioned URLs, archived pages)
+    - Add relevant community resources or third-party documentation when official sources are limited
+
+    Example:
+    ```markdown
+    **Further Documentation:**
+    - [Complete API Reference](https://example.com/api/v2/fetchData) - Detailed parameter options and advanced usage
+    - [Performance Optimization Guide](https://example.com/guides/performance) - Techniques for improving fetch performance
+    - [Error Handling Best Practices](https://example.com/guides/errors) - Comprehensive error handling strategies
+    - [GitHub Repository](https://github.com/example/data-client) - Source code and issue tracking
+    - [Specification](https://example.com/specs/v2.1) - Complete technical specification for v2.1
+    ```
+
 ## Domain-Specific Adaptations
 
 Adjust documentation focus based on technology domain:
@@ -310,12 +333,14 @@ For each documented component, verify:
 2. **Comprehension Test:** Can an LLM accurately answer questions about usage patterns and constraints based on this documentation?
 3. **Migration Test:** For changed components, can an LLM correctly migrate code from previous versions?
 4. **Completeness Test:** Does the documentation cover all parameters, return types, and behaviors?
+5. **Resource Access Test:** Can an LLM locate and access the right external resources through provided links?
 
 Example validation prompts:
 - "Using only this documentation, write code that [accomplishes task X]"
 - "Based on this documentation, explain what happens if [edge case Y occurs]"
 - "Update this code from version 1.x to use the new API described in the documentation"
 - "Identify any information gaps in this documentation that would prevent correct implementation"
+- "Using the links provided in the documentation, find more detailed information about [specific feature Z]"
 
 ## Final Verification
 
@@ -333,6 +358,9 @@ Before submitting the documentation:
 10. Ensure behavior annotations (thread-safety, blocking nature) are included where relevant
 11. Verify security considerations are documented for sensitive components
 12. Check that edge cases and anti-patterns are clearly identified
+13. Test all external links to ensure they resolve to the correct resources
+14. Ensure links are properly contextualized so their relevance is clear
+15. Verify that links to versioned documentation point to the correct version
 
 ## Documentation Type Selection
 
@@ -343,6 +371,7 @@ When generating documentation:
    - Use component status categories (`STABLE`, `EXPERIMENTAL`, `DEPRECATED`)
    - Organize by functional categories (Core Features, APIs, Data Types, etc.)
    - Emphasize component relationships and architecture
+   - Include links to comprehensive reference documentation
 
 2. **For release notes:**
    - Focus on changes between versions
@@ -351,6 +380,7 @@ When generating documentation:
    - Emphasize migration paths and version differences
    - Include specific release date information
    - Highlight backward compatibility considerations
+   - Link to both previous version documentation and new version detailed docs
 
 Choose the appropriate elements based on the documentation purpose while maintaining the overall structure for consistency.
 
@@ -472,3 +502,11 @@ import { fetchData } from '@example/data-client';
 const { data } = await fetchData<User[]>(url, { ...options, method: 'GET' });
 ```
 **Migration Difficulty:** Medium - requires updating imports and handling the new response structure
+
+**Further Documentation:**
+- [Complete API Reference](https://example.com/docs/api/fetchData) - Full parameter and return type definitions
+- [Retry Strategies Guide](https://example.com/docs/guides/retry-strategies) - Advanced configuration for retry behavior
+- [Caching Behavior](https://example.com/docs/guides/caching) - Detailed explanation of cache options
+- [TypeScript Integration](https://example.com/docs/guides/typescript) - Type-safe usage with TypeScript
+- [GitHub Repository](https://github.com/example/data-client) - Source code, issues, and examples
+- [Performance Benchmarks](https://example.com/docs/benchmarks) - Detailed performance comparison with alternatives
