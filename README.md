@@ -1,6 +1,6 @@
 # Agent Contexts
 
-A collection of markdown files to provide context to AI coding assistants like GitHub Copilot, Cursor, and Claude Code.
+A collection of markdown files that provide up-to-date context to AI coding assistants like GitHub Copilot, Cursor, and Claude Code.
 
 ## Purpose
 
@@ -23,6 +23,8 @@ This repository contains specialized documentation and reference materials forma
   <br>Go programming language, including release notes, standard library documentation, and best practices
 - [📁 `/languages/mojo`](./languages/mojo)
   <br>Mojo programming language, including built-ins, language guide, style guide, and standard library modules
+- [📁 `/languages/python`](./languages/python)
+  <br>Python programming language, including release notes for version 3.13.0
 
 #### Tools
 
@@ -30,6 +32,11 @@ This repository contains specialized documentation and reference materials forma
   <br>Python development tools
   - [📁 `/tools/python/uv`](./tools/python/uv/uv.md)
     <br> uv package installer and environment manager
+
+#### Libraries
+
+- [📁 `/libraries/tailwindcss`](./libraries/tailwindcss)
+  <br>Documentation for Tailwind CSS, including version 4 reference
 
 ### Planned Directories
 
