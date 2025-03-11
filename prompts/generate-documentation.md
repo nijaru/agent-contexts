@@ -1,4 +1,4 @@
-# Unified Technical Documentation Generator for LLM Coding Assistants
+# Technical Documentation Generator for LLM Coding Assistants
 
 This template creates structured, LLM-optimized documentation based on technical content for coding assistants. It works for both comprehensive documentation and version-specific release notes.
 
