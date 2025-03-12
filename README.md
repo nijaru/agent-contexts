@@ -28,10 +28,14 @@ This repository contains specialized documentation and reference materials forma
 
 #### Tools
 
+- [📁 `/tools/modular`](./tools/modular)
+  <br>Modular's AI development tools and ecosystems
+  - [📁 `/tools/modular/max`](./tools/modular/max)
+    <br>MAX (Modular AI Execution) engine and API documentation for AI model inference
 - [📁 `/tools/python`](./tools/python)
   <br>Python development tools
   - [📁 `/tools/python/uv`](./tools/python/uv/uv.md)
-    <br> uv package installer and environment manager
+    <br>uv package installer and environment manager
 
 #### Libraries
 
