@@ -58,3 +58,10 @@ This repository contains documentation for the Mojo programming language, design
 - [Mojo 25.1](changelogs/mojo-v25-1.md) - February 2025 release
 - [Mojo 24.6](changelogs/mojo-v24-6.md) - December 2024 release
 - [Mojo 24.5](changelogs/mojo-v24-5.md) - October 2024 release
+- [Mojo 24.4](changelogs/mojo-v24-4.md) - August 2024 release
+- [Mojo 24.3](changelogs/mojo-v24-3.md) - June 2024 release
+- [Mojo 24.2](changelogs/mojo-v24-2.md) - April 2024 release
+- [Mojo 24.1](changelogs/mojo-v24-1.md) - February 2024 release
+- [Mojo 0.7.0](changelogs/mojo-v0-7-0.md) - December 2023 release
+- [Mojo 0.6.1](changelogs/mojo-v0-6-1.md) - November 2023 release
+- [Mojo 0.6.0](changelogs/mojo-v0-6-0.md) - October 2023 release
