@@ -39,7 +39,7 @@ This repository contains specialized documentation and reference materials forma
 
 #### Libraries
 
-- [📁 `/libraries/tailwindcss`](./libraries/tailwindcss)
+- [📁 `/libraries/tailwindCSS`](./libraries/tailwindCSS)
   <br>Documentation for Tailwind CSS, including version 4 reference
 
 ### Planned Directories

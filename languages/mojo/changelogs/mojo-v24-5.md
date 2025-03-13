@@ -26,8 +26,8 @@ DOCUMENTATION_SOURCE: https://docs.modular.com/mojo/changelog/#v245-2024-09-13
 
 **Context:**
 - Mojo now allows implicit definitions of variables within a `fn` in the same way that has been allowed in a `def`
-- The `var` keyword is still allowed but is now optional
-- This makes `fn` and `def` more similar, though they still differ in other important ways
+- The `var` keyword is still optional but no longer required
+- This makes `fn` and `def` more similar, though they still differ in other important ways like memory control and implicit raising
 
 **Usage Example:**
 ```mojo
@@ -63,6 +63,7 @@ fn invalid_access():
 
 **Edge Cases and Anti-patterns:**
 - Argument exclusivity is not enforced for register-passable types since they are passed by copy
+- The compiler will warn about exclusivity violations in v24.5, but these will become errors in future releases
 
 ### Conditional Conformances [`STABLE`]
 
@@ -90,6 +91,29 @@ struct GenericThing[Type: AnyType]:  # Works with anything
 
 **Usage Example:**
 ```mojo
+# Define a generic type with conditional conformance
+trait StringableFormattableCollectionElement(Formattable, StringableCollectionElement):
+    ...
+
+struct SafeBuffer[T: CollectionElement]:
+    var _data: UnsafePointer[Optional[T]]
+    var size: Int
+
+    # Only available when T conforms to StringableFormattableCollectionElement
+    fn __str__[U: StringableFormattableCollectionElement](self: SafeBuffer[U]) -> String:
+        ret = String()
+        writer = ret._unsafe_to_formatter()
+        self.format_to(writer)
+        _ = writer^
+        return ret^
+
+    # Format implementation also requires the same conformance
+    fn format_to[U: StringableFormattableCollectionElement](
+        self: SafeBuffer[U], inout writer: Formatter
+    ):
+        # Implementation details...
+
+# Usage
 fn usage_example():
   var a = GenericThing[Int]()
   a.normal_method() # Ok, Int conforms to AnyType
@@ -154,12 +178,13 @@ fn efficiently_return_string(b: Bool) -> String as output:
 
 **Usage Example:**
 ```mojo
-fn efficiently_return_string(b: Bool) -> String as output:
-    if b:
-        output = "emplaced!"
-        mutate(output)
-        return
-    return "regular return"
+# Factory method using named result binding
+@staticmethod
+fn initialize_with_value(size: Int, value: T) -> Self as output:
+    output = SafeBuffer(size)
+    for i in range(size):
+        output.write(i, value)
+    return  # No value needed, as 'output' is already initialized
 ```
 
 **Edge Cases and Anti-patterns:**
@@ -340,6 +365,7 @@ struct Point(Stringable, Formattable):
 - `DTypePointer`, `LegacyPointer`, and `Pointer` have been removed - use `UnsafePointer` instead
 - Consolidates pointer types for more consistent memory management
 - Functions that previously took a `DTypePointer` now take an equivalent `UnsafePointer`
+- Simplifies the pointer system while retaining all necessary capabilities
 
 **Migration:**
 ```mojo
@@ -531,6 +557,13 @@ mojo test --filter "test_string.*"
 mojo test --debug
 ```
 
+**Migration Tip:**
+Add a testing task to your `mojoproject.toml` for easier test running:
+```toml
+[tasks]
+test = "mojo test test_*.mojo"
+```
+
 ### VS Code Support [`STABLE`]
 
 **Available Since:** `v24.5`
@@ -555,6 +588,24 @@ mojo test --debug
 - Now able to manage multiple VS Code windows
 - Supports a `break-on-raise` command to stop at any `raise` statements
 - Hides artificial function arguments `__result__` and `__error__` created by the compiler
+
+### Environment Variable `MOJO_PYTHON` [`STABLE`]
+
+**Available Since:** `v24.5`
+**Status:** Stable
+**Breaking:** No
+
+**Context:**
+- The environment variable `MOJO_PYTHON` can be pointed to an executable to pin Mojo to a specific version
+- Or a virtual environment to always have access to those Python modules
+- `MOJO_PYTHON_LIBRARY` still exists for environments with a dynamic `libpython` but no Python executable
+
+**Usage Example:**
+```bash
+export MOJO_PYTHON="/usr/bin/python3.11"
+# OR
+export MOJO_PYTHON="~/venv/bin/python"
+```
 
 ## Breaking Changes
 
@@ -640,24 +691,6 @@ var ptr = str.unsafe_ptr()  # Now returns UnsafePointer[UInt8]
 
 **Migration Difficulty:** Medium to Complex - may require significant restructuring of low-level memory management code
 
-### Environment Variable `MOJO_PYTHON` [`STABLE`]
-
-**Available Since:** `v24.5`
-**Status:** Stable
-**Breaking:** No
-
-**Context:**
-- The environment variable `MOJO_PYTHON` can be pointed to an executable to pin Mojo to a specific version
-- Or a virtual environment to always have access to those Python modules
-- `MOJO_PYTHON_LIBRARY` still exists for environments with a dynamic `libpython` but no Python executable
-
-**Usage Example:**
-```bash
-export MOJO_PYTHON="/usr/bin/python3.11"
-# OR
-export MOJO_PYTHON="~/venv/bin/python"
-```
-
 ## Fixed Issues
 
 - Fixed a crash in the Mojo Language Server when importing the current file
@@ -672,3 +705,9 @@ export MOJO_PYTHON="~/venv/bin/python"
 - Fixed outdated references to `let` in REPL documentation (#3336)
 - VS Code extension no longer caches the information of the selected MAX SDK
 - Mojo debugger now stops showing spurious warnings when parsing closures
+
+## Community Contributions
+
+Mojo v24.5 includes significant contributions from 11 community contributors who provided new features, bug fixes, documentation enhancements, and code refactoring:
+
+@jjvraw, @artemiogr97, @martinvuyk, @jayzhan211, @bgreni, @mzaks, @msaelices, @rd4com, @jiex-liu, @kszucs, @thatstoasty
