@@ -326,6 +326,70 @@ Adjust documentation focus based on technology domain:
 - Document backup and recovery procedures
 - Include replication and consistency guarantees
 
+### Programming Languages
+- Document core syntax and semantics comprehensively
+- Clearly explain memory management models
+- Include compilation, interpretation, and execution details
+- Document standard library components and APIs
+- Provide migration guidance between language versions
+- Explain interoperability with other languages
+- Document performance characteristics and optimization techniques
+- Include thread and concurrency models
+- Use consistent format for language features:
+  ```
+  ### Feature Name [`STABLE`|`EXPERIMENTAL`|`DEPRECATED`]
+  
+  **Package:** `package_name`
+  **Available Since:** `v1.2.3`
+  **Status:** Stable/Experimental/Deprecated
+  
+  **Signature:**
+  ```language
+  // Exact technical signature with parameter types
+  ```
+  
+  **Usage Example:**
+  ```language
+  // Complete, runnable example showing proper usage
+  ```
+  
+  **Context:** Purpose, patterns, alternatives, limitations
+  
+  **Edge Cases and Anti-patterns:**
+  ```language
+  // ANTI-PATTERN:
+  // Bad code example
+  
+  // CORRECT:
+  // Good code example
+  ```
+  ```
+- For changelogs, clearly mark changes as:
+  - [`NEW`] - New features
+  - [`CHANGED`] - Modified behavior
+  - [`DEPRECATED`] - Features being phased out
+  - [`REMOVED`] - Features no longer available
+  - [`IMPROVED`] - Enhanced existing functionality
+  - [`BREAKING`] - Changes that require code modification
+
+### Systems Programming Languages
+- Emphasize memory safety features and practices
+- Document explicit memory management patterns
+- Include low-level hardware interactions
+- Document compiler optimizations and inline assembly
+- Explain FFI (Foreign Function Interface) capabilities
+- Include representations of primitive types
+- Document ABI (Application Binary Interface) compatibility
+- Explain integration with system libraries
+- Detail ownership semantics and memory lifecycle:
+  - For languages with manual memory management, explain allocation/deallocation patterns
+  - For languages with ownership models, document transfer and borrowing semantics
+  - For languages with reference counting, explain reference cycle concerns
+- Document hardware acceleration capabilities:
+  - SIMD/vectorization features
+  - GPU acceleration interfaces
+  - Hardware-specific optimizations
+
 ## Testing Documentation Effectiveness
 
 For each documented component, verify:
@@ -373,15 +437,42 @@ When generating documentation:
    - Organize by functional categories (Core Features, APIs, Data Types, etc.)
    - Emphasize component relationships and architecture
    - Include links to comprehensive reference documentation
+   - Always include this metadata header for consistency:
+     ```
+     TITLE: [Component Name]
+     VERSION: [Version number where introduced or last significantly updated]
+     COMPATIBILITY: [Runtime requirements, dependencies, breaking changes]
+     DOCUMENTATION_SOURCE: [Primary URL referenced]
+     MODEL: [Claude-3.7-Sonnet-Thinking]
+     ```
 
 2. **For release notes:**
    - Focus on changes between versions
-   - Use change type categories (`NEW`, `CHANGED`, `DEPRECATED`, `REMOVED`)
+   - Use change type categories (`NEW`, `CHANGED`, `DEPRECATED`, `REMOVED`, `IMPROVED`, `BREAKING`)
    - Organize by change impact areas (Core Language, Standard Library, etc.)
    - Emphasize migration paths and version differences
    - Include specific release date information
    - Highlight backward compatibility considerations
    - Link to both previous version documentation and new version detailed docs
+   - Always include this metadata header for consistency:
+     ```
+     TITLE: [Technology/Language Name] - Version [X.Y.Z]
+     VERSION: [X.Y.Z]
+     RELEASED: [YYYY-MM-DD]
+     COMPATIBILITY: [Compatibility with previous versions, required updates]
+     DOCUMENTATION_SOURCE: [Primary URL referenced]
+     MODEL: [Claude-3.7-Sonnet-Thinking]
+     ```
+
+3. **For language features:**
+   - Document argument/parameter conventions and ownership semantics clearly
+   - For languages with type parameters or generics, document trait/interface requirements
+   - Include performance characteristics, especially for performance-critical features
+   - Provide clear examples of error handling approaches
+   - Document interoperability with other languages or ecosystems
+   - Distinguish between compile-time and runtime behaviors
+   - Include examples that demonstrate safe patterns and anti-patterns
+   - For languages with memory management, document lifecycle and resource handling
 
 Choose the appropriate elements based on the documentation purpose while maintaining the overall structure for consistency.
 

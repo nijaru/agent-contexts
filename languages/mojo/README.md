@@ -1,14 +1,26 @@
 # Mojo Documentation
 
-This repository contains documentation for the Mojo programming language.
+This repository contains documentation for the Mojo programming language, designed to help AI assistants understand and work with Mojo effectively.
 
-## Main Documentation Files
+## Getting Started
 
-- [Mojo Built-ins](mojo-built-ins.md) - Documentation of Mojo's built-in types and functions
-- [Mojo Language Guide](mojo-language-guide.md) - Guide to the Mojo programming language
-- [Mojo Style Guide](mojo-style-guide.md) - Recommended coding style for Mojo
+- [Mojo Language Basics](core/language-basics.md) - Essential Mojo language features and syntax
+- [Mojo Style Guide](core/style-guide.md) - Recommended coding style for Mojo
+- [What's New in Mojo](core/whats-new.md) - Latest Mojo features (2023-2025)
 
-## Standard Library Documentation
+## Core Language
+
+### Language Features
+- [Value Ownership and Lifecycle](core/value-ownership-lifecycle.md) - Mojo's ownership model and memory safety
+- [Traits System](core/traits.md) - Mojo's trait system for polymorphism
+- [Pointers and Memory](core/pointers.md) - Working with pointers and memory in Mojo
+- [Python Integration](core/python-integration.md) - Interoperability with Python
+- [Testing](core/testing.md) - Testing utilities and approaches
+
+### Built-in Components
+- [Built-ins](core/built-ins.md) - Documentation of Mojo's built-in types and functions
+
+## Standard Library
 
 ### Individual Modules
 - [base64](stdlib/base64.md) - Base64 and Base16 encoding and decoding
@@ -40,3 +52,9 @@ This repository contains documentation for the Mojo programming language.
 - [collections.set](stdlib/collections/set.md) - Unique element collection
 - [collections.strings](stdlib/collections/strings.md) - String handling utilities
 - [collections.traits](stdlib/collections/traits.md) - Core traits for collections
+
+## Changelogs
+
+- [Mojo 25.1](changelogs/mojo-v25-1.md) - February 2025 release
+- [Mojo 24.6](changelogs/mojo-v24-6.md) - December 2024 release
+- [Mojo 24.5](changelogs/mojo-v24-5.md) - October 2024 release
