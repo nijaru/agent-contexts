@@ -8,6 +8,10 @@ This repository contains documentation for the Mojo programming language, design
 - [Mojo Style Guide](core/style-guide.md) - Recommended coding style for Mojo
 - [What's New in Mojo](core/whats-new.md) - Latest Mojo features (2023-2025)
 
+## Examples
+
+- [Matrix Multiplication](examples/matmul.md) - Example of matrix multiplication in Mojo
+
 ## Core Language
 
 ### Language Features
