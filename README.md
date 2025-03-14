@@ -32,6 +32,8 @@ This repository contains specialized documentation and reference materials forma
   <br>Modular's AI development tools and ecosystems
   - [📁 `/tools/modular/max`](./tools/modular/max)
     <br>MAX (Modular AI Execution) engine and API documentation for AI model inference
+  - [📁 `/tools/modular/magic`](./tools/modular/magic)
+    <br>Magic package manager and virtual environment manager for Python and Mojo
 - [📁 `/tools/python`](./tools/python)
   <br>Python development tools
   - [📁 `/tools/python/uv`](./tools/python/uv/uv.md)
