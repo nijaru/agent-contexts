@@ -11,6 +11,9 @@ This repository contains documentation for the Mojo programming language, design
 ## Examples
 
 - [Matrix Multiplication](examples/matmul.md) - Example of matrix multiplication in Mojo
+- [Matrix Multiplication Source](examples/matmul.mojo) - Source code for matrix multiplication example
+- [Device Info](examples/deviceinfo.mojo) - Example for getting device information
+- [Mojo Project Configuration](examples/mojoproject.toml) - Example project configuration file
 
 ## Core Language
 
