@@ -114,3 +114,15 @@ SEQUENCE:
 ### Low Priority (Reference Only)
 - Advanced pattern files for specific optimization
 - Language reference docs for syntax lookup
+
+## SUBMODULE INTEGRATION
+
+### Pattern: Access from Submodule
+```
+IF repository_has_submodule:
+    @external/agent-contexts/AI_AGENT_INDEX.md     # This file
+    @external/agent-contexts/ERROR_PATTERNS.md     # Error patterns
+    Follow decision trees to specific pattern files
+```
+
+See `SUBMODULE_INTEGRATION.md` for complete integration patterns.

@@ -52,6 +52,21 @@ ERROR_ENCOUNTERED:
 - **Command Sequences**: Bash/tool automation scripts
 - **Reference Lookups**: Structured API/syntax information
 
+## Integration with Projects
+
+### Add as Submodule (Recommended)
+```bash
+git submodule add https://github.com/username/agent-contexts external/agent-contexts
+```
+
+Then AI agents can access patterns via:
+```
+@external/agent-contexts/AI_AGENT_INDEX.md    # Navigation
+@external/agent-contexts/ERROR_PATTERNS.md    # Error solutions
+```
+
+See [SUBMODULE_INTEGRATION.md](SUBMODULE_INTEGRATION.md) for complete patterns.
+
 ## Contributing
 
 Contributions are welcome! Please follow these guidelines:
