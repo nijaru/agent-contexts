@@ -54,9 +54,15 @@ ERROR_ENCOUNTERED:
 
 ## Integration with Projects
 
-### Add as Submodule (Recommended)
+### Quick Install
 ```bash
-git submodule add https://github.com/username/agent-contexts external/agent-contexts
+curl -s https://raw.githubusercontent.com/nickbytes/agent-contexts/main/install.sh | bash
+```
+
+### Manual Install
+```bash
+git submodule add https://github.com/nickbytes/agent-contexts external/agent-contexts
+git submodule update --init --recursive
 ```
 
 Then AI agents can access patterns via:
@@ -65,7 +71,7 @@ Then AI agents can access patterns via:
 @external/agent-contexts/ERROR_PATTERNS.md    # Error solutions
 ```
 
-See [SUBMODULE_INTEGRATION.md](SUBMODULE_INTEGRATION.md) for complete patterns.
+See [INSTALL.md](INSTALL.md) for copy-paste prompts and [PROMPT.md](PROMPT.md) for ready-to-use AI agent prompts.
 
 ## Contributing
 
