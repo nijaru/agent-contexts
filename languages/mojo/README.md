@@ -2,11 +2,11 @@
 
 This repository contains documentation for the Mojo programming language, designed to help AI assistants understand and work with Mojo effectively.
 
-## Getting Started
+## AI Agent Patterns
 
-- [Mojo Language Basics](core/language-basics.md) - Essential Mojo language features and syntax
-- [Mojo Style Guide](core/style-guide.md) - Recommended coding style for Mojo
-- [What's New in Mojo](core/whats-new.md) - Latest Mojo features (2023-2025)
+- [AI Patterns](AI_PATTERNS.md) - Pattern recognition for AI agents (❌ WRONG vs ✅ CORRECT)
+- [Advanced Patterns](advanced/) - High-performance optimization patterns
+- [Release Notes](releases/) - Version-specific changelogs and breaking changes
 
 ## Examples
 
@@ -17,15 +17,10 @@ This repository contains documentation for the Mojo programming language, design
 
 ## Core Language
 
-### Language Features
-- [Value Ownership and Lifecycle](core/value-ownership-lifecycle.md) - Mojo's ownership model and memory safety
-- [Traits System](core/traits.md) - Mojo's trait system for polymorphism
-- [Pointers and Memory](core/pointers.md) - Working with pointers and memory in Mojo
-- [Python Integration](core/python-integration.md) - Interoperability with Python
-- [Testing](core/testing.md) - Testing utilities and approaches
-
-### Built-in Components
-- [Built-ins](core/built-ins.md) - Documentation of Mojo's built-in types and functions
+### Reference Documentation
+- [Built-ins](core/built-ins.md) - Built-in types and functions reference
+- [Style Guide](core/style-guide.md) - Coding conventions and patterns  
+- [Packages](core/mojo-packages.md) - Package system reference
 
 ## Standard Library
 

@@ -1,56 +1,56 @@
-# Agent Contexts
+# AI Agent Context Repository
 
-A collection of markdown files that provide up-to-date context to AI coding assistants like GitHub Copilot, Cursor, and Claude Code.
+*Pattern-based documentation optimized for LLM consumption and code generation*
 
-## Purpose
+## START HERE: `@AI_AGENT_INDEX.md`
 
-This repository contains specialized documentation and reference materials formatted as markdown files that can be added as context when working with AI coding assistants. These files help the AI better understand specific programming languages, frameworks, libraries, development tools, and best practices.
+Navigation file with decision trees for loading the right patterns based on your task.
 
-## Use Cases
+## Repository Purpose
 
-- Enhancing AI code completion and suggestions
-- Providing domain-specific knowledge to AI coding agents
-- Standardizing documentation format for AI consumption
-- Improving accuracy of AI-assisted programming
+**Pure AI agent optimization** - No human-friendly prose, maximum pattern density:
+- **❌ WRONG vs ✅ CORRECT** examples for pattern recognition
+- **Decision trees** for algorithmic decision making  
+- **Command sequences** for automated execution
+- **Error → solution mappings** for problem resolution
 
-## Repository Structure
+## Structure for AI Agents
 
-### Active Directories
+### Universal Patterns (Load First)
+- `ERROR_PATTERNS.md` - Error recognition → solution mapping
+- `standards/AI_CODE_PATTERNS.md` - Code organization patterns
+- `standards/JJ_DECISION_TREES.md` - Version control decision logic
 
-#### Languages
+### Language-Specific Patterns
+- `languages/mojo/AI_PATTERNS.md` - Mojo-specific pattern recognition
+- `languages/mojo/advanced/` - High-performance optimization patterns  
+- `languages/mojo/core/` - Reference docs (built-ins, style guide)
 
-- [📁 `/languages/go`](./languages/go)
-  <br>Go programming language, including release notes, standard library documentation, and best practices
-- [📁 `/languages/mojo`](./languages/mojo)
-  <br>Mojo programming language, including built-ins, language guide, style guide, and standard library modules
-- [📁 `/languages/python`](./languages/python)
-  <br>Python programming language, including release notes for version 3.13.0
+### Tool-Specific Patterns
+- `tools/modular/` - MAX/Magic command sequences
+- `tools/python/uv/` - UV package manager automation
 
-#### Tools
+## AI Agent Usage
 
-- [📁 `/tools/modular`](./tools/modular)
-  <br>Modular's AI development tools and ecosystems
-  - [📁 `/tools/modular/max`](./tools/modular/max)
-    <br>MAX (Modular AI Execution) engine and API documentation for AI model inference
-  - [📁 `/tools/modular/magic`](./tools/modular/magic)
-    <br>Magic package manager and virtual environment manager for Python and Mojo
-- [📁 `/tools/python`](./tools/python)
-  <br>Python development tools
-  - [📁 `/tools/python/uv`](./tools/python/uv/uv.md)
-    <br>uv package installer and environment manager
+```
+TASK_START:
+1. @AI_AGENT_INDEX.md              # Load navigation
+2. Follow decision tree → specific pattern file
+3. Apply ❌ WRONG vs ✅ CORRECT patterns
+4. Execute command sequences
+5. Check ERROR_PATTERNS.md if issues
 
-#### Libraries
+ERROR_ENCOUNTERED:
+1. @ERROR_PATTERNS.md              # Find error → solution mapping
+2. Apply fix pattern
+3. Load language/tool-specific patterns if needed
+```
 
-- [📁 `/libraries/tailwindCSS`](./libraries/tailwindCSS)
-  <br>Documentation for Tailwind CSS, including version 4 reference
-
-### Planned Directories
-
-The following directories are planned but not yet implemented:
-
-- 📁 `/frameworks` - Web, mobile and other frameworks
-- 📁 `/patterns` - Design patterns and architecture
-- 📁 `/best-practices` - Coding standards and conventions
+## File Types
+- **Decision Trees**: IF/THEN logic for AI decision making
+- **Pattern Recognition**: Anti-pattern examples with corrections
+- **Command Sequences**: Bash/tool automation scripts
+- **Reference Lookups**: Structured API/syntax information
 
 ## Contributing
 
