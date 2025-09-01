@@ -55,32 +55,50 @@ ERROR_ENCOUNTERED:
 ## Installation
 
 ### One-Command Install (Recommended)
+
+**Smart location detection:**
+```bash
+curl -s https://raw.githubusercontent.com/nickbytes/agent-contexts/main/install-flexible.sh | bash
+```
+Analyzes your project structure and chooses the best location (`external/`, `docs/`, `tools/`, or root).
+
+**Fixed location (external/):**  
 ```bash
 curl -s https://raw.githubusercontent.com/nickbytes/agent-contexts/main/install.sh | bash
 ```
 
-This script automatically:
-- Adds submodule to `external/agent-contexts/`
-- Creates/updates your `CLAUDE.md` with entry point
-- Commits changes with descriptive message
+Both scripts automatically:
+- Add submodule at appropriate location
+- Create/update your `CLAUDE.md` with entry point  
+- Commit changes with descriptive message
 
 ### Manual Install
+Choose location based on your project structure:
 ```bash
+# Option 1: External dependencies
 git submodule add https://github.com/nickbytes/agent-contexts external/agent-contexts
+
+# Option 2: Documentation  
+git submodule add https://github.com/nickbytes/agent-contexts docs/agent-contexts
+
+# Option 3: Development tools
+git submodule add https://github.com/nickbytes/agent-contexts tools/agent-contexts
+
+# Then initialize and update CLAUDE.md
 git submodule update --init --recursive
-echo "@external/agent-contexts/AI_AGENT_INDEX.md" >> CLAUDE.md
+echo "@{chosen-path}/AI_AGENT_INDEX.md" >> CLAUDE.md
 ```
 
 ### Copy-Paste Prompts for AI Agents
 See [PROMPT.md](PROMPT.md) for ready-to-use prompts you can give AI agents to install this in any project.
 
 ### Verification
-After installation, AI agents can access:
+After installation, AI agents can access (adapt path to your chosen location):
 ```
-@external/agent-contexts/AI_AGENT_INDEX.md    # Navigation decision trees
-@external/agent-contexts/ERROR_PATTERNS.md    # Error → solution mappings
-@external/agent-contexts/standards/           # Universal patterns
-@external/agent-contexts/languages/           # Language-specific patterns
+@{submodule-path}/AI_AGENT_INDEX.md    # Navigation decision trees
+@{submodule-path}/ERROR_PATTERNS.md    # Error → solution mappings  
+@{submodule-path}/standards/           # Universal patterns
+@{submodule-path}/languages/           # Language-specific patterns
 ```
 
 Complete documentation: [INSTALL.md](INSTALL.md) | [SUBMODULE_INTEGRATION.md](SUBMODULE_INTEGRATION.md)

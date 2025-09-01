@@ -5,51 +5,71 @@
 Copy and paste this into any AI coding assistant:
 
 ```
-Add agent-contexts submodule for AI pattern recognition:
+Add agent-contexts submodule for AI pattern recognition. Choose appropriate location based on project structure:
 
-curl -s https://raw.githubusercontent.com/nickbytes/agent-contexts/main/install.sh | bash
+OPTION 1 - Projects with external/ or vendor/ directory:
+git submodule add https://github.com/nickbytes/agent-contexts external/agent-contexts
+
+OPTION 2 - Projects with docs/ or documentation structure:  
+git submodule add https://github.com/nickbytes/agent-contexts docs/agent-contexts
+
+OPTION 3 - Projects with tools/ or scripts/ directory:
+git submodule add https://github.com/nickbytes/agent-contexts tools/agent-contexts
+
+OPTION 4 - Root level (minimal projects):
+git submodule add https://github.com/nickbytes/agent-contexts agent-contexts
+
+Then: git submodule update --init --recursive
+
+Add to CLAUDE.md: @{chosen-path}/AI_AGENT_INDEX.md
 
 This provides:
-- Error → solution mappings (@external/agent-contexts/ERROR_PATTERNS.md)  
-- Code organization patterns (@external/agent-contexts/standards/AI_CODE_PATTERNS.md)
-- Version control workflows (@external/agent-contexts/standards/JJ_DECISION_TREES.md)
-- Language-specific patterns (@external/agent-contexts/languages/)
-
-Entry point: @external/agent-contexts/AI_AGENT_INDEX.md
-```
-
-## Manual Install Prompt
-
-For projects where scripts aren't allowed:
-
-```
-Add AI agent context patterns to this project:
-
-git submodule add https://github.com/nickbytes/agent-contexts external/agent-contexts
-git submodule update --init --recursive
-
-Then add to CLAUDE.md:
-@external/agent-contexts/AI_AGENT_INDEX.md
-
-This gives you access to:
-- ❌ WRONG vs ✅ CORRECT pattern examples
-- Decision trees for common coding choices  
-- Error message → solution mappings
-- Command sequences for automation
+- Error → solution mappings  
+- Code organization decision trees
+- Version control workflows
+- Language-specific optimization patterns
 ```
 
 ## Context Loading Prompt
 
-For AI agents working on projects with the submodule:
+For AI agents working on projects with the submodule (adapt path as needed):
 
 ```
-Load AI context patterns:
-@external/agent-contexts/AI_AGENT_INDEX.md
+Load AI context patterns from submodule:
+@{submodule-path}/AI_AGENT_INDEX.md
+
+Common paths:
+- @external/agent-contexts/AI_AGENT_INDEX.md
+- @docs/agent-contexts/AI_AGENT_INDEX.md  
+- @tools/agent-contexts/AI_AGENT_INDEX.md
+- @agent-contexts/AI_AGENT_INDEX.md
 
 Follow the decision trees to load relevant patterns based on current task.
 Apply ❌ WRONG vs ✅ CORRECT examples throughout.
-Use command sequences for automation.
-Check ERROR_PATTERNS.md if errors occur.
+```
+
+## Intelligent Install Prompt
+
+For AI agents that should decide location automatically:
+
+```
+Add AI agent context patterns as a submodule. Analyze the project structure and choose the most appropriate location:
+
+IF project has external/ or vendor/ directory:
+  → git submodule add https://github.com/nickbytes/agent-contexts external/agent-contexts
+ELIF project has docs/ or documentation/ directory:
+  → git submodule add https://github.com/nickbytes/agent-contexts docs/agent-contexts  
+ELIF project has tools/ or scripts/ directory:
+  → git submodule add https://github.com/nickbytes/agent-contexts tools/agent-contexts
+ELSE:
+  → git submodule add https://github.com/nickbytes/agent-contexts agent-contexts
+
+Then:
+git submodule update --init --recursive
+
+Add entry point to CLAUDE.md: @{chosen-path}/AI_AGENT_INDEX.md
+
+This provides decision trees, error patterns, and optimization guides for AI agents.
 ```
 
 ## Language-Specific Prompts
