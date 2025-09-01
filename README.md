@@ -52,26 +52,38 @@ ERROR_ENCOUNTERED:
 - **Command Sequences**: Bash/tool automation scripts
 - **Reference Lookups**: Structured API/syntax information
 
-## Integration with Projects
+## Installation
 
-### Quick Install
+### One-Command Install (Recommended)
 ```bash
 curl -s https://raw.githubusercontent.com/nickbytes/agent-contexts/main/install.sh | bash
 ```
+
+This script automatically:
+- Adds submodule to `external/agent-contexts/`
+- Creates/updates your `CLAUDE.md` with entry point
+- Commits changes with descriptive message
 
 ### Manual Install
 ```bash
 git submodule add https://github.com/nickbytes/agent-contexts external/agent-contexts
 git submodule update --init --recursive
+echo "@external/agent-contexts/AI_AGENT_INDEX.md" >> CLAUDE.md
 ```
 
-Then AI agents can access patterns via:
+### Copy-Paste Prompts for AI Agents
+See [PROMPT.md](PROMPT.md) for ready-to-use prompts you can give AI agents to install this in any project.
+
+### Verification
+After installation, AI agents can access:
 ```
-@external/agent-contexts/AI_AGENT_INDEX.md    # Navigation
-@external/agent-contexts/ERROR_PATTERNS.md    # Error solutions
+@external/agent-contexts/AI_AGENT_INDEX.md    # Navigation decision trees
+@external/agent-contexts/ERROR_PATTERNS.md    # Error → solution mappings
+@external/agent-contexts/standards/           # Universal patterns
+@external/agent-contexts/languages/           # Language-specific patterns
 ```
 
-See [INSTALL.md](INSTALL.md) for copy-paste prompts and [PROMPT.md](PROMPT.md) for ready-to-use AI agent prompts.
+Complete documentation: [INSTALL.md](INSTALL.md) | [SUBMODULE_INTEGRATION.md](SUBMODULE_INTEGRATION.md)
 
 ## Contributing
 
