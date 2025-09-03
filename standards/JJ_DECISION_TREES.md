@@ -13,7 +13,7 @@ ELSE:
     → jj new                        # Create sandbox
 ```
 
-## DECISION: AI Agent Made Mistakes
+### DECISION: AI Agent Made Mistakes
 ```
 IF minor_mistakes:
     → jj squash                     # Clean up commits
@@ -24,7 +24,7 @@ ELIF complete_disaster:
     → jj op restore --to=<id>       # Restore to known good
 ```
 
-## DECISION: Ready to Share Work
+### DECISION: Ready to Share Work
 ```
 IF commits_messy:
     → jj squash                     # Clean up first
@@ -35,18 +35,35 @@ ELSE:
 
 ## COMMAND SEQUENCES
 
-### SEQUENCE: AI Agent Session Start
+### SEQUENCE: AI Agent Auto-Management (Preferred)
 ```bash
+# AI agents should proactively manage jj at logical boundaries:
+
+# 1. Check if jj is initialized:
+if [ -d .jj ]; then
+    # Already initialized, create checkpoint
+    jj new -m "starting: [task description]"
+elif [ -d .git ]; then
+    # Git repo exists, colocate jj
+    jj git init --colocate
+    jj new -m "starting: [task description]"
+fi
+
+# 2. During work - checkpoint at major milestones:
+jj describe -m "feat: implemented X"     # After feature
+jj new -m "fix: addressing Y"            # Before switching tasks
+jj new -m "refactor: improving Z"        # Before major changes
+
+# 3. No cleanup needed - user can organize later
+# jj tracks everything automatically
+```
+
+### SEQUENCE: Manual Fallback
+```bash
+# If auto-management fails, use simple flow:
 jj st                               # Check current state
 jj new                              # Create sandbox
 # AI agent does work here
-```
-
-### SEQUENCE: AI Agent Session End  
-```bash
-jj squash                           # Clean up commits
-jj describe -m "AI: [task summary]" # Add description
-jj git push                         # Share if needed
 ```
 
 ### SEQUENCE: Emergency Recovery
