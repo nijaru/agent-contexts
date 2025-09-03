@@ -64,6 +64,105 @@ IF refactoring_existing → edit_in_place
 IF completely_different_domain → new_file_new_directory
 ```
 
+## COMMENT PATTERNS
+
+### ❌ WRONG vs ✅ CORRECT Comments
+
+**❌ WRONG: Obvious comments**
+```javascript
+// Increment i by 1
+i++;
+
+// Create a new array
+const items = [];
+
+// Return the user object
+return user;
+```
+
+**✅ CORRECT: Context-providing comments**
+```javascript
+// Handle edge case where API returns null user on first login attempt
+if (!user && isFirstLogin) {
+  return await retryUserFetch();
+}
+
+// Cache result for 5 minutes to reduce API calls during peak hours
+const cached = await cache.set(key, result, 300);
+
+// Business rule: Premium users get unlimited retries
+const maxRetries = user.isPremium ? Infinity : 3;
+```
+
+**❌ WRONG: Outdated/wrong comments**
+```javascript
+// Returns user email (actually returns full user object)
+function getUserData(id) {
+  return database.users.find(id);
+}
+```
+
+**✅ CORRECT: Accurate and maintained comments**
+```javascript
+// Returns complete user profile including preferences and settings
+function getUserData(id) {
+  return database.users.find(id);
+}
+```
+
+### Dev Notes Decision Tree
+```
+IF temporary_solution OR known_issue:
+    → TODO: [specific action needed]
+IF performance_concern OR optimization_opportunity:
+    → PERF: [what to optimize and why]
+IF potential_bug OR edge_case_not_handled:
+    → BUG: [describe issue and impact]
+IF security_concern OR requires_review:
+    → SECURITY: [describe risk]
+IF complex_business_logic OR non_obvious_requirement:
+    → NOTE: [explain context]
+IF quick_fix OR needs_proper_solution:
+    → HACK: [why this approach, what proper fix would be]
+```
+
+### Dev Note Patterns
+```javascript
+// TODO: Add input validation after user requirements finalized
+// TODO: @alice - needs review of algorithm efficiency
+// TODO: Replace with proper error handling when new API available
+
+// PERF: Consider caching here - called 1000+ times per request
+// PERF: O(n²) complexity, optimize with Set lookup for n > 100
+
+// BUG: Race condition possible if multiple users modify same resource
+// BUG: Memory leak when processing large files, investigate cleanup
+
+// SECURITY: Validate user permissions before allowing admin actions
+// SECURITY: Sanitize input to prevent XSS attacks
+
+// NOTE: Business rule - invoices locked after 24 hours per accounting
+// NOTE: Keep in sync with mobile app constants (version 2.1.4)
+
+// HACK: Temporary workaround for Safari CSS bug, remove when fixed
+// HACK: API doesn't support batch updates, doing individual calls
+```
+
+### Comment Maintenance Patterns
+```
+ON code_change:
+  IF comment_mentions_changed_behavior:
+    → UPDATE_COMMENT_OR_DELETE
+  IF function_signature_changed:
+    → UPDATE_PARAMETER_DESCRIPTIONS
+
+ON refactoring:
+  IF extracted_function:
+    → MOVE_RELEVANT_COMMENTS_TO_NEW_LOCATION
+  IF merged_functions:
+    → CONSOLIDATE_AND_UPDATE_COMMENTS
+```
+
 ## COMMAND PATTERNS
 
 ### Before Writing Code
@@ -75,15 +174,19 @@ rg "interface.*${DOMAIN}" .       # Check existing interfaces
 
 ### After Writing Code  
 ```bash
-rg "TODO|FIXME|HACK" .           # Find temporary code
-rg "console\.log|print\(" .       # Find debug statements
-rg "var |let " . | wc -l         # Count variable declarations
+rg "TODO|FIXME|HACK|BUG|PERF|SECURITY" .  # Find all dev notes
+rg "console\.log|print\(" .                # Find debug statements
+rg "/\*.*\*/" . -U                        # Find block comments to review
 ```
 
-### Performance Checks
+### Comment Quality Checks
 ```bash
-rg "for.*for.*for" .             # Find nested loops O(n³)
-rg "\.map\(.*\.map\(" .          # Find nested maps
-rg "JSON\.parse\(" .             # Find JSON operations
-rg "fs\.readFileSync" .          # Find blocking I/O
+# Find comments that might be obvious
+rg "// (Get|Set|Return|Create|Delete) " . 
+
+# Find potentially outdated comments
+rg "// (Old|Previous|Legacy|Temp)" .
+
+# Find empty or placeholder comments  
+rg "// (TODO|FIXME|HACK)$" .
 ```
