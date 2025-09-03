@@ -15,7 +15,7 @@ fi
 
 # Add submodule
 echo "📦 Adding agent-contexts submodule..."
-git submodule add https://github.com/nickbytes/agent-contexts external/agent-contexts
+git submodule add https://github.com/nijaru/agent-contexts external/agent-contexts
 
 # Initialize submodule
 echo "🔄 Initializing submodule..."
@@ -25,13 +25,13 @@ git submodule update --init --recursive
 if [ -f CLAUDE.md ]; then
     echo "📝 Updating existing CLAUDE.md..."
     if ! grep -q "external/agent-contexts" CLAUDE.md; then
-        echo "" >> CLAUDE.md
-        echo "# AI Agent Context" >> CLAUDE.md
-        echo "@external/agent-contexts/AI_AGENT_INDEX.md" >> CLAUDE.md
+        echo "" >>CLAUDE.md
+        echo "# AI Agent Context" >>CLAUDE.md
+        echo "@external/agent-contexts/AI_AGENT_INDEX.md" >>CLAUDE.md
     fi
 else
     echo "📝 Creating CLAUDE.md..."
-    cat > CLAUDE.md << 'EOF'
+    cat >CLAUDE.md <<'EOF'
 # Project Context for AI Agents
 
 ## AI Agent Patterns
@@ -39,7 +39,7 @@ else
 
 ## Project-Specific Information
 - Build: [add your build command]
-- Test: [add your test command]  
+- Test: [add your test command]
 - Lint: [add your lint command]
 EOF
 fi

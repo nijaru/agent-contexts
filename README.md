@@ -10,7 +10,7 @@ Navigation file with decision trees for loading the right patterns based on your
 
 **Pure AI agent optimization** - No human-friendly prose, maximum pattern density:
 - **❌ WRONG vs ✅ CORRECT** examples for pattern recognition
-- **Decision trees** for algorithmic decision making  
+- **Decision trees** for algorithmic decision making
 - **Command sequences** for automated execution
 - **Error → solution mappings** for problem resolution
 
@@ -23,7 +23,7 @@ Navigation file with decision trees for loading the right patterns based on your
 
 ### Language-Specific Patterns
 - `languages/mojo/AI_PATTERNS.md` - Mojo-specific pattern recognition
-- `languages/mojo/advanced/` - High-performance optimization patterns  
+- `languages/mojo/advanced/` - High-performance optimization patterns
 - `languages/mojo/core/` - Reference docs (built-ins, style guide)
 
 ### Tool-Specific Patterns
@@ -58,31 +58,31 @@ ERROR_ENCOUNTERED:
 
 **Smart location detection:**
 ```bash
-curl -s https://raw.githubusercontent.com/nickbytes/agent-contexts/main/install-flexible.sh | bash
+curl -s https://raw.githubusercontent.com/nijaru/agent-contexts/main/install-flexible.sh | bash
 ```
 Analyzes your project structure and chooses the best location (`external/`, `docs/`, `tools/`, or root).
 
-**Fixed location (external/):**  
+**Fixed location (external/):**
 ```bash
-curl -s https://raw.githubusercontent.com/nickbytes/agent-contexts/main/install.sh | bash
+curl -s https://raw.githubusercontent.com/nijaru/agent-contexts/main/install.sh | bash
 ```
 
 Both scripts automatically:
 - Add submodule at appropriate location
-- Create/update your `CLAUDE.md` with entry point  
+- Create/update your `CLAUDE.md` with entry point
 - Commit changes with descriptive message
 
 ### Manual Install
 Choose location based on your project structure:
 ```bash
 # Option 1: External dependencies
-git submodule add https://github.com/nickbytes/agent-contexts external/agent-contexts
+git submodule add https://github.com/nijaru/agent-contexts external/agent-contexts
 
-# Option 2: Documentation  
-git submodule add https://github.com/nickbytes/agent-contexts docs/agent-contexts
+# Option 2: Documentation
+git submodule add https://github.com/nijaru/agent-contexts docs/agent-contexts
 
 # Option 3: Development tools
-git submodule add https://github.com/nickbytes/agent-contexts tools/agent-contexts
+git submodule add https://github.com/nijaru/agent-contexts tools/agent-contexts
 
 # Then initialize and update CLAUDE.md
 git submodule update --init --recursive
@@ -96,7 +96,7 @@ See [PROMPT.md](PROMPT.md) for ready-to-use prompts you can give AI agents to in
 After installation, AI agents can access (adapt path to your chosen location):
 ```
 @{submodule-path}/AI_AGENT_INDEX.md    # Navigation decision trees
-@{submodule-path}/ERROR_PATTERNS.md    # Error → solution mappings  
+@{submodule-path}/ERROR_PATTERNS.md    # Error → solution mappings
 @{submodule-path}/standards/           # Universal patterns
 @{submodule-path}/languages/           # Language-specific patterns
 ```

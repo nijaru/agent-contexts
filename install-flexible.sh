@@ -21,7 +21,7 @@ if [ -d "external" ] || [ -d "vendor" ]; then
     SUBMODULE_PATH="external/agent-contexts"
     RATIONALE="Found external/ or vendor/ directory (common for dependencies)"
 elif [ -d "docs" ] || [ -d "documentation" ]; then
-    SUBMODULE_PATH="docs/agent-contexts"  
+    SUBMODULE_PATH="docs/agent-contexts"
     RATIONALE="Found docs/ directory (good fit for context patterns)"
 elif [ -d "tools" ] || [ -d "scripts" ]; then
     SUBMODULE_PATH="tools/agent-contexts"
@@ -36,7 +36,7 @@ echo "💡 Rationale: $RATIONALE"
 
 # Add submodule
 echo "📦 Adding agent-contexts submodule..."
-git submodule add https://github.com/nickbytes/agent-contexts "$SUBMODULE_PATH"
+git submodule add https://github.com/nijaru/agent-contexts "$SUBMODULE_PATH"
 
 # Initialize submodule
 echo "🔄 Initializing submodule..."
@@ -46,13 +46,13 @@ git submodule update --init --recursive
 if [ -f CLAUDE.md ]; then
     echo "📝 Updating existing CLAUDE.md..."
     if ! grep -q "$SUBMODULE_PATH" CLAUDE.md; then
-        echo "" >> CLAUDE.md
-        echo "# AI Agent Context" >> CLAUDE.md
-        echo "@$SUBMODULE_PATH/AI_AGENT_INDEX.md" >> CLAUDE.md
+        echo "" >>CLAUDE.md
+        echo "# AI Agent Context" >>CLAUDE.md
+        echo "@$SUBMODULE_PATH/AI_AGENT_INDEX.md" >>CLAUDE.md
     fi
 else
     echo "📝 Creating CLAUDE.md..."
-    cat > CLAUDE.md << EOF
+    cat >CLAUDE.md <<EOF
 # Project Context for AI Agents
 
 ## AI Agent Patterns
@@ -60,7 +60,7 @@ else
 
 ## Project-Specific Information
 - Build: [add your build command]
-- Test: [add your test command]  
+- Test: [add your test command]
 - Lint: [add your lint command]
 EOF
 fi
@@ -80,7 +80,7 @@ echo "✅ Installation complete!"
 echo ""
 echo "🎯 AI agents can now access:"
 echo "   @$SUBMODULE_PATH/AI_AGENT_INDEX.md    # Navigation"
-echo "   @$SUBMODULE_PATH/ERROR_PATTERNS.md    # Error solutions"  
+echo "   @$SUBMODULE_PATH/ERROR_PATTERNS.md    # Error solutions"
 echo "   @$SUBMODULE_PATH/standards/           # Universal patterns"
 echo ""
 echo "💡 To update patterns later:"
