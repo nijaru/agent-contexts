@@ -25,13 +25,13 @@ IF build_system_task:
 ### Choose Documentation by Language
 ```
 IF working_with_mojo:
-    → languages/mojo/AI_PATTERNS.md        # Mojo pattern recognition
-    → languages/mojo/advanced/             # Performance patterns
+    → languages/mojo/MOJO_PATTERNS.md      # Consolidated Mojo patterns
     → languages/mojo/CODING_ASSISTANT_INTEGRATION.md  # AI setup
 IF working_with_python:
-    → languages/python/                    # Python patterns
+    → languages/python/python-3-13.md      # Python 3.13 patterns
+    → tools/python/uv/uv.md                # UV package manager
 IF working_with_go:
-    → languages/go/                        # Go patterns
+    → languages/go/go-1-23.md              # Go 1.23 patterns
 ```
 
 ### Choose by Context Type
@@ -42,10 +42,9 @@ IF setting_up_workflow:
     → GITHUB_PROJECTS.md                   # Project tracking
 IF debugging_issue:
     → ERROR_PATTERNS.md                    # Error diagnosis
-    → languages/mojo/AI_PATTERNS.md        # Mojo-specific fixes
+    → languages/mojo/MOJO_PATTERNS.md      # Mojo-specific fixes
 IF optimizing_performance:
-    → languages/mojo/advanced/             # Advanced patterns  
-    → languages/mojo/AI_PATTERNS.md        # Quick fixes
+    → languages/mojo/MOJO_PATTERNS.md      # Performance patterns
 IF integrating_ai_assistant:
     → languages/mojo/CODING_ASSISTANT_INTEGRATION.md  # Setup guides
     → tools/modular/BUILD_PATTERNS.md      # Build commands

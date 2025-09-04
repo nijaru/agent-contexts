@@ -83,7 +83,7 @@ ERROR_TYPE:
 ### SEQUENCE: Debug Mojo Build Errors
 ```bash
 # 1. Capture error
-magic run mojo build main.mojo 2>&1 | tee build_error.log
+pixi run mojo build main.mojo 2>&1 | tee build_error.log
 
 # 2. Extract error patterns
 grep -E "error:|note:" build_error.log
@@ -97,7 +97,7 @@ grep -E "error:|note:" build_error.log
 ### SEQUENCE: Optimize Performance
 ```bash
 # 1. Profile current code
-magic run mojo build -O3 --profile main.mojo
+pixi run mojo build -O3 --profile main.mojo
 
 # 2. Identify bottlenecks
 # AI loads: @external/agent-contexts/languages/mojo/advanced/MOJO_BEST_PRACTICES.md
@@ -140,7 +140,7 @@ documentation:
 ## STATE RECOGNITION PATTERNS
 ```
 PROJECT_STATE:
-  No .magic/ → Run: magic init
+  No pixi.toml → Run: pixi init
   No pyproject.toml → Missing MAX project config
   Build errors → Check ERROR_PATTERNS.md
   Slow performance → Check MOJO_BEST_PRACTICES.md
