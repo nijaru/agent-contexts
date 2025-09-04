@@ -64,7 +64,8 @@ Analyzes your project structure and chooses the best location (`external/`, `doc
 
 **Fixed location (external/):**
 ```bash
-curl -s https://raw.githubusercontent.com/nijaru/agent-contexts/main/install.sh | bash
+# Add as submodule (replace USERNAME with your fork)
+git submodule add https://github.com/USERNAME/agent-contexts external/agent-contexts
 ```
 
 Both scripts automatically:
@@ -76,7 +77,7 @@ Both scripts automatically:
 Choose location based on your project structure:
 ```bash
 # Option 1: External dependencies
-git submodule add https://github.com/nijaru/agent-contexts external/agent-contexts
+git submodule add https://github.com/USERNAME/agent-contexts external/agent-contexts
 
 # Option 2: Documentation
 git submodule add https://github.com/nijaru/agent-contexts docs/agent-contexts
