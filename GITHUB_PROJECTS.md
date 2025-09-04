@@ -2,224 +2,365 @@
 
 *Decision trees and automation patterns for AI agent project management*
 
+## CORE PRINCIPLE: Projects vs Issues
+
+**GitHub Projects** = Internal development planning and task tracking
+- Sprint planning and milestone management  
+- Feature implementation tasks
+- Architecture decisions and technical work
+- AI agent development coordination
+
+**GitHub Issues** = External problem reporting and community interaction
+- Bug reports from users
+- Feature requests from community  
+- Problems that need fixing
+- External contributions and discussions
+
+**TodoWrite** = AI session task tracking with optional Project sync
+
 ## DECISION: AI Agent Task Classification
 ```
-IF task_complexity > 3_steps OR multi_session_work:
-    → CREATE_GITHUB_ISSUE
-ELIF collaborative_work OR needs_tracking:
-    → CREATE_GITHUB_ISSUE  
-ELIF simple_fix OR single_file_change:
+IF development_task OR feature_implementation OR sprint_planning:
+    → CREATE_PROJECT_ITEM (in development project)
+ELIF bug_report OR user_request OR external_contribution:
+    → CREATE_GITHUB_ISSUE (for community/support)
+ELIF simple_single_session_task:
     → USE_TODOWRITE_ONLY
 ELSE:
     → WORK_DIRECTLY
 ```
 
-## DECISION: TodoWrite → GitHub Sync
+**Key Decision Factors:**
+- Multi-session work → Project Item
+- External visibility needed → Issue  
+- Internal planning → Project Item
+- User-reported problem → Issue
+- AI development task → Project Item
+
+## DECISION: TodoWrite → GitHub Project Sync
 ```
-IF todo_status == "completed" AND github_issue_exists:
-    → gh issue close ISSUE_NUM --comment "✅ AI: [todo.content]"
-ELIF todo_status == "in_progress" AND github_issue_exists:
-    → gh issue comment ISSUE_NUM --body "🤖 Working: [todo.activeForm]"
-ELIF todo_items > 5 AND no_github_issues:
-    → BULK_CREATE_ISSUES
+IF todo_status == "completed" AND project_item_exists:
+    → gh project item-edit PROJECT_NUM --id ITEM_ID --field "Status" --value "Done"
+ELIF todo_status == "in_progress" AND project_item_exists:
+    → gh project item-edit PROJECT_NUM --id ITEM_ID --field "Status" --value "In Progress"  
+ELIF complex_todo_items > 3 AND no_project_items:
+    → BULK_CREATE_PROJECT_ITEMS
 ```
 
 ## DECISION: Session Management
 ```
 IF new_ai_session AND existing_project:
-    → gh issue list --assignee @me --state open --project PROJECT_ID
-    → MAP_TO_TODOWRITE
+    → gh project item-list PROJECT_NUM --owner @me --format json
+    → MAP_ACTIVE_ITEMS_TO_TODOWRITE
 ELIF session_complete AND todos_finished:
-    → SYNC_GITHUB_STATUS
-    → CLOSE_COMPLETED_ISSUES
+    → SYNC_PROJECT_ITEM_STATUS
+    → MARK_COMPLETED_ITEMS_DONE
 ELIF session_interrupted:
-    → UPDATE_ISSUE_COMMENTS_WITH_PROGRESS
+    → UPDATE_PROJECT_ITEM_STATUS_TO_IN_PROGRESS
+```
+
+## PROJECT SETUP COMMANDS
+
+### Create Development Project
+```bash
+# One-time setup for AI agent development
+gh project create --owner @me --title "Aircher Development"
+
+# Get project number for future commands  
+PROJECT_NUM=$(gh project list --owner @me --format json | jq -r '.[] | select(.title=="Aircher Development") | .number')
+echo "Project Number: $PROJECT_NUM"
+```
+
+### Add Required Scopes
+```bash
+# Required permissions for project management
+gh auth refresh --hostname github.com -s read:project -s project
 ```
 
 ## COMMAND SEQUENCES
 
-### SEQUENCE: AI Session Start with GitHub Sync
+### SEQUENCE: AI Session Start with Project Sync
 ```bash
-# Load existing work into TodoWrite
-PROJECT_ID=1  # Main project
-gh issue list --assignee @me --state open --project $PROJECT_ID \
-  --json number,title,body,labels --jq '.[] | {number, title, body}' > /tmp/github_issues.json
+# Load existing development work into TodoWrite
+PROJECT_NUM=1  # Your development project number
 
-# Map to TodoWrite items
-while IFS= read -r issue; do
-  TITLE=$(echo $issue | jq -r '.title')
-  NUM=$(echo $issue | jq -r '.number')
-  echo "TodoWrite item: $TITLE (GitHub #$NUM)"
-done < /tmp/github_issues.json
+# Get active project items  
+ACTIVE_ITEMS=$(gh project item-list $PROJECT_NUM --owner @me --format json)
+
+# Convert to TodoWrite format
+echo "$ACTIVE_ITEMS" | jq -r '.[] | select(.status != "Done") | "\(.title) (Project #\(.number))"' > /tmp/ai_todos.txt
+
+# Load into TodoWrite session
+while IFS= read -r item; do
+  echo "TodoWrite item: $item"
+done < /tmp/ai_todos.txt
 ```
 
-### SEQUENCE: TodoWrite → GitHub Issue Creation
+### SEQUENCE: TodoWrite → Project Item Creation  
 ```bash
-# Batch create issues from TodoWrite items
-create_github_issues_from_todos() {
-  local TODO_ITEMS=("$@")
+# Create project items from TodoWrite tasks
+create_project_items_from_todos() {
+  local PROJECT_NUM="$1"
+  local TODO_ITEMS=("${@:2}")
+  
   for todo in "${TODO_ITEMS[@]}"; do
-    ISSUE_NUM=$(gh issue create \
+    # Create draft issue first (project items need to link to something)
+    ISSUE_URL=$(gh issue create \
       --title "AI: $todo" \
-      --body "Auto-created from AI agent TodoWrite\n\n- [ ] $todo" \
-      --label "ai-generated" \
+      --body "Development task created from AI agent TodoWrite
+
+## Task Description
+$todo
+
+## Status  
+- [ ] In Progress
+- [ ] Testing
+- [ ] Complete
+
+Auto-created for project management." \
       --assignee @me \
-      --project 1 \
-      --json number -q '.number')
-    echo "Created issue #$ISSUE_NUM for: $todo"
+      --draft)
+    
+    # Add to project
+    gh project item-add $PROJECT_NUM --url "$ISSUE_URL"
+    echo "Created project item for: $todo"
   done
 }
 ```
 
-### SEQUENCE: Sync Completed Work
+### SEQUENCE: Sync Completed Work to Project
 ```bash
-# Close GitHub issues for completed todos
-sync_completed_todos() {
-  local COMPLETED_TODOS=("$@")
+# Update project item status for completed todos
+sync_completed_todos_to_project() {
+  local PROJECT_NUM="$1"
+  local COMPLETED_TODOS=("${@:2}")
+  
   for todo in "${COMPLETED_TODOS[@]}"; do
-    # Find matching GitHub issue
-    ISSUE_NUM=$(gh issue list --search "AI: $todo in:title" \
-      --json number -q '.[0].number')
+    # Find matching project item
+    ITEM_ID=$(gh project item-list $PROJECT_NUM --format json | \
+      jq -r --arg todo "$todo" '.[] | select(.title | contains($todo)) | .id')
     
-    if [ "$ISSUE_NUM" != "null" ]; then
-      gh issue close $ISSUE_NUM \
-        --comment "✅ AI agent completed: $todo"
+    if [ "$ITEM_ID" != "null" ] && [ "$ITEM_ID" != "" ]; then
+      # Mark as Done in project
+      gh project item-edit $PROJECT_NUM --id "$ITEM_ID" \
+        --field "Status" --value "Done"
+        
+      # Close associated issue if exists
+      ISSUE_NUM=$(gh project item-list $PROJECT_NUM --format json | \
+        jq -r --arg id "$ITEM_ID" '.[] | select(.id == $id) | .content.number')
+      
+      if [ "$ISSUE_NUM" != "null" ]; then
+        gh issue close "$ISSUE_NUM" \
+          --comment "✅ AI agent completed: $todo"
+      fi
+      
+      echo "✅ Completed: $todo"
     fi
   done
 }
 ```
 
-### SEQUENCE: AI Agent Complex Feature Implementation
+### SEQUENCE: AI Agent Feature Development (Full Lifecycle)
 ```bash
-# Break complex task into GitHub-tracked subtasks
-implement_complex_feature() {
+# Complete development workflow for major features
+implement_feature_with_project_tracking() {
   local FEATURE="$1"
-  local PARENT_ISSUE=$(gh issue create \
-    --title "AI: Implement $FEATURE" \
-    --body "Complex feature broken into AI agent subtasks" \
-    --label "ai-epic" \
-    --assignee @me \
-    --project 1 \
-    --json number -q '.number')
+  local PROJECT_NUM="$2"
   
-  # Create subtask issues
+  echo "🚀 Starting feature development: $FEATURE"
+  
+  # 1. Create epic issue for the feature
+  EPIC_ISSUE=$(gh issue create \
+    --title "Feature: $FEATURE" \
+    --body "# $FEATURE Implementation
+
+## Overview
+AI agent feature development with full project tracking.
+
+## Development Phases
+- [ ] Architecture Design
+- [ ] Core Implementation  
+- [ ] Testing & Validation
+- [ ] Documentation
+- [ ] Integration
+
+## Success Criteria
+- Feature works as specified
+- Tests pass
+- Documentation updated
+- Performance benchmarks met
+
+Epic for project management." \
+    --assignee @me)
+    
+  # 2. Add epic to project
+  EPIC_ITEM_ID=$(gh project item-add $PROJECT_NUM --url "$EPIC_ISSUE" --format json | jq -r '.id')
+  
+  # 3. Create subtasks
   declare -a SUBTASKS=(
-    "Research existing $FEATURE patterns"
-    "Design $FEATURE architecture" 
+    "Research existing $FEATURE patterns and approaches"
+    "Design $FEATURE architecture and interfaces"
     "Implement core $FEATURE functionality"
-    "Add $FEATURE tests"
+    "Add comprehensive $FEATURE tests"
     "Update $FEATURE documentation"
+    "Performance optimization for $FEATURE"
+    "Integration testing with existing systems"
   )
   
+  echo "📋 Creating subtasks..."
   for subtask in "${SUBTASKS[@]}"; do
-    gh issue create \
+    SUBTASK_ISSUE=$(gh issue create \
       --title "AI: $subtask" \
-      --body "Subtask of #$PARENT_ISSUE\n\n- [ ] $subtask" \
-      --label "ai-subtask" \
-      --assignee @me \
-      --project 1
+      --body "Subtask of $EPIC_ISSUE
+
+## Task
+$subtask
+
+## Acceptance Criteria
+- [ ] Implementation complete
+- [ ] Tests passing  
+- [ ] Code reviewed
+- [ ] Documentation updated
+
+Part of $FEATURE development." \
+      --assignee @me)
+      
+    # Add subtask to project
+    gh project item-add $PROJECT_NUM --url "$SUBTASK_ISSUE"
   done
   
-  echo "Created parent issue #$PARENT_ISSUE with ${#SUBTASKS[@]} subtasks"
+  echo "✅ Created epic and ${#SUBTASKS[@]} subtasks for $FEATURE"
+  echo "📊 Project URL: https://github.com/users/$(gh api user --jq .login)/projects/$PROJECT_NUM"
 }
 ```
 
 ## AI AGENT PATTERNS
 
-### ❌ WRONG vs ✅ CORRECT Integration
+### ❌ WRONG vs ✅ CORRECT Project Management
 
-**❌ WRONG: Create GitHub issue for every todo**
+**❌ WRONG: Use Issues for development tasks**
 ```bash
-# Creates noise, overwhelming project board
-for todo in "${ALL_TODOS[@]}"; do
-  gh issue create --title "$todo"
-done
+# Creates noise in issue tracker, confuses external users
+gh issue create --title "Refactor authentication module"
+gh issue create --title "Add error handling to parser"
+gh issue create --title "Optimize search performance"
 ```
 
-**✅ CORRECT: Strategic issue creation**
+**✅ CORRECT: Use Projects for development, Issues for problems**
 ```bash
-# Only create issues for complex, trackable work
-IF todo_complexity > simple_task:
-  gh issue create --title "AI: $todo" --label "ai-generated"
-ELSE:
-  # Keep in TodoWrite only
-FI
+# Development planning in Projects
+create_project_items_from_todos 1 \
+  "Refactor authentication module" \
+  "Add error handling to parser" \
+  "Optimize search performance"
+
+# Issues only for bugs/user requests  
+gh issue create --title "Bug: Authentication fails on Windows" \
+  --body "User reported authentication not working..."
 ```
 
-**❌ WRONG: Ignore existing GitHub issues**
+**❌ WRONG: Mix development tasks with user issues**
 ```bash
-# AI agent starts fresh, duplicates work
-TodoWrite new items without checking GitHub
+# Issues list becomes unusable for external contributors
+Issues:
+#1: "Bug: Crash on startup" (user report)
+#2: "Refactor database layer" (internal dev task) 
+#3: "Feature request: Dark mode" (user request)
+#4: "Update CI pipeline" (internal dev task)
 ```
 
-**✅ CORRECT: Sync with existing work**
+**✅ CORRECT: Clear separation of concerns**
 ```bash
-# Check for existing issues first
-gh issue list --assignee @me --state open | \
-  while read issue; do
+# Issues for external/community interaction
+Issues:
+#1: "Bug: Crash on startup" (user report)
+#2: "Feature request: Dark mode" (user request)
+
+# Projects for internal development planning
+Project "Aircher Development":
+- Refactor database layer (In Progress)
+- Update CI pipeline (Todo)
+- Add error handling (Done)
+```
+
+**❌ WRONG: Ignore existing project structure**
+```bash
+# AI agent creates duplicate work
+TodoWrite items without checking existing project items
+```
+
+**✅ CORRECT: Sync with existing project state**
+```bash
+# Load existing project items into TodoWrite
+gh project item-list 1 --format json | \
+  jq -r '.[] | select(.status != "Done") | .title' | \
+  while read item; do
     # Add to TodoWrite as pending
+    echo "Existing: $item"
   done
-```
-
-**❌ WRONG: Manual status updates**
-```bash
-# Requires human intervention
-gh issue edit 123 --add-label "in-progress"
-```
-
-**✅ CORRECT: Automated status sync**
-```bash
-# TodoWrite status changes trigger GitHub updates
-on_todo_status_change() {
-  local TODO="$1" STATUS="$2"
-  case $STATUS in
-    "in_progress") update_github_status "$TODO" "In Progress" ;;
-    "completed")   close_github_issue "$TODO" ;;
-  esac
-}
 ```
 
 ## AI SESSION MANAGEMENT
 
-### PATTERN: Session Initialization
+### PATTERN: Session Initialization with Project Sync
 ```bash
-# AI agent session starts
-ai_session_init() {
+# AI agent session starts with project awareness
+ai_session_init_with_project() {
+  local PROJECT_NUM="$1"
+  
   echo "🤖 AI Agent Session Start: $(date)"
+  echo "📊 Loading project: $PROJECT_NUM"
   
-  # 1. Check for existing work
-  OPEN_ISSUES=$(gh issue list --assignee @me --state open --project 1 --json number,title)
+  # 1. Get current project state
+  ACTIVE_ITEMS=$(gh project item-list $PROJECT_NUM --owner @me --format json)
   
-  # 2. Convert to TodoWrite format
-  echo "$OPEN_ISSUES" | jq -r '.[] | "\(.title) (GitHub #\(.number))"' > /tmp/ai_todos.txt
+  # 2. Load in-progress items to TodoWrite
+  echo "$ACTIVE_ITEMS" | jq -r '.[] | select(.status == "In Progress") | "\(.title) (Project Item)"' > /tmp/ai_active.txt
   
-  # 3. Mark session active
-  gh issue comment --body "🤖 AI agent session started" $(echo "$OPEN_ISSUES" | jq -r '.[0].number' 2>/dev/null || echo "")
+  # 3. Load todo items to TodoWrite  
+  echo "$ACTIVE_ITEMS" | jq -r '.[] | select(.status == "Todo") | "\(.title) (Project Item)"' > /tmp/ai_todo.txt
+  
+  # 4. Show summary
+  IN_PROGRESS=$(cat /tmp/ai_active.txt | wc -l)
+  TODO_COUNT=$(cat /tmp/ai_todo.txt | wc -l)
+  
+  echo "📈 Status: $IN_PROGRESS in progress, $TODO_COUNT pending"
+  echo "🔗 Project: https://github.com/users/$(gh api user --jq .login)/projects/$PROJECT_NUM"
 }
 ```
 
-### PATTERN: Session Completion
+### PATTERN: Session Completion with Project Updates
 ```bash
-# AI agent session ends
-ai_session_complete() {
-  local COMPLETED_TODOS=("$@")
+# AI agent session ends with full project sync
+ai_session_complete_with_project() {
+  local PROJECT_NUM="$1"
+  local COMPLETED_TODOS=("${@:2}")
   
   echo "🤖 AI Agent Session Complete: $(date)"
   
-  # 1. Close completed GitHub issues
+  # 1. Update completed items in project
   for todo in "${COMPLETED_TODOS[@]}"; do
-    sync_completed_todo "$todo"
+    sync_completed_todos_to_project $PROJECT_NUM "$todo"
   done
   
-  # 2. Update in-progress issues
+  # 2. Update in-progress items status
   for todo in "${IN_PROGRESS_TODOS[@]}"; do
-    update_github_progress "$todo"
+    update_project_item_status $PROJECT_NUM "$todo" "In Progress"
   done
   
-  # 3. Create issues for new pending todos
+  # 3. Add new todos as project items if complex
   for todo in "${NEW_TODOS[@]}"; do
-    create_github_issue_if_complex "$todo"
+    if is_complex_task "$todo"; then
+      create_project_items_from_todos $PROJECT_NUM "$todo"
+    fi
   done
+  
+  # 4. Generate session summary
+  echo "✅ Session Summary:"
+  echo "   - Completed: ${#COMPLETED_TODOS[@]} items"
+  echo "   - In Progress: ${#IN_PROGRESS_TODOS[@]} items"  
+  echo "   - New Items: ${#NEW_TODOS[@]} items"
+  echo "🔗 Updated project: https://github.com/users/$(gh api user --jq .login)/projects/$PROJECT_NUM"
 }
 ```
 
@@ -228,62 +369,95 @@ ai_session_complete() {
 | AI Agent Error | GitHub Command Fix | When |
 |----------------|--------------------|----- |
 | `No GitHub token` | `gh auth login --scopes project` | First run |
-| `Issue already exists` | `gh issue list --search "title:$TITLE"` | Before create |
-| `Project not found` | `gh project list --owner @me` | Check project ID |
+| `Missing project scope` | `gh auth refresh -s project -s read:project` | Project operations |
+| `Project not found` | `gh project list --owner @me` | Check project exists |
+| `Item not found` | `gh project item-list PROJECT_NUM` | Verify item exists |
 | `Rate limit exceeded` | `sleep 60 && retry_command` | Batch operations |
-| `TodoWrite out of sync` | `ai_session_sync_github` | After interruption |
+| `TodoWrite out of sync` | `ai_session_init_with_project PROJECT_NUM` | After interruption |
 
-## AUTOMATION TRIGGERS
+## PROJECT STATUS MANAGEMENT
 
-### GitHub Actions Integration
-```yaml
-# .github/workflows/ai-agent-sync.yml
-name: AI Agent Sync
-on:
-  issue_comment:
-    types: [created]
+### Status Field Values
+```bash
+# Standard project status values
+PROJECT_STATUSES=("Todo" "In Progress" "Done" "Backlog")
+
+# Update item status
+update_project_item_status() {
+  local PROJECT_NUM="$1"
+  local ITEM_TITLE="$2"  
+  local NEW_STATUS="$3"
   
-jobs:
-  ai-sync:
-    if: contains(github.event.comment.body, '🤖')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Parse AI agent comment
-        run: |
-          COMMENT="${{ github.event.comment.body }}"
-          if [[ $COMMENT == *"Working:"* ]]; then
-            gh issue edit ${{ github.event.issue.number }} --add-label "ai-in-progress"
-          elif [[ $COMMENT == *"Completed:"* ]]; then
-            gh issue close ${{ github.event.issue.number }}
-          fi
+  ITEM_ID=$(gh project item-list $PROJECT_NUM --format json | \
+    jq -r --arg title "$ITEM_TITLE" '.[] | select(.title | contains($title)) | .id')
+    
+  if [ "$ITEM_ID" != "null" ]; then
+    gh project item-edit $PROJECT_NUM --id "$ITEM_ID" \
+      --field "Status" --value "$NEW_STATUS"
+    echo "Updated $ITEM_TITLE → $NEW_STATUS"
+  fi
+}
+```
+
+### Priority and Labels Management
+```bash
+# Add custom fields for project management
+setup_project_fields() {
+  local PROJECT_NUM="$1"
+  
+  # Priority field (if not exists)
+  gh project field-create $PROJECT_NUM --name "Priority" \
+    --type "single_select" \
+    --options "P0,P1,P2,P3" 2>/dev/null || true
+    
+  # Phase field for development tracking
+  gh project field-create $PROJECT_NUM --name "Phase" \
+    --type "single_select" \
+    --options "Design,Implementation,Testing,Review,Done" 2>/dev/null || true
+}
 ```
 
 ## INTEGRATION UTILITIES
 
-### TodoWrite ↔ GitHub Sync Functions
+### TodoWrite ↔ Project Sync Functions
 ```bash
 # Core integration functions for AI agents
 
-# Convert GitHub issues to TodoWrite format
-github_to_todowrite() {
-  gh issue list --assignee @me --state open --project 1 \
-    --json number,title,body,labels | \
-    jq -r '.[] | "\(.title) (GitHub #\(.number))"'
+# Convert project items to TodoWrite format
+project_to_todowrite() {
+  local PROJECT_NUM="$1"
+  gh project item-list $PROJECT_NUM --owner @me --format json | \
+    jq -r '.[] | select(.status != "Done") | "\(.title) (Project #\(.number))"'
 }
 
-# Create GitHub issue from TodoWrite item
-todowrite_to_github() {
-  local TODO="$1"
-  local COMPLEXITY="$2"  # simple|complex|epic
+# Create project item from TodoWrite task
+todowrite_to_project() {
+  local PROJECT_NUM="$1"
+  local TODO="$2"
+  local COMPLEXITY="$3"  # simple|complex|epic
   
   case $COMPLEXITY in
     "complex"|"epic")
-      gh issue create \
+      # Create issue first
+      ISSUE_URL=$(gh issue create \
         --title "AI: $TODO" \
-        --body "Auto-created from AI agent TodoWrite" \
-        --label "ai-generated" \
-        --assignee @me \
-        --project 1
+        --body "Auto-created from AI agent TodoWrite
+
+## Task
+$TODO
+
+## Status
+- [ ] Todo
+- [ ] In Progress  
+- [ ] Testing
+- [ ] Done
+
+Development task for project tracking." \
+        --assignee @me)
+      
+      # Add to project
+      gh project item-add $PROJECT_NUM --url "$ISSUE_URL"
+      echo "Created project item: $TODO"
       ;;
     *)
       echo "Keep in TodoWrite only: $TODO"
@@ -291,42 +465,38 @@ todowrite_to_github() {
   esac
 }
 
-# Sync TodoWrite completion to GitHub
-sync_completed_todo() {
-  local TODO="$1"
-  local ISSUE_NUM=$(gh issue list --search "AI: $TODO in:title" \
-    --state open --json number -q '.[0].number')
+# Sync TodoWrite completion to project
+sync_completed_todo_to_project() {
+  local PROJECT_NUM="$1"
+  local TODO="$2"
   
-  if [ "$ISSUE_NUM" != "null" ] && [ "$ISSUE_NUM" != "" ]; then
-    gh issue close $ISSUE_NUM \
-      --comment "✅ AI agent completed: $TODO"
-  fi
+  update_project_item_status $PROJECT_NUM "$TODO" "Done"
 }
 ```
 
 ## QUICK COMMAND REFERENCE
 
-### Essential AI Agent Commands
+### Essential AI Agent Project Commands
 ```bash
-# Session initialization
-gh issue list --assignee @me --state open --project 1 --json number,title
+# Project setup
+gh project create --owner @me --title "Development Project"
+gh auth refresh --hostname github.com -s project -s read:project
 
-# Create AI task issue
-gh issue create --title "AI: [task]" --label "ai-generated" --assignee @me --project 1
+# Session management  
+gh project item-list PROJECT_NUM --owner @me --format json
+PROJECT_SUMMARY=$(gh project item-list 1 --format json | jq -r 'group_by(.status) | map({status: .[0].status, count: length}) | .[]')
 
-# Update issue progress
-gh issue comment [ISSUE_NUM] --body "🤖 Working: [current_status]"
+# Task creation
+gh issue create --title "AI: [task]" --assignee @me
+gh project item-add PROJECT_NUM --url ISSUE_URL
 
-# Close completed issue
-gh issue close [ISSUE_NUM] --comment "✅ AI agent completed"
+# Status updates
+gh project item-edit PROJECT_NUM --id ITEM_ID --field "Status" --value "In Progress"
+gh project item-edit PROJECT_NUM --id ITEM_ID --field "Status" --value "Done"
 
-# Bulk status check
-gh issue list --search "label:ai-generated assignee:@me" --state open --json number,title,labels
-
-# Clean up AI issues
-gh issue list --label "ai-generated" --state closed --search "closed:<30days" \
-  --json number | jq -r '.[].number' | \
-  xargs -I {} gh issue edit {} --add-label "archived"
+# Bulk operations
+gh project item-list PROJECT_NUM --format json | jq -r '.[] | select(.status == "Todo") | .id' | \
+  xargs -I {} gh project item-edit PROJECT_NUM --id {} --field "Status" --value "In Progress"
 ```
 
 ### MCP Integration Setup
@@ -346,28 +516,58 @@ gh issue list --label "ai-generated" --state closed --search "closed:<30days" \
 
 ### User Settings (nijaru)
 ```bash
-# Default configuration for AI agent integration
+# Default configuration for AI agent project integration
 USER="nijaru"
-DEFAULT_PROJECT=1
-AI_LABELS=("ai-generated" "ai-in-progress" "ai-completed")
+DEFAULT_PROJECT=1  # Main development project
+PROJECT_STATUSES=("Todo" "In Progress" "Done" "Backlog")
 PRIORITY_LABELS=("P0" "P1" "P2" "P3")
-TYPE_LABELS=("feat" "bug" "task" "docs" "perf" "chore")
+PHASE_LABELS=("Design" "Implementation" "Testing" "Review" "Done")
 
-# AI-specific branch naming
-AI_BRANCH_PREFIX="ai/"
-BRANCH_FORMAT="${AI_BRANCH_PREFIX}[issue-num]-[description]"
+# Project field setup
+setup_project_fields $DEFAULT_PROJECT
 ```
 
 ### State Transitions for AI Agents
 ```
-TodoWrite "pending" → GitHub "Backlog"
-TodoWrite "in_progress" → GitHub "In Progress" + comment
-TodoWrite "completed" → GitHub "Done" + close issue
+TodoWrite "pending" → Project "Todo"
+TodoWrite "in_progress" → Project "In Progress" 
+TodoWrite "completed" → Project "Done" + close linked issue
 
-AI Session Start → Load GitHub issues to TodoWrite
-AI Session End → Sync TodoWrite status to GitHub
-AI Session Interrupt → Update GitHub with current progress
+AI Session Start → Load active project items to TodoWrite
+AI Session End → Sync TodoWrite status to project items
+AI Session Interrupt → Update project items to "In Progress"
+```
+
+## WORKFLOW EXAMPLES
+
+### Example 1: Feature Development Workflow
+```bash
+# 1. Start feature development
+implement_feature_with_project_tracking "Python Intelligence Bridge" 1
+
+# 2. AI session works on subtasks (TodoWrite tracks progress)
+# 3. Complete subtasks and sync to project
+
+# 4. Session end - mark completed items  
+ai_session_complete_with_project 1 \
+  "Research existing Python bridge patterns" \
+  "Design Python bridge architecture"
+```
+
+### Example 2: Sprint Planning Workflow
+```bash
+# 1. Load current sprint items
+SPRINT_ITEMS=$(gh project item-list 1 --format json | \
+  jq -r '.[] | select(.status != "Done") | .title')
+
+# 2. Estimate and prioritize in project board
+
+# 3. AI sessions work through items with TodoWrite sync
+
+# 4. Sprint review - check completion status
+gh project item-list 1 --format json | \
+  jq -r 'group_by(.status) | map({status: .[0].status, count: length})'
 ```
 
 ---
-*Optimized for AI agent automation and integration patterns*
+*Optimized for proper GitHub Projects workflow with AI agent automation*
