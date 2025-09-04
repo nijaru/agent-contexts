@@ -1,0 +1,13 @@
+# Local scripts
+update-submodules.py
+update-all-submodules.sh
+
+# Python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
