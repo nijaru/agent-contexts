@@ -163,6 +163,77 @@ ON refactoring:
     → CONSOLIDATE_AND_UPDATE_COMMENTS
 ```
 
+## CODE REMOVAL PATTERNS
+
+### Clean Deletion Principle
+Version control tracks history - code should be production-ready without removal artifacts.
+
+### ❌ WRONG vs ✅ CORRECT Code Removal
+
+**❌ WRONG: Leaving placeholder comments**
+```javascript
+// gc section removed
+// const gcConfig = { ... }
+// function runGC() { ... }
+
+// authentication removed
+// import { auth } from './auth';
+// auth.initialize();
+```
+
+**✅ CORRECT: Clean deletion**
+```javascript
+// Just delete the code completely
+// Version control preserves the history
+```
+
+**❌ WRONG: Commenting out code blocks**
+```python
+def process_data(data):
+    validate(data)
+    # transform(data)  # removed old transformation
+    # clean(data)      # deprecated cleaning step
+    return data
+```
+
+**✅ CORRECT: Remove cleanly or document why**
+```python
+def process_data(data):
+    validate(data)
+    # Note: Direct transformation removed in v2.0 - data now pre-processed by upstream service
+    return data
+```
+
+### Code Removal Decision Tree
+```
+IF removing_code_section:
+    IF temporary_removal_for_testing:
+        → Use feature flag or environment variable
+    ELIF permanent_removal:
+        → Delete completely, rely on version control
+    ELIF keeping_for_reference:
+        → Move to documentation or archive file
+    
+IF modifying_configuration:
+    IF removing_config_section:
+        → Delete section entirely
+    ELIF disabling_feature:
+        → Set to false/disabled, don't comment out
+```
+
+### Anti-Pattern Examples
+```
+❌ # Section removed
+❌ // Deleted authentication logic  
+❌ /* Removed old implementation */
+❌ // BEGIN REMOVED CODE ... // END REMOVED CODE
+❌ # --- DELETED ---
+❌ // gc configuration removed here
+
+✅ [Clean file with no removal artifacts]
+✅ [Use git log/blame to see what was removed]
+```
+
 ## COMMAND PATTERNS
 
 ### Before Writing Code

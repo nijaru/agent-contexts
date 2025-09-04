@@ -83,6 +83,18 @@ ELIF IO_wait_high:
 
 ## ERROR PREVENTION PATTERNS
 
+### Code Removal Anti-Patterns
+```
+❌ WRONG: Leaving removal artifacts
+# gc section removed
+// authentication removed  
+/* old implementation */
+
+✅ CORRECT: Clean deletion
+# Delete code completely
+# Version control tracks history
+```
+
 ### Before Committing Code
 ```bash
 # Check for common issues
@@ -90,6 +102,7 @@ rg "TODO|FIXME|HACK" .              # Temporary code
 rg "console\.log|print\(" .          # Debug statements  
 rg "password|secret|key" . -i        # Hardcoded secrets
 rg "localhost|127\.0\.0\.1" .        # Local URLs
+rg "# (removed|deleted)" . -i       # Removal artifacts
 ```
 
 ### Before Deploying
