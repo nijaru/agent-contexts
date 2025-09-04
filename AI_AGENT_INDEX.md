@@ -6,20 +6,29 @@
 
 ### Choose Documentation by Task Type
 ```
-IF error_encountered:
-    → ERROR_PATTERNS.md                    # Universal error → solution mapping
+IF starting_new_project:
+    → patterns/AI_AGENT_PLAYBOOK_TEMPLATE.md  # Optimal workflow setup
+IF tracking_work_session:
+    → patterns/SESSION_LOG_TEMPLATE.md        # Context persistence
+IF documenting_discovery:
+    → patterns/DISCOVERIES_LOG_TEMPLATE.md    # Learning capture
+IF making_architecture_decision:
+    → patterns/DECISION_LOG_TEMPLATE.md       # Decision rationale
+IF fixing_error:
+    → patterns/ERROR_FIXES_TEMPLATE.md        # Problem → solution
+    → ERROR_PATTERNS.md                       # Universal error mapping
 IF code_organization_task:
-    → standards/AI_CODE_PATTERNS.md        # Universal naming/structure patterns
+    → standards/AI_CODE_PATTERNS.md          # Universal naming/structure
 IF version_control_needed:
-    → standards/JJ_DECISION_TREES.md       # VCS workflow decisions
+    → standards/JJ_DECISION_TREES.md         # VCS workflow decisions
 IF github_project_management:
-    → GITHUB_PROJECTS.md                   # AI agent GitHub integration
+    → GITHUB_PROJECTS.md                      # AI agent GitHub integration
 IF language_specific_task:
-    → languages/{language}/                # Language-specific patterns
+    → languages/{language}/                   # Language-specific patterns
 IF tool_specific_task:  
-    → tools/{tool}/                        # Tool-specific command sequences
+    → tools/{tool}/                          # Tool-specific command sequences
 IF build_system_task:
-    → tools/modular/BUILD_PATTERNS.md      # Bazel/Pixi patterns
+    → tools/modular/BUILD_PATTERNS.md        # Bazel/Pixi patterns
 ```
 
 ### Choose Documentation by Language
