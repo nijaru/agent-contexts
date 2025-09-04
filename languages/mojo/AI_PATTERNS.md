@@ -1,5 +1,29 @@
 # Mojo AI Agent Patterns
 
+## DECISION: AI Assistant Integration
+```
+IF starting_new_max_project:
+    → Use @docs.modular.com/llms-mojo.txt
+    → Create .cursor/rules for project conventions
+ELIF fixing_mojo_errors:
+    → Reference llms-full.txt for complete context
+ELIF optimizing_performance:
+    → Check advanced/MOJO_BEST_PRACTICES.md patterns
+```
+
+## PATTERN: Coding Assistant Setup
+```bash
+# For Cursor/Windsurf/Claude Code
+PROJECT_ROOT="."
+mkdir -p $PROJECT_ROOT/.cursor
+curl -o $PROJECT_ROOT/.cursor/rules https://docs.modular.com/max/cursorules
+echo "@docs.modular.com/llms-mojo.txt" >> $PROJECT_ROOT/.cursor/context
+
+# For Claude Code specifically  
+echo "# MAX/Mojo Project Context" >> CLAUDE.md
+echo "@external/agent-contexts/languages/mojo/" >> CLAUDE.md
+```
+
 ## PATTERN: Type Conversions
 TRIGGER: Converting Python types to Mojo
 ACTION: Use capitalized Mojo equivalents
