@@ -35,7 +35,7 @@ setup_ai_context() {
 EOF
 
   # 3. Add agent-contexts submodule
-  git submodule add https://github.com/nijaru/agent-contexts external/agent-contexts
+  git submodule add https://github.com/USERNAME/agent-contexts external/agent-contexts
   git submodule update --init --recursive
 }
 ```

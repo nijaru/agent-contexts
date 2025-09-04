@@ -1,118 +1,74 @@
-# AI Agent Context Repository
+# Agent Contexts
 
-*Pattern-based documentation optimized for LLM consumption and code generation*
+**Actionable patterns for AI-assisted development**
 
-## START HERE: `@AI_AGENT_INDEX.md`
+Version: 0.0.1
 
-Navigation file with decision trees for loading the right patterns based on your task.
+## What is this?
 
-## Repository Purpose
+A curated collection of decision trees, error patterns, and best practices optimized for AI coding assistants (Claude, Cursor, Copilot, etc.). These patterns help AI agents make better decisions and write better code.
 
-**Pure AI agent optimization** - No human-friendly prose, maximum pattern density:
-- **❌ WRONG vs ✅ CORRECT** examples for pattern recognition
-- **Decision trees** for algorithmic decision making
-- **Command sequences** for automated execution
-- **Error → solution mappings** for problem resolution
+## Quick Start
 
-## Structure for AI Agents
-
-### Universal Patterns (Load First)
-- `ERROR_PATTERNS.md` - Error recognition → solution mapping
-- `standards/AI_CODE_PATTERNS.md` - Code organization patterns
-- `standards/JJ_DECISION_TREES.md` - Version control decision logic
-
-### Language-Specific Patterns
-- `languages/mojo/AI_PATTERNS.md` - Mojo-specific pattern recognition
-- `languages/mojo/advanced/` - High-performance optimization patterns
-- `languages/mojo/core/` - Reference docs (built-ins, style guide)
-
-### Tool-Specific Patterns
-- `tools/modular/` - MAX/Magic command sequences
-- `tools/python/uv/` - UV package manager automation
-
-## AI Agent Usage
-
-```
-TASK_START:
-1. @AI_AGENT_INDEX.md              # Load navigation
-2. Follow decision tree → specific pattern file
-3. Apply ❌ WRONG vs ✅ CORRECT patterns
-4. Execute command sequences
-5. Check ERROR_PATTERNS.md if issues
-
-ERROR_ENCOUNTERED:
-1. @ERROR_PATTERNS.md              # Find error → solution mapping
-2. Apply fix pattern
-3. Load language/tool-specific patterns if needed
-```
-
-## File Types
-- **Decision Trees**: IF/THEN logic for AI decision making
-- **Pattern Recognition**: Anti-pattern examples with corrections
-- **Command Sequences**: Bash/tool automation scripts
-- **Reference Lookups**: Structured API/syntax information
-
-## Installation
-
-### One-Command Install (Recommended)
-
-**Smart location detection:**
+### 1. Add as Submodule
 ```bash
-curl -s https://raw.githubusercontent.com/nijaru/agent-contexts/main/install-flexible.sh | bash
-```
-Analyzes your project structure and chooses the best location (`external/`, `docs/`, `tools/`, or root).
-
-**Fixed location (external/):**
-```bash
-# Add as submodule (replace USERNAME with your fork)
 git submodule add https://github.com/USERNAME/agent-contexts external/agent-contexts
-```
-
-Both scripts automatically:
-- Add submodule at appropriate location
-- Create/update your `CLAUDE.md` with entry point
-- Commit changes with descriptive message
-
-### Manual Install
-Choose location based on your project structure:
-```bash
-# Option 1: External dependencies
-git submodule add https://github.com/USERNAME/agent-contexts external/agent-contexts
-
-# Option 2: Documentation
-git submodule add https://github.com/nijaru/agent-contexts docs/agent-contexts
-
-# Option 3: Development tools
-git submodule add https://github.com/nijaru/agent-contexts tools/agent-contexts
-
-# Then initialize and update CLAUDE.md
 git submodule update --init --recursive
-echo "@{chosen-path}/AI_AGENT_INDEX.md" >> CLAUDE.md
 ```
 
-### Copy-Paste Prompts for AI Agents
-See [PROMPT.md](PROMPT.md) for ready-to-use prompts you can give AI agents to install this in any project.
+### 2. Reference in Your AI Assistant
 
-### Verification
-After installation, AI agents can access (adapt path to your chosen location):
-```
-@{submodule-path}/AI_AGENT_INDEX.md    # Navigation decision trees
-@{submodule-path}/ERROR_PATTERNS.md    # Error → solution mappings
-@{submodule-path}/standards/           # Universal patterns
-@{submodule-path}/languages/           # Language-specific patterns
+**For Claude Code (CLAUDE.md):**
+```markdown
+@external/agent-contexts/AI_AGENT_INDEX.md
 ```
 
-Complete documentation: [INSTALL.md](INSTALL.md) | [SUBMODULE_INTEGRATION.md](SUBMODULE_INTEGRATION.md)
+**For Cursor/Windsurf (.cursorules):**
+```
+Include: @external/agent-contexts/AI_AGENT_INDEX.md
+```
+
+## Core Files
+
+| File | Purpose |
+|------|---------|
+| `AI_AGENT_INDEX.md` | Entry point with navigation decision trees |
+| `ERROR_PATTERNS.md` | Error message → solution mappings |
+| `standards/AI_CODE_PATTERNS.md` | Code organization and naming patterns |
+| `standards/JJ_DECISION_TREES.md` | Version control workflow patterns |
+
+## Language-Specific Patterns
+
+- `languages/mojo/MOJO_PATTERNS.md` - Mojo performance and memory patterns
+- `languages/python/PYTHON_PATTERNS.md` - Modern Python with UV patterns
+- `languages/go/GO_PATTERNS.md` - Go concurrency and testing patterns
+
+## Key Principles
+
+1. **Actionable over Informational** - Every pattern leads to a specific action
+2. **Timeless over Trendy** - Focus on patterns that won't become outdated
+3. **Universal over Personal** - All patterns work for any developer
+4. **Concise over Comprehensive** - Optimized for AI context windows
+
+## Usage Pattern
+
+```
+IF error_encountered:
+    → Check ERROR_PATTERNS.md
+IF organizing_code:
+    → Check standards/AI_CODE_PATTERNS.md
+IF language_specific_task:
+    → Check languages/[language]/[LANGUAGE]_PATTERNS.md
+```
 
 ## Contributing
 
-Contributions are welcome! Please follow these guidelines:
-- Use clear, concise language optimized for AI consumption
-- Format using standard markdown following our [Style Guide](./STYLE-GUIDE.md)
-- Focus on technical accuracy and current best practices
-- Include relevant code examples where helpful
-- Run validation tools mentioned in the [Style Guide](./STYLE-GUIDE.md) before submitting
+1. Keep patterns actionable and timeless
+2. Use decision tree format (IF/THEN)
+3. Include ❌ WRONG vs ✅ CORRECT examples
+4. Remove outdated content regularly
+5. No personal information or specific usernames
 
 ## License
 
-This repository is licensed under the [Apache License, Version 2.0](./LICENSE). You are free to use, modify, and distribute these context files for any AI coding assistant in accordance with the terms of this license.
+MIT - Use these patterns freely in your projects

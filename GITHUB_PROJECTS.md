@@ -514,10 +514,10 @@ gh project item-list PROJECT_NUM --format json | jq -r '.[] | select(.status == 
 
 ## PROJECT CONFIGURATION
 
-### User Settings (nijaru)
+### User Settings (Example)
 ```bash
 # Default configuration for AI agent project integration
-USER="nijaru"
+USER="your-username"
 DEFAULT_PROJECT=1  # Main development project
 PROJECT_STATUSES=("Todo" "In Progress" "Done" "Backlog")
 PRIORITY_LABELS=("P0" "P1" "P2" "P3")
