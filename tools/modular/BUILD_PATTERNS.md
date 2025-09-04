@@ -6,8 +6,6 @@ IF working_in_modular_repo:
     → ./bazelw build //...
 ELIF has_pixi_toml:
     → pixi install && pixi run [task]
-ELIF has_magic_project:
-    → magic run mojo [file]
 ELSE:
     → mojo [file]
 ```
