@@ -36,16 +36,14 @@ def find_repos_with_submodule(base_path: str = "~/github") -> list[Path]:
             dirs[:] = [d for d in dirs if d not in skip_dirs and not d.startswith('.')]
             
             # Check for .gitmodules
-            for file in files:
-                if file.name == '.gitmodules':
-                    gitmodules_path = root / file
-                    try:
-                        content = gitmodules_path.read_text()
-                        if 'agent-contexts' in content:
-                            repos.append(root)
-                            break
-                    except (OSError, IOError):
-                        continue
+            if '.gitmodules' in files:
+                gitmodules_path = root / '.gitmodules'
+                try:
+                    content = gitmodules_path.read_text()
+                    if 'agent-contexts' in content:
+                        repos.append(root)
+                except (OSError, IOError):
+                    continue
     except AttributeError:
         print("❌ Error: This script requires Python 3.12+ for Path.walk()")
         print("   Please upgrade Python or use: uv run python update_submodules.py")

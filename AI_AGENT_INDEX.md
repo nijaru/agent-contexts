@@ -19,6 +19,8 @@ IF fixing_error:
     → ERROR_PATTERNS.md                       # Universal error mapping
 IF code_organization_task:
     → standards/AI_CODE_PATTERNS.md          # Universal naming/structure
+IF documentation_organization_task:
+    → standards/DOC_PATTERNS.md              # Project doc structure patterns
 IF version_control_needed:
     → standards/JJ_DECISION_TREES.md         # VCS workflow decisions
 IF github_project_management:
