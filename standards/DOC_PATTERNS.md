@@ -78,14 +78,14 @@ IF scattered_md_files → Consolidate by type:
     - Component docs → component/README.md
 ```
 
-## Naming Conventions
+## Naming Decision Trees
 
 ```
-Strategic docs: ALL_CAPS.md (ROADMAP.md, STRATEGY.md)
-AI context: AGENTS.md or CLAUDE.md  
-Internal tracking: ALL_CAPS.md (NOW.md, DECISIONS.md, KNOWLEDGE.md)
-Technical docs: kebab-case.md (api-reference.md)
-Component docs: README.md
+IF strategic_document → ALL_CAPS.md (ROADMAP.md, STRATEGY.md)
+IF ai_context_file → AGENTS.md or CLAUDE.md  
+IF internal_tracking → internal/ALL_CAPS.md (internal/NOW.md, internal/DECISIONS.md)
+IF technical_documentation → kebab-case.md (api-reference.md)
+IF component_documentation → README.md
 ```
 
 ## AI Context Loading Patterns
