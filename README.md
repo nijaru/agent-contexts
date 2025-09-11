@@ -35,12 +35,19 @@ Include: @external/agent-contexts/AI_AGENT_INDEX.md
 | `AI_AGENT_INDEX.md` | Entry point with navigation decision trees |
 | `ERROR_PATTERNS.md` | Error message → solution mappings |
 | `standards/AI_CODE_PATTERNS.md` | Code organization and naming patterns |
-| `standards/JJ_DECISION_TREES.md` | Version control workflow patterns |
+| `standards/DOC_PATTERNS.md` | Documentation structure patterns |
+
+## Tool-Specific Patterns
+
+- `tools/jj/JJ_PATTERNS.md` - JJ version control workflows
+- `tools/github/GITHUB_PATTERNS.md` - GitHub project management
+- `tools/python/UV_PATTERNS.md` - UV package manager patterns
+- `tools/modular/BUILD_PATTERNS.md` - Bazel/Pixi build patterns
 
 ## Language-Specific Patterns
 
 - `languages/mojo/MOJO_PATTERNS.md` - Mojo performance and memory patterns
-- `languages/python/PYTHON_PATTERNS.md` - Modern Python with UV patterns
+- `languages/python/PYTHON_PATTERNS.md` - Modern Python patterns
 - `languages/go/GO_PATTERNS.md` - Go concurrency and testing patterns
 
 ## Key Principles

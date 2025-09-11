@@ -24,7 +24,7 @@ IF documentation_organization_task:
 IF version_control_needed:
     → tools/jj/JJ_PATTERNS.md                # JJ VCS workflow decisions
 IF github_project_management:
-    → GITHUB_PROJECTS.md                      # AI agent GitHub integration
+    → tools/github/GITHUB_PATTERNS.md        # AI agent GitHub integration
 IF language_specific_task:
     → languages/{language}/                   # Language-specific patterns
 IF tool_specific_task:  
