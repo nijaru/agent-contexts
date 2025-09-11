@@ -22,7 +22,7 @@ IF code_organization_task:
 IF documentation_organization_task:
     → standards/DOC_PATTERNS.md              # Project doc structure patterns
 IF version_control_needed:
-    → standards/JJ_DECISION_TREES.md         # VCS workflow decisions
+    → tools/jj/JJ_PATTERNS.md                # JJ VCS workflow decisions
 IF github_project_management:
     → GITHUB_PROJECTS.md                      # AI agent GitHub integration
 IF language_specific_task:
@@ -48,7 +48,7 @@ IF working_with_go:
 ### Choose by Context Type
 ```
 IF setting_up_workflow:
-    → standards/JJ_DECISION_TREES.md       # VCS workflow
+    → tools/jj/JJ_PATTERNS.md             # JJ VCS workflow
     → standards/AI_CODE_PATTERNS.md        # Code standards
     → GITHUB_PROJECTS.md                   # Project tracking
 IF debugging_issue:
@@ -75,7 +75,7 @@ IF integrating_ai_assistant:
 - Automated project board updates
 - Decision trees for issue creation
 
-### `standards/JJ_DECISION_TREES.md` - Version Control Logic
+### `tools/jj/JJ_PATTERNS.md` - JJ Version Control Logic
 - AI agent workflow decisions
 - Command sequences for common scenarios
 - State recognition patterns
@@ -169,7 +169,7 @@ SEQUENCE:
 2. Check ERROR_PATTERNS.md for mapping
 3. Apply suggested fix pattern
 4. If Mojo-related, check languages/mojo/AI_PATTERNS.md
-5. If VCS-related, check standards/JJ_DECISION_TREES.md
+5. If JJ VCS-related, check tools/jj/JJ_PATTERNS.md
 ```
 
 ### Pattern: Code Quality Check
@@ -207,7 +207,7 @@ SEQUENCE:
 3. Task-specific pattern file based on context
 
 ### Medium Priority (Load as Needed)
-- `standards/JJ_DECISION_TREES.md` - VCS operations
+- `tools/jj/JJ_PATTERNS.md` - JJ VCS operations
 - `standards/AI_CODE_PATTERNS.md` - Code organization
 - `languages/mojo/AI_PATTERNS.md` - Mojo development
 

@@ -11,7 +11,7 @@ Entry point with decision trees for choosing the right documentation.
 - `AI_AGENT_INDEX.md` - Navigation decision trees for any task
 - `ERROR_PATTERNS.md` - Error message → solution mappings  
 - `standards/AI_CODE_PATTERNS.md` - Code organization patterns
-- `standards/JJ_DECISION_TREES.md` - Version control workflows
+- `tools/jj/JJ_PATTERNS.md` - JJ version control workflows
 - `standards/DOC_PATTERNS.md` - Documentation organization patterns
 
 ### Language-Specific Patterns
