@@ -1,228 +1,147 @@
 # AI Agent Pattern Index
 
-*Optimized lookup for AI agent decision making*
+*Optimized navigation for AI agent decision making*
 
 ## QUICK DECISION TREES
 
-### Choose Documentation by Task Type
+### Primary Task Router
 ```
-IF starting_new_project:
-    → patterns/AI_AGENT_PLAYBOOK_TEMPLATE.md  # Optimal workflow setup
-IF tracking_work_session:
-    → patterns/SESSION_LOG_TEMPLATE.md        # Context persistence
-IF documenting_discovery:
-    → patterns/DISCOVERIES_LOG_TEMPLATE.md    # Learning capture
-IF making_architecture_decision:
-    → patterns/DECISION_LOG_TEMPLATE.md       # Decision rationale
-IF fixing_error:
-    → patterns/ERROR_FIXES_TEMPLATE.md        # Problem → solution
-    → ERROR_PATTERNS.md                       # Universal error mapping
-IF code_organization_task:
-    → standards/AI_CODE_PATTERNS.md          # Universal naming/structure
-IF documentation_organization_task:
-    → standards/DOC_PATTERNS.md              # Project doc structure patterns
-IF version_control_needed:
-    → tools/jj/JJ_PATTERNS.md                # JJ VCS workflow decisions
-IF github_project_management:
-    → tools/github/GITHUB_PATTERNS.md        # AI agent GitHub integration
-IF language_specific_task:
-    → languages/{language}/                   # Language-specific patterns
-IF tool_specific_task:  
-    → tools/{tool}/                          # Tool-specific command sequences
-IF build_system_task:
-    → tools/modular/BUILD_PATTERNS.md        # Bazel/Pixi patterns
+IF error_encountered:
+    → standards/ERROR_PATTERNS.md           # Error → solution mappings
+IF code_organization:
+    → standards/AI_CODE_PATTERNS.md         # Naming, structure, AI patterns
+IF documentation_setup:
+    → standards/DOC_PATTERNS.md             # AGENTS.md setup, file organization
+IF language_specific:
+    → languages/{language}/*_PATTERNS.md    # Language-specific patterns
+IF tool_specific:
+    → tools/{tool}/*_PATTERNS.md           # Tool command sequences
 ```
 
-### Choose Documentation by Language
+### Language Selection
 ```
-IF working_with_mojo:
-    → languages/mojo/MOJO_PATTERNS.md      # Consolidated Mojo patterns
-    → languages/mojo/CODING_ASSISTANT_INTEGRATION.md  # AI setup
-IF working_with_python:
-    → languages/python/python-3-13.md      # Python 3.13 patterns
-    → tools/python/uv/uv.md                # UV package manager
-IF working_with_go:
-    → languages/go/go-1-23.md              # Go 1.23 patterns
+IF python_development:
+    → languages/python/PYTHON_PATTERNS.md   # Modern Python 3.10+ with UV
+IF go_development:
+    → languages/go/GO_PATTERNS.md           # Concurrency, testing, performance
+IF mojo_development:
+    → languages/mojo/MOJO_PATTERNS.md       # Memory, performance, type conversions
 ```
 
-### Choose by Context Type
+### Tool Selection
 ```
-IF setting_up_workflow:
-    → tools/jj/JJ_PATTERNS.md             # JJ VCS workflow
-    → standards/AI_CODE_PATTERNS.md        # Code standards
-    → GITHUB_PROJECTS.md                   # Project tracking
-IF debugging_issue:
-    → ERROR_PATTERNS.md                    # Error diagnosis
-    → languages/mojo/MOJO_PATTERNS.md      # Mojo-specific fixes
-IF optimizing_performance:
-    → languages/mojo/MOJO_PATTERNS.md      # Performance patterns
-IF integrating_ai_assistant:
-    → languages/mojo/CODING_ASSISTANT_INTEGRATION.md  # Setup guides
-    → tools/modular/BUILD_PATTERNS.md      # Build commands
+IF version_control:
+    → tools/jj/JJ_PATTERNS.md               # JJ version control workflows
+IF github_integration:
+    → tools/github/GITHUB_PATTERNS.md      # Projects vs Issues patterns
+IF python_packages:
+    → tools/python/UV_PATTERNS.md          # UV package management
+IF modular_build:
+    → tools/modular/BUILD_PATTERNS.md      # Bazel/Pixi build patterns
 ```
 
-## PATTERN TYPES BY FILE
+## UNIVERSAL PATTERNS (Always Load)
 
-### `ERROR_PATTERNS.md` - Error Recognition
-- Compilation error → fix mappings
-- Runtime error → diagnostic commands  
-- Performance issue → optimization patterns
-- Recovery procedures for common mistakes
+### Core Standards
+- **standards/AI_CODE_PATTERNS.md** - Code organization, naming, AI context engineering
+- **standards/ERROR_PATTERNS.md** - Error message → solution mappings
+- **standards/DOC_PATTERNS.md** - Documentation organization, AGENTS.md setup
 
-### `GITHUB_PROJECTS.md` - AI GitHub Integration
-- TodoWrite ↔ GitHub issue sync
-- AI session management patterns
-- Automated project board updates
-- Decision trees for issue creation
+## SPECIALIZED PATTERNS
 
-### `tools/jj/JJ_PATTERNS.md` - JJ Version Control Logic
-- AI agent workflow decisions
-- Command sequences for common scenarios
-- State recognition patterns
-- Emergency recovery procedures
-
-### `standards/AI_CODE_PATTERNS.md` - Code Organization  
-- Naming decision trees
-- Anti-pattern recognition  
-- Code smell → fix mappings
-- File organization logic
-- Comment patterns and dev notes
-
-### `languages/mojo/AI_PATTERNS.md` - Mojo-Specific
-- Type conversion patterns
-- Memory management decisions
-- Function type selection logic
-- Performance optimization triggers
-
-### `languages/mojo/CODING_ASSISTANT_INTEGRATION.md` - AI Setup
-- llms.txt documentation selection
-- Cursor/Claude Code configuration
-- Error resolution strategies
-- Context loading patterns
-
-### `tools/modular/BUILD_PATTERNS.md` - Build Systems
-- Bazel command patterns
-- Pixi task discovery
-- Environment setup decisions
-- Git commit formats
-
-## CORE AI AGENT DECISION TREES
-
-### DECISION: Task Complexity Assessment
+### Language Patterns
 ```
-IF single_file_change AND < 50_lines:
-    → Work directly, use TodoWrite for tracking
-ELIF multiple_files OR > 100_lines:
-    → Create GitHub issue for tracking
-    → Use TodoWrite for subtasks
-ELIF collaborative_work OR needs_review:
-    → Create GitHub issue + PR workflow
-ELSE:
-    → Use TodoWrite only
+languages/
+├── go/GO_PATTERNS.md         # Error handling, concurrency, testing
+├── mojo/MOJO_PATTERNS.md     # Memory management, FFI, performance
+└── python/PYTHON_PATTERNS.md # Async, type hints, UV, modern features
 ```
 
-### DECISION: Documentation Loading Strategy
+### Tool Patterns
 ```
-IF starting_fresh:
-    → Load AI_AGENT_INDEX.md first
-    → Follow specific paths based on task
-ELIF fixing_error:
-    → Load ERROR_PATTERNS.md + language-specific
-ELIF optimizing_code:
-    → Load performance patterns + benchmarks
-ELIF setting_up_project:
-    → Load integration guides + build patterns
+tools/
+├── github/GITHUB_PATTERNS.md  # Projects workflow, TodoWrite sync
+├── jj/JJ_PATTERNS.md          # Bookmark management, conflict resolution
+├── modular/BUILD_PATTERNS.md  # Bazel wrapper, Pixi tasks
+└── python/UV_PATTERNS.md      # Package management, virtual envs
 ```
 
-### DECISION: Session Management
-```
-IF new_session:
-    → Check for existing GitHub issues
-    → Load relevant context files
-    → Initialize TodoWrite from issues
-ELIF resuming_session:
-    → Sync TodoWrite with GitHub
-    → Check for upstream changes
-    → Continue from last state
-ELIF ending_session:
-    → Sync completed todos to GitHub
-    → Update issue statuses
-    → Document blockers
-```
+## PATTERN CATEGORIES
 
-## USAGE PATTERNS FOR AI AGENTS
-
-### Pattern: Starting New Task
+### Decision Trees
 ```
-SEQUENCE:
-1. Check AI_AGENT_INDEX.md for relevant docs
-2. Load specific pattern files based on task type  
-3. Apply decision trees to current context
-4. Execute command sequences as needed
-5. Refer to error patterns if issues arise
+IF condition:
+    → action/command
+ELIF other_condition:
+    → alternative_action
 ```
+Used for: Navigation, tool selection, error diagnosis
 
-### Pattern: Error Resolution
+### Error → Solution Mappings
 ```
-SEQUENCE:
-1. Identify error message/symptoms
-2. Check ERROR_PATTERNS.md for mapping
-3. Apply suggested fix pattern
-4. If Mojo-related, check languages/mojo/AI_PATTERNS.md
-5. If JJ VCS-related, check tools/jj/JJ_PATTERNS.md
+| Error Message | Root Cause | Fix |
+|---------------|------------|-----|
 ```
+Used for: Quick error resolution, debugging
 
-### Pattern: Code Quality Check
+### ❌ WRONG vs ✅ CORRECT
 ```
-SEQUENCE:  
-1. Apply patterns from standards/AI_CODE_PATTERNS.md
-2. Run diagnostic commands from ERROR_PATTERNS.md
-3. Check for anti-patterns using pattern recognition
-4. Apply fixes using decision tree logic
+❌ Anti-pattern example
+✅ Correct pattern example
 ```
+Used for: Best practices, common mistakes
 
-### Pattern: Build System Integration
+### Command Sequences
+```bash
+# Step 1: Description
+command1
+# Step 2: Description
+command2
 ```
-SEQUENCE:
-1. Check for build system (Bazel/Pixi/Magic)
-2. Load tools/modular/BUILD_PATTERNS.md
-3. Execute appropriate build commands
-4. Handle errors with pattern matching
-```
+Used for: Automation, workflows
 
-### Pattern: AI Assistant Setup
-```
-SEQUENCE:
-1. Determine assistant type (Cursor/Claude/Copilot)
-2. Load CODING_ASSISTANT_INTEGRATION.md
-3. Configure with appropriate llms.txt
-4. Set up project-specific rules
-```
+## LOADING STRATEGY
 
-## FILE PRIORITY FOR AI AGENTS
+### For New Tasks
+1. Load `AI_AGENT_INDEX.md` (this file)
+2. Follow decision tree to specific patterns
+3. Load identified pattern files
+4. Apply patterns to task
 
-### High Priority (Load First)
-1. `AI_AGENT_INDEX.md` - This file (navigation)
-2. `ERROR_PATTERNS.md` - Error resolution  
-3. Task-specific pattern file based on context
+### For Error Resolution
+1. Load `standards/ERROR_PATTERNS.md`
+2. Search for error message
+3. Apply fix pattern
+4. If language-specific, load language patterns
 
-### Medium Priority (Load as Needed)
-- `tools/jj/JJ_PATTERNS.md` - JJ VCS operations
-- `standards/AI_CODE_PATTERNS.md` - Code organization
-- `languages/mojo/AI_PATTERNS.md` - Mojo development
+### For Code Writing
+1. Load `standards/AI_CODE_PATTERNS.md`
+2. Load language-specific patterns
+3. Apply naming conventions and structure
+4. Use ❌ WRONG vs ✅ CORRECT examples
 
-### Low Priority (Reference Only)
-- Advanced pattern files for specific optimization
-- Language reference docs for syntax lookup
+## OPTIMIZATION RULES
 
-## SUBMODULE INTEGRATION
+- **Load only what's needed** - Don't load all patterns
+- **Universal first** - Standards apply everywhere
+- **Specific second** - Language/tool patterns override
+- **Decision trees guide** - Follow IF/THEN logic
+- **Examples matter** - AI performs better with patterns
 
-### Pattern: Access from Submodule
-```
-IF repository_has_submodule:
-    @external/agent-contexts/AI_AGENT_INDEX.md     # This file
-    @external/agent-contexts/ERROR_PATTERNS.md     # Error patterns
-    Follow decision trees to specific pattern files
-```
+## QUICK REFERENCE
 
-See `SUBMODULE_INTEGRATION.md` for complete integration patterns.
+### Most Used Patterns
+1. `standards/ERROR_PATTERNS.md` - Debugging
+2. `standards/AI_CODE_PATTERNS.md` - Code quality
+3. `languages/python/PYTHON_PATTERNS.md` - Python dev
+4. `languages/mojo/MOJO_PATTERNS.md` - Mojo specifics
+5. `tools/jj/JJ_PATTERNS.md` - Version control
+
+### Pattern Priority
+1. Error resolution (immediate fixes)
+2. Code organization (quality patterns)
+3. Language specifics (syntax/features)
+4. Tool workflows (commands/automation)
+
+---
+*Start here → Follow trees → Load patterns → Execute tasks*

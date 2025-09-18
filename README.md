@@ -33,7 +33,7 @@ Include: @external/agent-contexts/AI_AGENT_INDEX.md
 | File | Purpose |
 |------|---------|
 | `AI_AGENT_INDEX.md` | Entry point with navigation decision trees |
-| `ERROR_PATTERNS.md` | Error message → solution mappings |
+| `standards/ERROR_PATTERNS.md` | Error message → solution mappings |
 | `standards/AI_CODE_PATTERNS.md` | Code organization and naming patterns |
 | `standards/DOC_PATTERNS.md` | Documentation structure patterns |
 
@@ -61,7 +61,7 @@ Include: @external/agent-contexts/AI_AGENT_INDEX.md
 
 ```
 IF error_encountered:
-    → Check ERROR_PATTERNS.md
+    → Check standards/ERROR_PATTERNS.md
 IF organizing_code:
     → Check standards/AI_CODE_PATTERNS.md
 IF language_specific_task:

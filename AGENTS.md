@@ -9,7 +9,7 @@ Entry point with decision trees for choosing the right documentation.
 
 ### Universal Patterns (Load These First)
 - `AI_AGENT_INDEX.md` - Navigation decision trees for any task
-- `ERROR_PATTERNS.md` - Error message → solution mappings  
+- `standards/ERROR_PATTERNS.md` - Error message → solution mappings
 - `standards/AI_CODE_PATTERNS.md` - Code organization patterns
 - `tools/jj/JJ_PATTERNS.md` - JJ version control workflows
 - `standards/DOC_PATTERNS.md` - Documentation organization patterns
@@ -21,13 +21,7 @@ Entry point with decision trees for choosing the right documentation.
 
 ### Tool-Specific Patterns
 - `tools/modular/BUILD_PATTERNS.md` - Bazel/Pixi command sequences
-- `tools/python/uv/uv.md` - UV package manager patterns
-
-### Workflow Templates
-- `patterns/SESSION_LOG_TEMPLATE.md` - Development session tracking
-- `patterns/DECISION_LOG_TEMPLATE.md` - Architecture decision records
-- `patterns/DISCOVERIES_LOG_TEMPLATE.md` - Research findings capture
-- `patterns/ERROR_FIXES_TEMPLATE.md` - Problem → solution documentation
+- `tools/python/UV_PATTERNS.md` - UV package manager patterns
 
 ## USAGE PATTERNS FOR AI AGENTS
 
@@ -41,7 +35,7 @@ Entry point with decision trees for choosing the right documentation.
 
 ### Error Resolution
 ```
-1. @ERROR_PATTERNS.md             # Universal error → solution mapping
+1. @standards/ERROR_PATTERNS.md  # Universal error → solution mapping
 2. Check language-specific patterns if needed
 3. Use diagnostic commands to verify fix
 ```
@@ -58,4 +52,3 @@ Entry point with decision trees for choosing the right documentation.
 - **Pattern Recognition**: ❌ WRONG vs ✅ CORRECT examples
 - **Command Sequences**: Automated diagnostic/fix procedures  
 - **Error Mappings**: Specific error message → solution pairs
-- **Templates**: Structured formats for common tasks
