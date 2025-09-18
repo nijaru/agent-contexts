@@ -1,5 +1,37 @@
 # AI Agent Code Patterns
 
+*Universal patterns for AI-friendly code organization*
+
+## AI CONTEXT ENGINEERING PATTERNS
+
+### Code Structure for AI Agents
+```
+IF writing_new_code:
+    → Include clear function signatures
+    → Add type hints/annotations
+    → Keep functions under 50 lines
+    → Use descriptive variable names
+    → Group related functions together
+```
+
+### Example-Driven Development
+```
+IF complex_pattern:
+    → Create examples/ directory
+    → Include input/output samples
+    → Show edge cases
+    → Demonstrate error handling
+```
+
+### AI-Friendly Comments
+```
+IF business_logic → Explain "why" not "what"
+IF complex_algorithm → Add complexity notation (O(n))
+IF external_dependency → Note version and constraints
+IF temporary_workaround → Mark with TODO and reason
+IF security_sensitive → Add SECURITY tag
+```
+
 ## NAMING DECISION TREES
 
 ### Variable Naming
@@ -232,6 +264,37 @@ IF modifying_configuration:
 
 ✅ [Clean file with no removal artifacts]
 ✅ [Use git log/blame to see what was removed]
+```
+
+## PROMPT ENGINEERING FOR CODE
+
+### Task Decomposition Patterns
+```
+IF complex_feature:
+    → Break into subtasks
+    → Define success criteria per task
+    → Provide relevant context per subtask
+    → Chain tasks with clear dependencies
+```
+
+### Context Optimization
+```
+IF providing_code_context:
+    → Include imports and dependencies
+    → Show related functions/classes
+    → Include test cases if available
+    → Remove verbose comments
+    → Focus on patterns over implementation
+```
+
+### Error Context Patterns
+```
+IF debugging_with_ai:
+    → Include full error message
+    → Show relevant code snippet
+    → Provide stack trace
+    → List recent changes
+    → Include environment details
 ```
 
 ## COMMAND PATTERNS
