@@ -2,7 +2,7 @@
 
 **Actionable patterns for AI-assisted development**
 
-Version: 0.0.1
+Version: 0.0.2
 
 ## What is this?
 
@@ -18,12 +18,12 @@ git submodule update --init --recursive
 
 ### 2. Reference in Your AI Assistant
 
-**For Claude Code (CLAUDE.md):**
+**For TUI agents (Claude Code, Aider, etc.) in AGENTS.md or CLAUDE.md:**
 ```markdown
 @external/agent-contexts/AI_AGENT_INDEX.md
 ```
 
-**For Cursor/Windsurf (.cursorules):**
+**For IDE extensions (Cursor, Windsurf, etc.) in .cursorrules:**
 ```
 Include: @external/agent-contexts/AI_AGENT_INDEX.md
 ```
