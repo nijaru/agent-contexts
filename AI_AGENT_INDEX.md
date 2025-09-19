@@ -12,6 +12,8 @@ IF code_organization:
     → standards/AI_CODE_PATTERNS.md         # Naming, structure, AI patterns
 IF documentation_setup:
     → standards/DOC_PATTERNS.md             # AGENTS.md setup, file organization
+IF release_management:
+    → standards/RELEASE_PATTERNS.md         # Changelog, versioning, release process
 IF language_specific:
     → languages/{language}/*_PATTERNS.md    # Language-specific patterns
 IF tool_specific:
