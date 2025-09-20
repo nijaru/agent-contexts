@@ -11,15 +11,17 @@ Entry point with decision trees for choosing the right documentation.
 - `AI_AGENT_INDEX.md` - Navigation decision trees for any task
 - `standards/ERROR_PATTERNS.md` - Error message → solution mappings
 - `standards/AI_CODE_PATTERNS.md` - Code organization patterns
-- `tools/jj/JJ_PATTERNS.md` - JJ version control workflows
 - `standards/DOC_PATTERNS.md` - Documentation organization patterns
+- `standards/RELEASE_PATTERNS.md` - Release management and versioning
 
 ### Language-Specific Patterns
 - `languages/mojo/MOJO_PATTERNS.md` - Mojo performance and memory patterns
-- `languages/python/PYTHON_PATTERNS.md` - Modern Python with UV patterns
+- `languages/python/PYTHON_PATTERNS.md` - Modern Python patterns
 - `languages/go/GO_PATTERNS.md` - Go concurrency and testing patterns
 
 ### Tool-Specific Patterns
+- `tools/jj/JJ_PATTERNS.md` - JJ version control workflows
+- `tools/github/GITHUB_PATTERNS.md` - GitHub project management
 - `tools/modular/BUILD_PATTERNS.md` - Bazel/Pixi command sequences
 - `tools/python/UV_PATTERNS.md` - UV package manager patterns
 
