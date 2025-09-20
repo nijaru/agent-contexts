@@ -108,10 +108,10 @@ Root Level (Public):
 ├── LICENSE          # Legal
 
 internal/ (AI Agent Working Context):
-├── TODO.md          # Active tasks and priorities
-├── STATUS.md        # Current state, progress, blockers
-├── RESEARCH.md      # What we've tried, what works/doesn't
-├── DECISIONS.md     # Architectural decisions (append-only)
+├── TODO.md          # Active tasks and priorities (edit in place)
+├── STATUS.md        # Current state, progress, blockers (edit in place)
+├── RESEARCH.md      # What we've tried, what works/doesn't (hybrid: update patterns, append attempts)
+├── DECISIONS.md     # Architectural decisions (append-only, never delete)
 └── research/        # Deep topic investigations
     └── {topic}.md   # Specific research threads
 ```
@@ -141,11 +141,16 @@ _Updated: YYYY-MM-DD_
 ```markdown
 ## Project Status
 _Last Updated: YYYY-MM-DD_
+_Update Mode: Edit in place - represents current truth_
 
 ### Current State
-- Performance: X req/s
+- Performance: X req/s (measured on date)
 - Test Coverage: X%
 - Build: Passing/Failing
+
+### Recent Progress
+- Completed: [what was done this week]
+- Implemented: [feature that now works]
 
 ### Active Work
 Currently implementing [feature]
@@ -157,20 +162,23 @@ Currently implementing [feature]
 ### RESEARCH.md Pattern (internal/)
 ```markdown
 ## Project Research Log
+_Update Mode: Hybrid - update successes, append failures_
 
-### Successful Patterns
+### Successful Patterns (edit/update this section)
 - **[Pattern Name]**: What works and why
 - **Evidence**: Metrics, test results
 - **Applied**: Where we use this
 
-### Failed Attempts
+### Failed Attempts (append-only, keep history)
 #### YYYY-MM-DD: [Approach Name]
 - **Hypothesis**: What we thought would work
 - **Tried**: Specific implementation
 - **Failed Because**: Root cause
 - **Learning**: Key insight for future
+---
+[Previous attempts preserved below]
 
-### Open Questions
+### Open Questions (edit/update)
 - [ ] Investigation needed on [topic]
 - [ ] Performance impact of [approach]
 ```
