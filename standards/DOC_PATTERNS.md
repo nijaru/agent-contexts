@@ -90,59 +90,78 @@ IF enterprise → Use Copilot Spaces for shared context
 
 ### Progress Documentation
 ```
-IF tracking_current_work:
-    → internal/NOW.md - Active tasks, current approach
-IF tracking_attempts:
-    → internal/TRIED.md - What failed and why (append-only)
-IF tracking_discoveries:
-    → internal/KNOWLEDGE.md - What worked, patterns found
-IF blocking_issues:
-    → internal/BLOCKERS.md - Current obstacles, dependencies
+IF tracking_current_tasks:
+    → TODO.md - Active tasks, priorities (root level)
+IF tracking_project_status:
+    → STATUS.md - Current state, metrics, blockers
+IF tracking_changes:
+    → CHANGELOG.md - What changed, when, why
+IF tracking_research:
+    → internal/NOTES.md - Findings, patterns, attempts
 ```
 
 ### File Structure for AI Context Persistence
 ```
-internal/
-├── NOW.md           # Current sprint/active work
-├── TRIED.md         # Failed attempts (prevent repetition)
-├── KNOWLEDGE.md     # Discovered patterns, solutions
-├── BLOCKERS.md      # Active impediments
-└── research/        # Deep dives, investigations
-    └── {topic}.md   # Specific research threads
+Root Level (High Visibility):
+├── TODO.md          # Active tasks and priorities
+├── STATUS.md        # Current project state
+├── CHANGELOG.md     # History of changes
+
+internal/ (Working Docs):
+├── NOTES.md         # Research findings, what worked/didn't
+├── DECISIONS.md     # Architectural decisions (append-only)
+└── research/        # Deep dives
+    └── {topic}.md   # Specific investigations
 ```
 
-### NOW.md Pattern
+### TODO.md Pattern
 ```markdown
-## Current Focus: [Main Goal]
-Started: YYYY-MM-DD
+## Current Sprint
+_Updated: YYYY-MM-DD_
 
-### Active Tasks
+### High Priority
 - [ ] Task with specific success criteria
-- [x] Completed subtask
+- [ ] Blocking issue that needs resolution
 
-### Approach
-Current strategy and why chosen
+### In Progress
+- [ ] Feature being developed
+  - [x] Subtask completed
+  - [ ] Subtask pending
 
-### Next Steps
-Immediate actions after current task
+### Backlog
+- [ ] Future improvements
 ```
 
-### TRIED.md Pattern (Append-Only)
+### STATUS.md Pattern
 ```markdown
-## YYYY-MM-DD: [Approach Name]
-**What**: Brief description
-**Why Failed**: Root cause
-**Learning**: Key insight
----
+## Project Status
+_Last Updated: YYYY-MM-DD_
+
+### Current State
+- Performance: X req/s
+- Test Coverage: X%
+- Build: Passing/Failing
+
+### Active Work
+Currently implementing [feature]
+
+### Blockers
+- Issue description and impact
 ```
 
-### KNOWLEDGE.md Pattern
+### NOTES.md Pattern (internal/)
 ```markdown
-## [Pattern/Solution Name]
-**Context**: When this applies
-**Solution**: What works
-**Evidence**: Metrics/proof
-**Applied**: Where used successfully
+## Research & Findings
+
+### What Works
+- **Pattern**: Description and evidence
+- **Solution**: Applied successfully in [context]
+
+### Failed Attempts
+#### YYYY-MM-DD: Approach Name
+- **Tried**: What we attempted
+- **Failed Because**: Root cause
+- **Learning**: Key insight
 ```
 
 ## Documentation Organization
