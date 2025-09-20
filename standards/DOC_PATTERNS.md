@@ -86,6 +86,65 @@ IF knowledge_base → Configure documentation collections
 IF enterprise → Use Copilot Spaces for shared context
 ```
 
+## AI Work Tracking Patterns
+
+### Progress Documentation
+```
+IF tracking_current_work:
+    → internal/NOW.md - Active tasks, current approach
+IF tracking_attempts:
+    → internal/TRIED.md - What failed and why (append-only)
+IF tracking_discoveries:
+    → internal/KNOWLEDGE.md - What worked, patterns found
+IF blocking_issues:
+    → internal/BLOCKERS.md - Current obstacles, dependencies
+```
+
+### File Structure for AI Context Persistence
+```
+internal/
+├── NOW.md           # Current sprint/active work
+├── TRIED.md         # Failed attempts (prevent repetition)
+├── KNOWLEDGE.md     # Discovered patterns, solutions
+├── BLOCKERS.md      # Active impediments
+└── research/        # Deep dives, investigations
+    └── {topic}.md   # Specific research threads
+```
+
+### NOW.md Pattern
+```markdown
+## Current Focus: [Main Goal]
+Started: YYYY-MM-DD
+
+### Active Tasks
+- [ ] Task with specific success criteria
+- [x] Completed subtask
+
+### Approach
+Current strategy and why chosen
+
+### Next Steps
+Immediate actions after current task
+```
+
+### TRIED.md Pattern (Append-Only)
+```markdown
+## YYYY-MM-DD: [Approach Name]
+**What**: Brief description
+**Why Failed**: Root cause
+**Learning**: Key insight
+---
+```
+
+### KNOWLEDGE.md Pattern
+```markdown
+## [Pattern/Solution Name]
+**Context**: When this applies
+**Solution**: What works
+**Evidence**: Metrics/proof
+**Applied**: Where used successfully
+```
+
 ## Documentation Organization
 
 ### File Placement Decision Trees
