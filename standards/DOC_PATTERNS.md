@@ -93,9 +93,9 @@ IF enterprise → Use Copilot Spaces for shared context
 IF tracking_current_tasks:
     → internal/TODO.md - Active tasks for AI agent
 IF tracking_project_status:
-    → internal/STATUS.md - Current state, what's been done
-IF tracking_research:
-    → internal/RESEARCH.md - Investigations, findings, attempts
+    → internal/STATUS.md - Current state, what's been done, what worked/didn't
+IF researching_external_topics:
+    → internal/RESEARCH.md - Algorithm research, system design, best practices
 IF tracking_releases:
     → CHANGELOG.md - Public release history (root level)
 ```
@@ -109,11 +109,11 @@ Root Level (Public):
 
 internal/ (AI Agent Working Context):
 ├── TODO.md          # Active tasks and priorities (edit in place)
-├── STATUS.md        # Current state, progress, blockers (edit in place)
-├── RESEARCH.md      # What we've tried, what works/doesn't (hybrid: update patterns, append attempts)
+├── STATUS.md        # Current state, progress, what worked/didn't (edit in place)
+├── RESEARCH.md      # External research: algorithms, architectures, best practices (append findings)
 ├── DECISIONS.md     # Architectural decisions (append-only, never delete)
 └── research/        # Deep topic investigations
-    └── {topic}.md   # Specific research threads
+    └── {topic}.md   # Specific research threads (e.g., indexing-algorithms.md)
 ```
 
 ### TODO.md Pattern (internal/)
@@ -152,6 +152,14 @@ _Update Mode: Edit in place - represents current truth_
 - Completed: [what was done this week]
 - Implemented: [feature that now works]
 
+### What Worked
+- Approach X improved performance by Y%
+- Pattern Z solved the concurrency issue
+
+### What Didn't Work
+- Attempted [approach] but [why it failed]
+- Tried [solution] but [limitation discovered]
+
 ### Active Work
 Currently implementing [feature]
 
@@ -161,26 +169,50 @@ Currently implementing [feature]
 
 ### RESEARCH.md Pattern (internal/)
 ```markdown
-## Project Research Log
-_Update Mode: Hybrid - update successes, append failures_
+## External Research & Best Practices
+_Update Mode: Append new findings, update summaries_
 
-### Successful Patterns (edit/update this section)
-- **[Pattern Name]**: What works and why
-- **Evidence**: Metrics, test results
-- **Applied**: Where we use this
+### Database Indexing Algorithms
+#### B-Tree vs LSM Tree (researched YYYY-MM-DD)
+- **Source**: [paper/article/link]
+- **Key Finding**: LSM better for write-heavy workloads
+- **Relevance**: Our use case is 80% writes
+- **Decision**: Implement LSM-based index
 
-### Failed Attempts (append-only, keep history)
-#### YYYY-MM-DD: [Approach Name]
-- **Hypothesis**: What we thought would work
-- **Tried**: Specific implementation
-- **Failed Because**: Root cause
-- **Learning**: Key insight for future
+### Web App Architecture Patterns
+#### Microservices vs Monolith (researched YYYY-MM-DD)
+- **Sources**: [links to articles, papers]
+- **Key Findings**: Microservices add complexity for <10 devs
+- **Our Context**: 3-person team
+- **Recommendation**: Start monolith, prepare for extraction
+
+### Open Research Questions
+- [ ] Optimal cache eviction strategy for our access patterns
+- [ ] Comparison of WebSocket vs SSE for our real-time needs
+```
+
+### DECISIONS.md Pattern (internal/)
+```markdown
+## Architectural Decision Log
+_Append-only - never delete past decisions_
+
+### YYYY-MM-DD: Choose PostgreSQL over MongoDB
+**Context**: Need to select primary database
+**Decision**: PostgreSQL
+**Rationale**:
+- Strong consistency requirements
+- Complex relational queries needed
+- Team expertise with SQL
+**Consequences**: Need to handle JSON data carefully
 ---
-[Previous attempts preserved below]
 
-### Open Questions (edit/update)
-- [ ] Investigation needed on [topic]
-- [ ] Performance impact of [approach]
+### YYYY-MM-DD: Adopt Event Sourcing for Audit Trail
+**Context**: Regulatory requirement for complete audit history
+**Decision**: Implement event sourcing pattern
+**Rationale**:
+- Immutable event log satisfies compliance
+- Enables temporal queries
+**Tradeoffs**: Increased storage, complexity
 ```
 
 ### CHANGELOG.md Pattern (root level)
