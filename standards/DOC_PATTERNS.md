@@ -91,32 +91,34 @@ IF enterprise → Use Copilot Spaces for shared context
 ### Progress Documentation
 ```
 IF tracking_current_tasks:
-    → TODO.md - Active tasks, priorities (root level)
+    → internal/TODO.md - Active tasks for AI agent
 IF tracking_project_status:
-    → STATUS.md - Current state, metrics, blockers
-IF tracking_changes:
-    → CHANGELOG.md - What changed, when, why
+    → internal/STATUS.md - Current state, what's been done
 IF tracking_research:
-    → internal/NOTES.md - Findings, patterns, attempts
+    → internal/RESEARCH.md - Investigations, findings, attempts
+IF tracking_releases:
+    → CHANGELOG.md - Public release history (root level)
 ```
 
 ### File Structure for AI Context Persistence
 ```
-Root Level (High Visibility):
-├── TODO.md          # Active tasks and priorities
-├── STATUS.md        # Current project state
-├── CHANGELOG.md     # History of changes
+Root Level (Public):
+├── README.md        # Project overview
+├── CHANGELOG.md     # Release history (follows keepachangelog.com)
+├── LICENSE          # Legal
 
-internal/ (Working Docs):
-├── NOTES.md         # Research findings, what worked/didn't
+internal/ (AI Agent Working Context):
+├── TODO.md          # Active tasks and priorities
+├── STATUS.md        # Current state, progress, blockers
+├── RESEARCH.md      # What we've tried, what works/doesn't
 ├── DECISIONS.md     # Architectural decisions (append-only)
-└── research/        # Deep dives
-    └── {topic}.md   # Specific investigations
+└── research/        # Deep topic investigations
+    └── {topic}.md   # Specific research threads
 ```
 
-### TODO.md Pattern
+### TODO.md Pattern (internal/)
 ```markdown
-## Current Sprint
+## Active Development Tasks
 _Updated: YYYY-MM-DD_
 
 ### High Priority
@@ -130,9 +132,12 @@ _Updated: YYYY-MM-DD_
 
 ### Backlog
 - [ ] Future improvements
+
+### Completed This Session
+- [x] What was finished (move to STATUS.md periodically)
 ```
 
-### STATUS.md Pattern
+### STATUS.md Pattern (internal/)
 ```markdown
 ## Project Status
 _Last Updated: YYYY-MM-DD_
@@ -149,20 +154,48 @@ Currently implementing [feature]
 - Issue description and impact
 ```
 
-### NOTES.md Pattern (internal/)
+### RESEARCH.md Pattern (internal/)
 ```markdown
-## Research & Findings
+## Project Research Log
 
-### What Works
-- **Pattern**: Description and evidence
-- **Solution**: Applied successfully in [context]
+### Successful Patterns
+- **[Pattern Name]**: What works and why
+- **Evidence**: Metrics, test results
+- **Applied**: Where we use this
 
 ### Failed Attempts
-#### YYYY-MM-DD: Approach Name
-- **Tried**: What we attempted
+#### YYYY-MM-DD: [Approach Name]
+- **Hypothesis**: What we thought would work
+- **Tried**: Specific implementation
 - **Failed Because**: Root cause
-- **Learning**: Key insight
+- **Learning**: Key insight for future
+
+### Open Questions
+- [ ] Investigation needed on [topic]
+- [ ] Performance impact of [approach]
 ```
+
+### CHANGELOG.md Pattern (root level)
+```markdown
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [1.0.0] - YYYY-MM-DD
+### Added
+- New features
+
+### Changed
+- Changes in existing functionality
+
+### Fixed
+- Bug fixes
+```
+**Note**: CHANGELOG.md is for public releases, not daily notes
 
 ## Documentation Organization
 
