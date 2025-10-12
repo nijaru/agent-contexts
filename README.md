@@ -28,6 +28,9 @@ git submodule update --init --recursive
 Include: @external/agent-contexts/AI_AGENT_INDEX.md
 ```
 
+### 3. Optional: Use Example Global Config
+See `examples/CLAUDE.md` for a template of personal preferences and workflows you can adapt for your own `~/.claude/CLAUDE.md` or project-level `CLAUDE.md` file.
+
 ## Core Files
 
 | File | Purpose |
