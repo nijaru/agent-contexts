@@ -24,10 +24,14 @@ WHY: Test with optimizations enabled
 
 ### Run All Tests
 ```bash
-cargo test                        # All tests, parallel
+cargo test                        # All tests, parallel (built-in)
 cargo test --release              # With optimizations
 cargo test --lib                  # Library tests only
 cargo test --test integration     # Specific integration test
+
+# Modern alternatives (2025):
+cargo nextest run                 # Faster parallel test runner (cargo install cargo-nextest)
+cargo nextest run --retries 3     # With retries for flaky tests
 ```
 
 ### Debug Test Output
@@ -80,6 +84,16 @@ valgrind --leak-check=full --show-leak-kinds=all ./target/debug/[binary]
 # Option 2: heaptrack (Linux)
 heaptrack ./target/release/[binary]
 heaptrack_gui heaptrack.[binary].gz
+
+# Option 3: DHAT (Dynamic Heap Analysis Tool, 2025)
+# Add to Cargo.toml: dhat = "0.3"
+cargo build --release --features dhat-heap
+./target/release/[binary]
+# Generates dhat-heap.json, view at https://nnethercote.github.io/dh_view/dh_view.html
+
+# Option 4: Miri (Undefined Behavior detection)
+cargo +nightly miri test          # Requires nightly
+cargo +nightly miri run
 ```
 
 ### Benchmark Timing
@@ -156,9 +170,11 @@ cargo outdated                    # Check for outdated deps
 
 ### Audit Dependencies
 ```bash
-cargo audit                       # Security vulnerabilities
+cargo audit                       # Security vulnerabilities (RustSec database)
+cargo deny check                  # Dependency auditing (advisories, licenses, bans)
 cargo tree                        # Dependency tree
 cargo tree --duplicates           # Find duplicate deps
+cargo outdated                    # Check for outdated dependencies
 ```
 
 ## PERFORMANCE OPTIMIZATION PATTERNS
@@ -443,6 +459,43 @@ timeout 60s ./target/release/benchmark || exit 1
 git bisect run ./test.sh
 ```
 
+## MODERN TOOLING (2025)
+
+### Essential Tools
+```bash
+# Testing
+cargo install cargo-nextest       # Faster test runner
+cargo install cargo-tarpaulin     # Code coverage
+
+# Security & Dependencies
+cargo install cargo-audit         # Security vulnerabilities
+cargo install cargo-deny          # License/advisory checking
+cargo install cargo-outdated      # Check outdated deps
+
+# Profiling & Performance
+cargo install flamegraph          # CPU profiling visualization
+cargo install cargo-instruments   # macOS profiling (Instruments.app)
+
+# Code Quality
+cargo install cargo-udeps         # Find unused dependencies
+cargo install cargo-machete       # Find unused dependencies (faster)
+```
+
+### Advanced Tools
+```bash
+# Undefined Behavior Detection
+rustup component add miri         # Requires nightly
+cargo +nightly miri test
+
+# Fuzzing
+cargo install cargo-fuzz          # Fuzzing harness
+cargo +nightly fuzz run [target]
+
+# Binary Analysis
+cargo install cargo-bloat         # Find what takes space in binary
+cargo install cargo-expand        # Expand macros
+```
+
 ## RESOURCES
 
 **Official:**
@@ -453,7 +506,16 @@ git bisect run ./test.sh
 **Performance:**
 - [Rust Performance Book](https://nnethercote.github.io/perf-book/)
 - [Criterion.rs](https://github.com/bheisler/criterion.rs) - Benchmarking
+- [DHAT Viewer](https://nnethercote.github.io/dh_view/dh_view.html) - Memory profiling
+
+**Security:**
+- [RustSec Advisory Database](https://rustsec.org/)
+- [Rust Security Best Practices](https://ansasecurity.github.io/docs/rust-security/)
 
 **Patterns:**
 - [Rust Design Patterns](https://rust-unofficial.github.io/patterns/)
 - [API Guidelines](https://rust-lang.github.io/api-guidelines/)
+
+**Community:**
+- [This Week in Rust](https://this-week-in-rust.org/) - Weekly newsletter
+- [Rust Blog](https://blog.rust-lang.org/) - Official updates
