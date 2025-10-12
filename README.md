@@ -46,6 +46,7 @@ Include: @external/agent-contexts/AI_AGENT_INDEX.md
 
 ## Language-Specific Patterns
 
+- `languages/rust/RUST_PATTERNS.md` - Rust development, testing, and performance
 - `languages/mojo/MOJO_PATTERNS.md` - Mojo performance and memory patterns
 - `languages/python/PYTHON_PATTERNS.md` - Modern Python patterns
 - `languages/go/GO_PATTERNS.md` - Go concurrency and testing patterns
