@@ -8,20 +8,33 @@
 
 ## Standard Directory Structure
 
-Every project should follow this structure for AI agent working context:
+Every project should follow this structure:
 
 ```
 YOUR_PROJECT/
 ├── AGENTS.md                    # AI entry point (or CLAUDE.md)
-├── ai/                          # AI working context (visible directory)
+├── docs/                        # Permanent documentation (human-facing)
+│   ├── adr/                    # Architecture Decision Records (optional)
+│   ├── api/                    # API reference
+│   ├── guides/                 # Tutorials, how-tos
+│   └── architecture/           # System design, technical specs
+├── ai/                          # AI working context (evolving)
 │   ├── TODO.md                 # Active tasks
 │   ├── STATUS.md               # Current state
-│   ├── DECISIONS.md            # Architectural choices
+│   ├── DECISIONS.md            # Working decision log
 │   ├── RESEARCH.md             # Research index
-│   └── research/               # Detailed research by topic
-│       └── {topic}.md          # e.g., indexing-algorithms.md
-└── [existing project structure]
+│   └── research/               # AI's research findings
+│       ├── {topic}.md          # e.g., indexing-algorithms.md
+│       └── archive/            # Old research
+└── .github/                     # Platform-specific (optional)
+    └── workflows/
 ```
+
+**Key Principles:**
+- **docs/** — Permanent, human-facing documentation (committed, versioned)
+- **ai/** — Evolving, AI-optimized working context (committed, but changes frequently)
+- **Start minimal** — New projects just need `docs/` + `ai/`. Add subdirs as needed.
+- **Respect existing** — If project has `internal/`, `wiki/`, etc., note in AGENTS.md and use them.
 
 ## File Purposes and Update Modes
 
@@ -95,17 +108,73 @@ Currently implementing [feature]
 - [ ] WebSocket vs SSE comparison needed
 ```
 
+## Directory Organization
+
+### docs/ — Permanent Documentation
+**What belongs here:**
+- User guides, API documentation, tutorials
+- Architecture documentation (`docs/architecture/`)
+- Architecture Decision Records (`docs/adr/`) — optional, for formal projects
+- Requirements, specifications
+- Team processes, onboarding guides
+
+**Update pattern:** Versioned, permanent. Changes are deliberate.
+
+**Examples:**
+- `docs/api/authentication.md` — API reference
+- `docs/guides/quickstart.md` — Getting started guide
+- `docs/adr/0001-use-postgresql.md` — Formal architectural decision
+- `docs/architecture/system-overview.md` — System design
+
+### ai/ — AI Working Context
+**What belongs here:**
+- TODO.md — Current tasks, sprint planning
+- STATUS.md — Project health, what worked/didn't
+- DECISIONS.md — Working decision log during development
+- RESEARCH.md — Index of AI's web research
+- research/{topic}.md — Technical deep-dives from research
+
+**Update pattern:** Evolving, frequent changes. Optimized for AI context.
+
+**Examples:**
+- `ai/research/indexing-algorithms.md` — AI researched LSM vs B-tree
+- `ai/research/caching-strategies.md` — Redis vs Memcached comparison
+- `ai/DECISIONS.md` — "Tried approach X, didn't work because Y"
+
+### Decision Flow (Knowledge Graduation)
+```
+Active work → ai/TODO.md
+           ↓ (completed)
+         ai/STATUS.md (what worked/didn't)
+           ↓ (if important decision)
+         ai/DECISIONS.md (working log)
+           ↓ (if architectural/formal)
+         docs/adr/NNNN-title.md (formal ADR)
+
+Research → ai/research/{topic}.md
+        ↓ (if valuable/permanent)
+      docs/architecture/ or code comments
+        ↓ (if outdated)
+      ai/research/archive/
+```
+
+### Optional Directories
+**docs/adr/** — Use if project has formal ADR process. Small projects can skip this.
+**internal/** — Only if separating public vs private docs (rare, mostly corporate).
+**.github/** — Only if using GitHub (workflows, issue templates).
+
 ## AGENTS.md Structure
 
-Your project's AGENTS.md should include:
+Your project's AGENTS.md should document the discovered structure:
 
 ```markdown
 # Project Name
 
 ## Project Structure
-- Documentation: docs/
-- Internal notes: internal/
+- Documentation: docs/ (guides, API, architecture)
+- Architecture decisions: docs/adr/ (if exists)
 - AI working context: ai/
+- GitHub workflows: .github/ (if using GitHub)
 
 ## Development Setup
 [How to get started]
@@ -186,26 +255,46 @@ ON first_encounter_with_project:
     IF AGENTS.md exists:
         → Load it, note documented structure
     ELSE:
-        → Scan for docs/, internal/, tests/
-        → Propose creating AGENTS.md
+        → Scan for docs/, internal/, wiki/, .github/, tests/
+        → Note discovered directories
+        → Propose creating AGENTS.md with discovered structure
 
     IF ai/ directory missing:
         → Propose creating standard ai/ structure
+        → Explain: "For AI working context (TODO, STATUS, research)"
 
-    IF project has existing docs/:
-        → Note in AGENTS.md: "Documentation: docs/"
-        → Read from docs/, write working notes to ai/
+    Document discovered structure in AGENTS.md:
+        → docs/ → "Documentation: docs/"
+        → docs/adr/ → "Architecture decisions: docs/adr/"
+        → internal/ → "Internal team docs: internal/"
+        → .github/ → "GitHub workflows: .github/"
+
+    Working pattern:
+        → Read from docs/ (permanent knowledge)
+        → Write working notes to ai/ (evolving context)
+        → Don't restructure existing directories
 ```
 
 ## Anti-Patterns to Avoid
 
-**❌ Don't duplicate project docs in ai/**
-- Project specs belong in `docs/`
-- AI working notes belong in `ai/`
+**❌ Don't duplicate between docs/ and ai/**
+- Project specs, API docs → `docs/`
+- AI working notes, research → `ai/`
+- Don't copy the same content to both
 
 **❌ Don't put code in ai/ directory**
 - Code belongs in src/, not ai/
 - ai/ is for meta-work tracking only
+
+**❌ Don't create internal/ by default**
+- Most projects don't need it
+- Only for public vs private doc separation (corporate/enterprise)
+- Open-source projects: just use `docs/`
+
+**❌ Don't create docs/adr/ unless you need it**
+- Formal ADRs are optional
+- Small projects: `ai/DECISIONS.md` is sufficient
+- Large projects with formal process: use `docs/adr/`
 
 **❌ Don't create language/tool pattern docs**
 - Research current best practices instead
@@ -214,6 +303,10 @@ ON first_encounter_with_project:
 **❌ Don't bloat AGENTS.md**
 - Keep it concise (~100-200 lines max)
 - Link to detailed docs, don't inline them
+
+**❌ Don't hoard old research**
+- Archive to `ai/research/archive/` or delete
+- Keep `ai/` focused on current work
 
 ## Token Optimization
 
