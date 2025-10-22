@@ -1,56 +1,64 @@
-# AI Agent Context Repository
+# Agent Contexts
 
-*Actionable patterns for AI-assisted development*
+*Standardized patterns for AI agent organization*
 
-## START HERE: AI_AGENT_INDEX.md
-Entry point with decision trees for choosing the right documentation.
+## Purpose
 
-## CORE PATTERN FILES
+This repository teaches AI agents **how to organize their work** across projects, not how to code. It provides a minimal, standardized structure for AI working context that works across all AI coding tools (Claude Code, Cursor, Copilot, etc.).
 
-### Universal Patterns (Load These First)
-- `AI_AGENT_INDEX.md` - Navigation decision trees for any task
-- `standards/ERROR_PATTERNS.md` - Error message → solution mappings
-- `standards/AI_CODE_PATTERNS.md` - Code organization patterns
-- `standards/DOC_PATTERNS.md` - Documentation organization patterns
-- `standards/RELEASE_PATTERNS.md` - Release management and versioning
+## Quick Start
 
-### Language-Specific Patterns
-- `languages/mojo/MOJO_PATTERNS.md` - Mojo performance and memory patterns
-- `languages/python/PYTHON_PATTERNS.md` - Modern Python patterns
-- `languages/go/GO_PATTERNS.md` - Go concurrency and testing patterns
+**For AI agents working on projects:**
+1. Load `@PRACTICES.md` for complete guidance
+2. Create `ai/` directory structure in your project
+3. Maintain TODO, STATUS, DECISIONS, and RESEARCH files
+4. Use this repo's AGENTS.md as a template
 
-### Tool-Specific Patterns
-- `tools/jj/JJ_PATTERNS.md` - JJ version control workflows
-- `tools/github/GITHUB_PATTERNS.md` - GitHub project management
-- `tools/modular/BUILD_PATTERNS.md` - Bazel/Pixi command sequences
-- `tools/python/UV_PATTERNS.md` - UV package manager patterns
+**For humans setting up projects:**
+1. Copy this AGENTS.md to your project as a starting template
+2. Create `ai/` directory for agent working context
+3. Let AI agents maintain their workspace
+4. Reference `PRACTICES.md` for details
 
-## USAGE PATTERNS FOR AI AGENTS
+## Project Structure
 
-### New Task
+This repository follows its own practices:
+
 ```
-1. @AI_AGENT_INDEX.md             # Load navigation
-2. Follow decision tree to specific patterns
-3. Apply ❌ WRONG vs ✅ CORRECT examples
-4. Use command sequences for automation
-```
-
-### Error Resolution
-```
-1. @standards/ERROR_PATTERNS.md  # Universal error → solution mapping
-2. Check language-specific patterns if needed
-3. Use diagnostic commands to verify fix
+agent-contexts/
+├── README.md        # Project overview
+├── AGENTS.md        # This file (serves as example template)
+├── PRACTICES.md     # Core guidance for AI agents
+├── CLAUDE.md        # Symlink to AGENTS.md for compatibility
+├── ai/              # Our own working context
+│   ├── TODO.md
+│   ├── STATUS.md
+│   ├── DECISIONS.md
+│   └── RESEARCH.md
+└── VERSION
 ```
 
-### Code Organization
-```
-1. @standards/AI_CODE_PATTERNS.md # Universal naming/structure
-2. @standards/DOC_PATTERNS.md     # Documentation organization
-3. Apply anti-pattern avoidance rules
-```
+## Core Principles
 
-## PATTERN TYPES
-- **Decision Trees**: IF/THEN logic for AI decision making
-- **Pattern Recognition**: ❌ WRONG vs ✅ CORRECT examples
-- **Command Sequences**: Automated diagnostic/fix procedures  
-- **Error Mappings**: Specific error message → solution pairs
+1. **Organization over coding** - AI agents already know how to code
+2. **Standardization over customization** - Same structure across all projects
+3. **Minimal over comprehensive** - Keep token usage low
+4. **Research over duplication** - Fresh knowledge over stale patterns
+
+## When to Use This Repo
+
+**✅ Use when:**
+- Starting work on a new project
+- Setting up AI working context
+- Need guidance on file organization
+- Doing multi-session work requiring handoff
+
+**❌ Don't use for:**
+- Language syntax (use training data + research)
+- Tool commands (research current docs)
+- Project-specific patterns (belongs in project's AGENTS.md)
+- Comprehensive coding guides (defeats the purpose)
+
+## Development Workflow
+
+See `ai/TODO.md` for current work on this repository.

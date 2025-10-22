@@ -1,85 +1,124 @@
 # Agent Contexts
 
-**Actionable patterns for AI-assisted development**
+**Standardized organization patterns for AI coding agents**
 
-Version: 0.0.3
+Version: 0.1.0
 
 ## What is this?
 
-A curated collection of decision trees, error patterns, and best practices optimized for AI coding assistants (Claude, Cursor, Copilot, etc.). These patterns help AI agents make better decisions and write better code.
+A minimal guide teaching AI agents **how to organize their work** across projects. This is NOT a coding guide - AI agents already know how to code. This teaches them how to maintain consistent working context using a standardized `ai/` directory structure.
 
 ## Quick Start
 
-### 1. Add as Submodule
+### For AI Agents
+
+Include this in your project context:
+```markdown
+@external/agent-contexts/PRACTICES.md
+```
+
+Then create and maintain:
+```
+ai/
+├── TODO.md       # Active tasks
+├── STATUS.md     # Current state
+├── DECISIONS.md  # Architectural choices
+└── RESEARCH.md   # External research findings
+```
+
+### For Humans
+
+Add as submodule to your projects:
 ```bash
-git submodule add https://github.com/USERNAME/agent-contexts external/agent-contexts
+git submodule add https://github.com/nijaru/agent-contexts external/agent-contexts
 git submodule update --init --recursive
 ```
 
-### 2. Reference in Your AI Assistant
-
-**For TUI agents (Claude Code, Aider, etc.) in AGENTS.md or CLAUDE.md:**
+Reference in your AGENTS.md or CLAUDE.md:
 ```markdown
-@external/agent-contexts/AI_AGENT_INDEX.md
+For organization patterns: @external/agent-contexts/PRACTICES.md
 ```
-
-**For IDE extensions (Cursor, Windsurf, etc.) in .cursorrules:**
-```
-Include: @external/agent-contexts/AI_AGENT_INDEX.md
-```
-
-### 3. Optional: Use Example Global Config
-See `examples/CLAUDE.md` for a template of personal preferences and workflows you can adapt for your own `~/.claude/CLAUDE.md` or project-level `CLAUDE.md` file.
 
 ## Core Files
 
-| File | Purpose |
-|------|---------|
-| `AI_AGENT_INDEX.md` | Entry point with navigation decision trees |
-| `standards/ERROR_PATTERNS.md` | Error message → solution mappings |
-| `standards/AI_CODE_PATTERNS.md` | Code organization and naming patterns |
-| `standards/DOC_PATTERNS.md` | Documentation structure patterns |
-
-## Tool-Specific Patterns
-
-- `tools/jj/JJ_PATTERNS.md` - JJ version control workflows
-- `tools/github/GITHUB_PATTERNS.md` - GitHub project management
-- `tools/python/UV_PATTERNS.md` - UV package manager patterns
-- `tools/modular/BUILD_PATTERNS.md` - Bazel/Pixi build patterns
-
-## Language-Specific Patterns
-
-- `languages/rust/RUST_PATTERNS.md` - Rust development, testing, and performance
-- `languages/mojo/MOJO_PATTERNS.md` - Mojo performance and memory patterns
-- `languages/python/PYTHON_PATTERNS.md` - Modern Python patterns
-- `languages/go/GO_PATTERNS.md` - Go concurrency and testing patterns
+| File | Purpose | Size |
+|------|---------|------|
+| `PRACTICES.md` | Complete guide for AI agent organization | ~600 words |
+| `AGENTS.md` | Example template for your projects | ~200 words |
+| `ai/` | This repo's own working context | 4 files |
 
 ## Key Principles
 
-1. **Actionable over Informational** - Every pattern leads to a specific action
-2. **Timeless over Trendy** - Focus on patterns that won't become outdated
-3. **Universal over Personal** - All patterns work for any developer
-4. **Concise over Comprehensive** - Optimized for AI context windows
+1. **Organization over coding** - AI knows syntax, needs structure guidance
+2. **Standardization over customization** - Same `ai/` structure everywhere
+3. **Minimal over comprehensive** - ~1,000 total words vs previous ~13,000
+4. **Research over duplication** - Fresh knowledge beats stale patterns
 
-## Usage Pattern
+## What Changed (v0.1.0 Refactor)
+
+**Removed** (archived at tag `v0.0.3-archive`):
+- All language-specific patterns (Python, Go, Mojo, Rust)
+- All tool-specific patterns (UV, JJ, GitHub, Modular)
+- All coding standards (ERROR, DOC, CODE, RELEASE patterns)
+
+**Why**: AI agents should research current best practices, not rely on potentially outdated static patterns. This repo now focuses solely on **how to organize work**, not **how to code**.
+
+**Token reduction**: ~17,500 → ~2,500 tokens (85% reduction)
+
+## When to Use This
+
+**✅ Use for:**
+- Standardizing AI working context across projects
+- Multi-session work requiring clean handoffs
+- Setting up new projects with AI agent workflows
+- Learning how to structure `ai/` directory
+
+**❌ Don't use for:**
+- Learning programming languages (use training data + research)
+- Tool commands (research current documentation)
+- Project-specific patterns (belongs in your AGENTS.md)
+- Comprehensive coding guides (that's not the purpose)
+
+## File Structure
 
 ```
-IF error_encountered:
-    → Check standards/ERROR_PATTERNS.md
-IF organizing_code:
-    → Check standards/AI_CODE_PATTERNS.md
-IF language_specific_task:
-    → Check languages/[language]/[LANGUAGE]_PATTERNS.md
+agent-contexts/
+├── README.md         # This file
+├── AGENTS.md         # Example template
+├── CLAUDE.md         # Symlink for compatibility
+├── PRACTICES.md      # Core guidance (~600 words)
+├── ai/               # Our own working context
+│   ├── TODO.md
+│   ├── STATUS.md
+│   ├── DECISIONS.md
+│   └── RESEARCH.md
+└── VERSION
 ```
+
+## Philosophy
+
+This repository embodies a simple idea: **AI agents need standardized workspaces, not coding tutorials**.
+
+Think of it like a desk organization system for knowledge workers. The desk layout (filing system, inbox/outbox, reference materials) should be consistent. The actual work products vary by project.
+
+Similarly, the `ai/` directory structure should be standard across all projects, while the content within adapts to each project's needs.
 
 ## Contributing
 
-1. Keep patterns actionable and timeless
-2. Use decision tree format (IF/THEN)
-3. Include ❌ WRONG vs ✅ CORRECT examples
-4. Remove outdated content regularly
-5. No personal information or specific usernames
+We welcome feedback on the `ai/` directory structure and PRACTICES.md content. However, please **do not** submit:
+- Language-specific coding patterns
+- Tool-specific command references
+- Comprehensive how-to guides
+
+These defeat the purpose of minimal, focused organization guidance.
 
 ## License
 
-MIT - Use these patterns freely in your projects
+MIT - Use freely in your projects
+
+## Previous Patterns
+
+Need the old language/tool patterns? See tag `v0.0.3-archive`:
+```bash
+git show v0.0.3-archive:languages/python/PYTHON_PATTERNS.md
+```
