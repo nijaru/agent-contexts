@@ -2,7 +2,7 @@
 
 **Standardized organization patterns for AI coding agents**
 
-Version: 0.1.1
+Version: 0.1.2
 
 ## What is this?
 
@@ -41,11 +41,12 @@ For organization patterns: @external/agent-contexts/PRACTICES.md
 
 ## Core Files
 
-| File | Purpose | Size |
-|------|---------|------|
-| `PRACTICES.md` | Complete guide for AI agent organization | ~600 words |
-| `AGENTS.md` | Example template for your projects | ~200 words |
-| `ai/` | This repo's own working context | 4 files |
+| File | Purpose | Audience |
+|------|---------|----------|
+| `PRACTICES.md` | Complete guide for AI agent organization (~800 words) | AI agents |
+| `AGENTS.md` | Example template for projects (~300 words) | AI agents |
+| `README.md` | Project overview and usage | Humans |
+| `ai/` | This repo's own working context | AI agents |
 
 ## Key Principles
 

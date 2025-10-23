@@ -13,28 +13,21 @@ Every project should follow this structure:
 ```
 YOUR_PROJECT/
 ├── AGENTS.md                    # AI entry point (or CLAUDE.md)
-├── docs/                        # Permanent documentation (human-facing)
-│   ├── adr/                    # Architecture Decision Records (optional)
-│   ├── api/                    # API reference
-│   ├── guides/                 # Tutorials, how-tos
-│   └── architecture/           # System design, technical specs
-├── ai/                          # AI working context (evolving)
+├── docs/                        # Permanent documentation (optional)
+├── ai/                          # AI working context
 │   ├── TODO.md                 # Active tasks
 │   ├── STATUS.md               # Current state
 │   ├── DECISIONS.md            # Working decision log
 │   ├── RESEARCH.md             # Research index
-│   └── research/               # AI's research findings
-│       ├── {topic}.md          # e.g., indexing-algorithms.md
-│       └── archive/            # Old research
-└── .github/                     # Platform-specific (optional)
-    └── workflows/
+│   └── research/               # Detailed research by topic
+│       └── {topic}.md
+└── [existing project structure]
 ```
 
-**Key Principles:**
-- **docs/** — Permanent, human-facing documentation (committed, versioned)
-- **ai/** — Evolving, AI-optimized working context (committed, but changes frequently)
-- **Start minimal** — New projects just need `docs/` + `ai/`. Add subdirs as needed.
-- **Respect existing** — If project has `internal/`, `wiki/`, etc., note in AGENTS.md and use them.
+**Core separation:**
+- **docs/** — Permanent, human-facing documentation (guides, API, specs)
+- **ai/** — Evolving AI working context (tasks, research, decisions)
+- **Respect existing structure** — If project has internal/, wiki/, .github/, note in AGENTS.md and use them
 
 ## File Purposes and Update Modes
 
@@ -108,205 +101,83 @@ Currently implementing [feature]
 - [ ] WebSocket vs SSE comparison needed
 ```
 
-## Directory Organization
+## What Goes Where
 
-### docs/ — Permanent Documentation
-**What belongs here:**
-- User guides, API documentation, tutorials
-- Architecture documentation (`docs/architecture/`)
-- Architecture Decision Records (`docs/adr/`) — optional, for formal projects
+**docs/** — Permanent documentation
+- API references, user guides, tutorials
+- Architecture documentation
 - Requirements, specifications
-- Team processes, onboarding guides
+- Optional: docs/adr/ for formal Architecture Decision Records
 
-**Update pattern:** Versioned, permanent. Changes are deliberate.
+**ai/** — AI working context (focus of this guide)
+- TODO.md — Current tasks
+- STATUS.md — Project state, what worked/didn't
+- DECISIONS.md — Development decisions and rationale
+- RESEARCH.md — Index of research findings
+- research/{topic}.md — Detailed research (e.g., indexing-algorithms.md)
 
-**Examples:**
-- `docs/api/authentication.md` — API reference
-- `docs/guides/quickstart.md` — Getting started guide
-- `docs/adr/0001-use-postgresql.md` — Formal architectural decision
-- `docs/architecture/system-overview.md` — System design
-
-### ai/ — AI Working Context
-**What belongs here:**
-- TODO.md — Current tasks, sprint planning
-- STATUS.md — Project health, what worked/didn't
-- DECISIONS.md — Working decision log during development
-- RESEARCH.md — Index of AI's web research
-- research/{topic}.md — Technical deep-dives from research
-
-**Update pattern:** Evolving, frequent changes. Optimized for AI context.
-
-**Examples:**
-- `ai/research/indexing-algorithms.md` — AI researched LSM vs B-tree
-- `ai/research/caching-strategies.md` — Redis vs Memcached comparison
-- `ai/DECISIONS.md` — "Tried approach X, didn't work because Y"
-
-### Decision Flow (Knowledge Graduation)
-```
-Active work → ai/TODO.md
-           ↓ (completed)
-         ai/STATUS.md (what worked/didn't)
-           ↓ (if important decision)
-         ai/DECISIONS.md (working log)
-           ↓ (if architectural/formal)
-         docs/adr/NNNN-title.md (formal ADR)
-
-Research → ai/research/{topic}.md
-        ↓ (if valuable/permanent)
-      docs/architecture/ or code comments
-        ↓ (if outdated)
-      ai/research/archive/
-```
-
-### Optional Directories
-**docs/adr/** — Use if project has formal ADR process. Small projects can skip this.
-**internal/** — Only if separating public vs private docs (rare, mostly corporate).
-**.github/** — Only if using GitHub (workflows, issue templates).
+**Simple rule:**
+- Does it change frequently during development? → ai/
+- Is it permanent reference material? → docs/
+- When in doubt, start in ai/, move to docs/ when stable
 
 ## AGENTS.md Structure
 
-Your project's AGENTS.md should document the discovered structure:
+Document the project structure you discover:
 
 ```markdown
 # Project Name
 
 ## Project Structure
-- Documentation: docs/ (guides, API, architecture)
-- Architecture decisions: docs/adr/ (if exists)
+- Documentation: docs/ (or wherever it exists)
 - AI working context: ai/
-- GitHub workflows: .github/ (if using GitHub)
+- [Other discovered directories: .github/, internal/, etc.]
 
 ## Development Setup
 [How to get started]
 
-## Code Conventions
-[Project-specific patterns]
-
 ## Current Focus
 [What we're working on now]
-
-## Known Issues
-[Important gotchas]
 ```
 
-## When to Research vs Use Training Data
+## Session Workflow
 
-```
-IF language_syntax OR standard_library:
-    → Use training data, you already know this
+**Starting work:**
+- Load AGENTS.md for project context
+- Check ai/TODO.md for active work
+- Check ai/STATUS.md for current state
 
-IF new_library_version OR evolved_best_practices:
-    → Research current documentation and SOTA
+**During work:**
+- Research current best practices (don't rely on stale patterns)
+- Document findings in ai/research/{topic}.md
+- Record decisions in ai/DECISIONS.md
 
-IF project_architecture OR business_logic:
-    → Check AGENTS.md and existing docs
+**Ending session:**
+- Update ai/TODO.md with progress
+- Update ai/STATUS.md with current state
+- Archive old research if needed
 
-IF algorithm_comparison OR system_design:
-    → Research and document in ai/research/
-```
-
-## Context Management
-
-### Loading Context
-```
-ON session_start:
-    → Load @AGENTS.md or @CLAUDE.md
-    → Check ai/TODO.md for active work
-    → Check ai/STATUS.md for current state
-    → Load relevant ai/research/ files as needed
-
-IF multi-file_task:
-    → Load only files relevant to current task
-    → Reference ai/DECISIONS.md for architectural context
-```
-
-### Context Reset Strategy
-```
-IF context > 80% full:
-    → Update ai/STATUS.md with progress
-    → Update ai/TODO.md with remaining work
-    → Start fresh session
-    → Load only essential context
-
-IF switching_tasks:
-    → Mark current task state in ai/TODO.md
-    → Update ai/STATUS.md
-    → Load new task context
-```
-
-## Multi-Session Handoff
-
-**Before ending session:**
-1. Update `ai/TODO.md` with progress
-2. Update `ai/STATUS.md` with current state
-3. Document any discoveries in `ai/RESEARCH.md`
-4. Record decisions in `ai/DECISIONS.md`
-
-**Starting new session:**
-1. Load `AGENTS.md` for project context
-2. Check `ai/TODO.md` for active work
-3. Check `ai/STATUS.md` for current state
-4. Continue from documented state
-
-## Project Discovery Pattern
-
-```
-ON first_encounter_with_project:
-    IF AGENTS.md exists:
-        → Load it, note documented structure
-    ELSE:
-        → Scan for docs/, internal/, wiki/, .github/, tests/
-        → Note discovered directories
-        → Propose creating AGENTS.md with discovered structure
-
-    IF ai/ directory missing:
-        → Propose creating standard ai/ structure
-        → Explain: "For AI working context (TODO, STATUS, research)"
-
-    Document discovered structure in AGENTS.md:
-        → docs/ → "Documentation: docs/"
-        → docs/adr/ → "Architecture decisions: docs/adr/"
-        → internal/ → "Internal team docs: internal/"
-        → .github/ → "GitHub workflows: .github/"
-
-    Working pattern:
-        → Read from docs/ (permanent knowledge)
-        → Write working notes to ai/ (evolving context)
-        → Don't restructure existing directories
-```
+**Context reset (>80% full):**
+- Update ai/STATUS.md and ai/TODO.md
+- Start fresh session with only essential context
 
 ## Anti-Patterns to Avoid
 
 **❌ Don't duplicate between docs/ and ai/**
-- Project specs, API docs → `docs/`
-- AI working notes, research → `ai/`
-- Don't copy the same content to both
+- Permanent docs → docs/, working notes → ai/
 
 **❌ Don't put code in ai/ directory**
-- Code belongs in src/, not ai/
-- ai/ is for meta-work tracking only
-
-**❌ Don't create internal/ by default**
-- Most projects don't need it
-- Only for public vs private doc separation (corporate/enterprise)
-- Open-source projects: just use `docs/`
-
-**❌ Don't create docs/adr/ unless you need it**
-- Formal ADRs are optional
-- Small projects: `ai/DECISIONS.md` is sufficient
-- Large projects with formal process: use `docs/adr/`
+- Code belongs in src/, ai/ is for meta-work only
 
 **❌ Don't create language/tool pattern docs**
 - Research current best practices instead
-- Training data covers most syntax/patterns
 
 **❌ Don't bloat AGENTS.md**
-- Keep it concise (~100-200 lines max)
-- Link to detailed docs, don't inline them
+- Keep concise (~100-200 lines max)
+- Link to docs, don't inline them
 
 **❌ Don't hoard old research**
-- Archive to `ai/research/archive/` or delete
-- Keep `ai/` focused on current work
+- Archive or delete, keep ai/ focused on current work
 
 ## Token Optimization
 

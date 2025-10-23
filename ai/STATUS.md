@@ -1,32 +1,30 @@
 # Status
 
-_Last Updated: 2025-01-21_
+_Last Updated: 2025-10-22_
 
 ## Current State
-- Repository refactored to focus on organization patterns only
-- Removed all language and tool-specific patterns
-- Total files reduced from 17 to 4 core files
-- Token count reduced from ~17,500 to ~2,500 (85% reduction)
-- Version: 0.1.0
-- Added comprehensive directory organization guidance
+- Version: 0.1.1
+- Repository focused on AI workspace organization patterns
+- Core guidance in PRACTICES.md (~1,300 words)
+- ai/ directory structure established and documented
+- Global config proposal submitted (openai/agents.md#91)
 
 ## What Worked
-- Consolidating scattered patterns into single PRACTICES.md
-- Clear separation: organization (here) vs coding (research when needed)
-- ai/ directory structure is simple and intuitive
-- Researched industry standards (docs/adr/, ADRs, XDG, monorepo patterns)
-- Clear docs/ vs ai/ separation with "knowledge graduation" flow
+- Consolidating to single PRACTICES.md
+- ai/ directory structure is simple and proven
+- Clear separation: docs/ (permanent) vs ai/ (evolving)
+- Global config proposal has reference implementation (github.com/nijaru/global-agents-config)
 
 ## What Didn't Work
-- Initially unclear whether to recommend internal/ directory (too niche)
-- First version of PRACTICES.md lacked clear "what goes where" guidance
+- PRACTICES.md grew beyond initial ~600 word target (now ~1,300)
+- Docs organization section may be too detailed for our focus
 
-## Active Work
-- Updated PRACTICES.md with directory organization section
-- Documented docs/ vs ai/ separation patterns
-- Added ADR guidance (optional for formal projects)
+## Completed This Session
+- Trimmed PRACTICES.md from 1,319 → 807 words (39% reduction)
+- Removed verbose pseudocode, kept core guidance
+- Refocused on ai/ directory organization
+- Updated ai/TODO.md and ai/STATUS.md
+- Ready for v0.1.2 release
 
-## Next Steps
-- Consider opening issue on openai/agents.md for global config standard
-- Gather real-world usage feedback
-- Refine based on actual agent workflows
+## Blockers
+None currently
