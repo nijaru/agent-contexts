@@ -34,7 +34,8 @@ agent-contexts/
 │   ├── TODO.md
 │   ├── STATUS.md
 │   ├── DECISIONS.md
-│   └── RESEARCH.md
+│   ├── RESEARCH.md
+│   └── research/    # Detailed research files
 └── VERSION
 ```
 

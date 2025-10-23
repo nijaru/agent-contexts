@@ -23,7 +23,8 @@ ai/
 ├── TODO.md       # Active tasks
 ├── STATUS.md     # Current state
 ├── DECISIONS.md  # Architectural choices
-└── RESEARCH.md   # External research findings
+├── RESEARCH.md   # Research index
+└── research/     # Detailed research files
 ```
 
 ### For Humans
@@ -92,7 +93,8 @@ agent-contexts/
 │   ├── TODO.md
 │   ├── STATUS.md
 │   ├── DECISIONS.md
-│   └── RESEARCH.md
+│   ├── RESEARCH.md
+│   └── research/     # Detailed research files
 └── VERSION
 ```
 
