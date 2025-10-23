@@ -143,18 +143,18 @@ Document the project structure you discover:
 ## Session Workflow
 
 **Starting work:**
+- **Read ai/STATUS.md FIRST** - current state, what works/doesn't
 - Load AGENTS.md for project context
 - Check ai/TODO.md for active work
-- Check ai/STATUS.md for current state
 
 **During work:**
 - Research current best practices (don't rely on stale patterns)
 - Document findings in ai/research/{topic}.md
 - Record decisions in ai/DECISIONS.md
 
-**Ending session:**
+**Ending session (CRITICAL):**
+- **Update ai/STATUS.md** - keep it current for next session
 - Update ai/TODO.md with progress
-- Update ai/STATUS.md with current state
 - Archive old research if needed
 
 **Context reset (>80% full):**
@@ -162,6 +162,10 @@ Document the project structure you discover:
 - Start fresh session with only essential context
 
 ## Anti-Patterns to Avoid
+
+**❌ Don't create dated summary files**
+- NO SUMMARY_OCT23.md, IMPLEMENTATION_DAY1.md, etc.
+- Update ai/STATUS.md instead - it's designed for this
 
 **❌ Don't duplicate between docs/ and ai/**
 - Permanent docs → docs/, working notes → ai/
