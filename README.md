@@ -2,7 +2,7 @@
 
 **Standardized organization patterns for AI coding agents**
 
-Version: 0.1.4
+Version: 0.1.5
 
 ## What is this?
 
