@@ -154,6 +154,7 @@ Document the project structure you discover:
 
 **Ending session (CRITICAL):**
 - **Update ai/STATUS.md** - keep it current for next session
+- **Reference commits by short hash** - When documenting changes, include short hash (e.g., "Fixed in a1b2c3d") for traceability
 - Update ai/TODO.md with progress
 - Archive old research if needed
 
