@@ -31,7 +31,7 @@
 - Reduces token usage from ~17,500 to ~2,500 (85%)
 - Clearer purpose: teach organization, not coding
 
-**Tradeoffs**: Users must reference archived tag (v0.0.3-archive) for old patterns
+**Tradeoffs**: Old patterns available in git history (commit 75ba7d3 and earlier)
 
 ---
 

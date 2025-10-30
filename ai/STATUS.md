@@ -33,7 +33,7 @@ _Last Updated: 2025-10-30_
 
 1. **README.md (human-facing):**
    - 630 → 602 words
-   - Removed historical baggage (v0.1.0 refactor, previous patterns)
+   - Removed historical baggage (previous refactor notes, old patterns section)
    - Added "Why Use This?" with benefits upfront
    - Clear 3-step quick start
    - Scannable structure with tables
