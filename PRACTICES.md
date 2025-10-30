@@ -111,22 +111,24 @@ Currently implementing [feature]
 
 ## What Goes Where
 
-**docs/** — Permanent documentation
+**docs/** — Permanent documentation for humans
 - API references, user guides, tutorials
-- Architecture documentation
+- Architecture documentation for team/users
 - Requirements, specifications
 - Optional: docs/adr/ for formal Architecture Decision Records
+- Purpose: Normal project docs (readable by humans)
 
-**ai/** — AI working context (focus of this guide)
+**ai/** — AI agent working context (session tracking & research)
 - TODO.md — Current tasks
 - STATUS.md — Project state, what worked/didn't
 - DECISIONS.md — Development decisions and rationale
 - RESEARCH.md — Index of research findings
 - research/{topic}.md — Detailed research (e.g., indexing-algorithms.md)
+- Purpose: Purely for AI agents to track project and maintain context across sessions
 
 **Simple rule:**
 - Does it change frequently during development? → ai/
-- Is it permanent reference material? → docs/
+- Is it permanent reference material for humans? → docs/
 - When in doubt, start in ai/, move to docs/ when stable
 
 ## Writing for AI: Machine-Optimized Content
