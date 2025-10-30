@@ -111,29 +111,29 @@ Currently implementing [feature]
 
 ## What Goes Where
 
-**docs/** — Permanent documentation for humans
+**docs/** — Permanent project documentation
 - API references, user guides, tutorials
 - Architecture documentation for team/users
 - Requirements, specifications
 - Optional: docs/adr/ for formal Architecture Decision Records
-- Purpose: Normal project docs (readable by humans)
+- Purpose: Normal project docs (user/team-facing)
 
-**ai/** — AI agent working context (session tracking & research)
+**ai/** — AI agent working context
 - TODO.md — Current tasks
 - STATUS.md — Project state, what worked/didn't
 - DECISIONS.md — Development decisions and rationale
 - RESEARCH.md — Index of research findings
 - research/{topic}.md — Detailed research (e.g., indexing-algorithms.md)
-- Purpose: Purely for AI agents to track project and maintain context across sessions
+- Purpose: AI session tracking and context maintenance only
 
 **Simple rule:**
 - Does it change frequently during development? → ai/
-- Is it permanent reference material for humans? → docs/
+- Is it permanent reference material for team/users? → docs/
 - When in doubt, start in ai/, move to docs/ when stable
 
 ## Writing for AI: Machine-Optimized Content
 
-**ai/ is for AI agents (machine-readable), docs/ is for humans (narrative)**
+**ai/ is for AI agents (machine-readable), docs/ is for users/team (narrative)**
 
 ### Core Principles
 
@@ -308,7 +308,7 @@ See ai/STATUS.md for current state and active work.
 **❌ Don't write narrative prose in ai/ files**
 - Use tables, lists, key-value pairs for machine readability
 - Front-load answers, use inverted pyramid structure
-- ai/ is for agents (structured), docs/ is for humans (narrative)
+- ai/ is for agents (structured), docs/ is for users/team (narrative)
 
 **❌ Don't create language/tool pattern docs**
 - Research current best practices instead
