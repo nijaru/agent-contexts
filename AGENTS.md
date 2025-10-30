@@ -1,64 +1,68 @@
 # Agent Contexts
 
-*Standardized patterns for AI agent organization*
+**Example project configuration for AI coding agents**
 
 ## Purpose
 
-This repository teaches AI agents **how to organize their work** across projects, not how to code. It provides a minimal, standardized structure for AI working context that works across all AI coding tools (Claude Code, Cursor, Copilot, etc.).
+This repository teaches AI agents **how to organize their work** across projects. It provides standardized structure for AI working context that works across all AI coding tools.
 
-## Quick Start
+## Organization Patterns
 
-**For AI agents working on projects:**
-1. Load `@PRACTICES.md` for complete guidance
-2. Create `ai/` directory structure in your project
-3. Maintain TODO, STATUS, DECISIONS, and RESEARCH files
-4. Use this repo's AGENTS.md as a template
+**For complete guidance:** @PRACTICES.md
 
-**For humans setting up projects:**
-1. Copy this AGENTS.md to your project as a starting template
-2. Create `ai/` directory for agent working context
-3. Let AI agents maintain their workspace
-4. Reference `PRACTICES.md` for details
+**Quick reference:**
+- **ai/** — AI session tracking (tasks, state, decisions, research)
+- **docs/** — User/team documentation (guides, API, specs)
 
 ## Project Structure
 
-This repository follows its own practices:
-
 ```
 agent-contexts/
-├── README.md        # Project overview
-├── AGENTS.md        # This file (primary standard, example template)
-├── PRACTICES.md     # Core guidance for AI agents
-├── CLAUDE.md        # Symlink for Claude Code compatibility
+├── README.md        # Project overview (for humans browsing GitHub)
+├── AGENTS.md        # This file (example project config)
+├── CLAUDE.md        # Symlink to AGENTS.md (Claude Code compatibility)
+├── PRACTICES.md     # Complete guide for AI agents (~900 words)
 └── ai/              # Our own working context
-    ├── TODO.md
-    ├── STATUS.md
-    ├── DECISIONS.md
-    ├── RESEARCH.md
-    └── research/    # Detailed research files
+    ├── TODO.md      # Current work on this repo
+    ├── STATUS.md    # State of this repo
+    ├── DECISIONS.md # Decisions about this repo's structure
+    └── RESEARCH.md  # Research on AI agent patterns
 ```
 
 ## Core Principles
 
-1. **Organization over coding** - AI agents already know how to code
-2. **Standardization over customization** - Same structure across all projects
-3. **Minimal over comprehensive** - Keep token usage low
-4. **Research over duplication** - Fresh knowledge over stale patterns
-
-## When to Use This Repo
-
-**✅ Use when:**
-- Starting work on a new project
-- Setting up AI working context
-- Need guidance on file organization
-- Doing multi-session work requiring handoff
-
-**❌ Don't use for:**
-- Language syntax (use training data + research)
-- Tool commands (research current docs)
-- Project-specific patterns (belongs in project's AGENTS.md)
-- Comprehensive coding guides (defeats the purpose)
+1. **Organization over coding** - AI agents know syntax, need structure
+2. **Standardization** - Same ai/ structure across all projects
+3. **Minimal** - ~1,000 total words vs previous ~13,000
+4. **Machine-optimized** - ai/ uses tables/lists, docs/ uses prose
+5. **Research over duplication** - Fresh knowledge beats stale patterns
 
 ## Development Workflow
 
-See `ai/TODO.md` for current work on this repository.
+**For humans:**
+1. Browse README.md for project overview
+2. Read PRACTICES.md to understand organization patterns
+3. Use AGENTS.md as template for your own projects
+
+**For AI agents:**
+1. Load @PRACTICES.md for organization guidance
+2. Read ai/STATUS.md for current state of this repo
+3. Check ai/TODO.md for active work
+4. Reference ai/DECISIONS.md for architectural rationale
+
+## When to Use This Repo
+
+**✅ Use for:**
+- Standardizing AI working context across projects
+- Multi-session work requiring clean handoffs
+- Setting up new projects with AI agent workflows
+- Learning how to structure ai/ directory
+
+**❌ Don't use for:**
+- Programming language tutorials (AI knows syntax)
+- Tool commands (research current docs)
+- Project-specific patterns (put in your CLAUDE.md/AGENTS.md)
+
+## Current Focus
+
+See ai/STATUS.md for current state and active work.
