@@ -55,6 +55,7 @@ For organization patterns: @external/agent-contexts/PRACTICES.md
 2. **Standardization over customization** - Same `ai/` structure everywhere
 3. **Minimal over comprehensive** - ~1,000 total words vs previous ~13,000
 4. **Research over duplication** - Fresh knowledge beats stale patterns
+5. **Machine-optimized over narrative** - ai/ uses tables/lists (agents), docs/ uses prose (humans)
 
 ## What Changed (v0.1.0 Refactor)
 

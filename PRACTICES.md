@@ -129,6 +129,73 @@ Currently implementing [feature]
 - Is it permanent reference material? → docs/
 - When in doubt, start in ai/, move to docs/ when stable
 
+## Writing for AI: Machine-Optimized Content
+
+**ai/ is for AI agents (machine-readable), docs/ is for humans (narrative)**
+
+### Core Principles
+
+1. **Structure over prose**: Use tables, lists, key-value pairs instead of narrative paragraphs
+2. **Inverted pyramid**: Answer/conclusion first, evidence second, rationale third
+3. **Token efficiency**: AI agents process every token - make content scannable
+4. **Cross-reference**: Point to detailed files, don't duplicate content inline
+5. **Executive summaries**: Docs >500 lines need TL;DR at top with key Q&A
+
+### Strategic Analysis Pattern
+
+For research/investigations in ai/research/:
+
+```markdown
+## Executive Summary
+**Question**: [key question]
+**Answer**: [decision]
+**Impact**: [consequences]
+
+### Evidence
+| Option | Pro | Con | Score |
+|--------|-----|-----|-------|
+
+### Decision
+[action + rationale bullets]
+```
+
+### ai/ File Writing Rules
+
+**STATUS.md**:
+- Use tables for metrics: `| Metric | Value | Last Updated |`
+- Bullet points for learnings: `- Pattern X improved Y by Z%`
+- NO narrative paragraphs explaining context
+
+**TODO.md**:
+- Checkbox lists only: `- [ ] Task with success criteria`
+- NO descriptions beyond one line
+- Link to detailed docs: `See ai/research/feature-analysis.md`
+
+**DECISIONS.md**:
+- Use template: Context → Decision → Rationale (bullets) → Tradeoffs (table)
+- Date every entry
+- NO prose justifications
+
+**RESEARCH.md**:
+- Index format: Topic → Key Finding (one line) → Link to details
+- Use tables to compare options
+- NO embedded analysis (put in research/ files)
+
+**research/ files**:
+- Executive summary mandatory if >500 lines
+- Question → Answer → Evidence (table) → Rationale (bullets)
+- Use headings for scannability
+
+### Examples
+
+❌ Narrative: "After investigating caching, the team feels Redis would be good..."
+✅ Structured:
+```markdown
+**Decision**: Redis (2025-01-15)
+**Why**: 10x faster, persistence, team expertise
+**Tradeoff**: Additional service dependency
+```
+
 ## Global vs Project Files
 
 **Global ~/.claude/CLAUDE.md** (or equivalent):
@@ -235,6 +302,11 @@ See ai/STATUS.md for current state and active work.
 
 **❌ Don't put code in ai/ directory**
 - Code belongs in src/, ai/ is for meta-work only
+
+**❌ Don't write narrative prose in ai/ files**
+- Use tables, lists, key-value pairs for machine readability
+- Front-load answers, use inverted pyramid structure
+- ai/ is for agents (structured), docs/ is for humans (narrative)
 
 **❌ Don't create language/tool pattern docs**
 - Research current best practices instead
