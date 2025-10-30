@@ -1,30 +1,33 @@
 # Status
 
-_Last Updated: 2025-10-22_
+_Last Updated: 2025-10-29_
 
 ## Current State
-- Version: 0.1.1
+- Living, organic guide without formal versioning (git history provides traceability)
 - Repository focused on AI workspace organization patterns
-- Core guidance in PRACTICES.md (~1,300 words)
-- ai/ directory structure established and documented
-- Global config proposal submitted (openai/agents.md#91)
+- Core guidance in PRACTICES.md (~800 words)
+- AGENTS.md now recommended as universal standard (Cursor, Cline, Claude Code, Copilot, Windsurf)
+- Clear guidance on repo-level files vs ai/ files with update triggers
 
 ## What Worked
 - Consolidating to single PRACTICES.md
 - ai/ directory structure is simple and proven
 - Clear separation: docs/ (permanent) vs ai/ (evolving)
-- Global config proposal has reference implementation (github.com/nijaru/global-agents-config)
+- AGENTS.md as universal standard reduces fragmentation
+- Explicit "when to update" guidance prevents confusion
+- Removing versioning keeps repo focused and organic
 
 ## What Didn't Work
-- PRACTICES.md grew beyond initial ~600 word target (now ~1,300)
-- Docs organization section may be too detailed for our focus
+- Previous versioning approach (removed - git history sufficient)
+- Lack of clarity on repo-level CLAUDE.md/AGENTS.md vs ai/STATUS.md
 
 ## Completed This Session
-- Trimmed PRACTICES.md from 1,319 → 807 words (39% reduction)
-- Removed verbose pseudocode, kept core guidance
-- Refocused on ai/ directory organization
-- Updated ai/TODO.md and ai/STATUS.md
-- Ready for v0.1.2 release
+- Added "Global vs Project Files" section with update triggers
+- Added comprehensive AGENTS.md template
+- Recommended AGENTS.md as universal standard
+- Removed VERSION file and all versioning references
+- Updated README to reflect living document approach
+- Added "How files work together" section (history→status→next steps)
 
 ## Blockers
 None currently

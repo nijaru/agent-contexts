@@ -27,16 +27,15 @@ This repository follows its own practices:
 ```
 agent-contexts/
 ├── README.md        # Project overview
-├── AGENTS.md        # This file (serves as example template)
+├── AGENTS.md        # This file (primary standard, example template)
 ├── PRACTICES.md     # Core guidance for AI agents
-├── CLAUDE.md        # Symlink to AGENTS.md for compatibility
-├── ai/              # Our own working context
-│   ├── TODO.md
-│   ├── STATUS.md
-│   ├── DECISIONS.md
-│   ├── RESEARCH.md
-│   └── research/    # Detailed research files
-└── VERSION
+├── CLAUDE.md        # Symlink for Claude Code compatibility
+└── ai/              # Our own working context
+    ├── TODO.md
+    ├── STATUS.md
+    ├── DECISIONS.md
+    ├── RESEARCH.md
+    └── research/    # Detailed research files
 ```
 
 ## Core Principles

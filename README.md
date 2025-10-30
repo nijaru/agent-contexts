@@ -2,11 +2,9 @@
 
 **Standardized organization patterns for AI coding agents**
 
-Version: 0.1.5
+A living, organic guide teaching AI agents **how to organize their work** across projects. This is NOT a coding guide - AI agents already know how to code. This teaches them how to maintain consistent working context using a standardized `ai/` directory structure.
 
-## What is this?
-
-A minimal guide teaching AI agents **how to organize their work** across projects. This is NOT a coding guide - AI agents already know how to code. This teaches them how to maintain consistent working context using a standardized `ai/` directory structure.
+> **Note**: This is an evolving document without formal versioning. Git history provides full traceability. The patterns adapt as AI coding practices mature.
 
 ## Quick Start
 
@@ -35,10 +33,12 @@ git submodule add https://github.com/nijaru/agent-contexts external/agent-contex
 git submodule update --init --recursive
 ```
 
-Reference in your AGENTS.md or CLAUDE.md:
+Reference in your AGENTS.md:
 ```markdown
 For organization patterns: @external/agent-contexts/PRACTICES.md
 ```
+
+> **Recommendation**: Use `AGENTS.md` as your primary file (universal standard supported by Cursor, Cline, Claude Code, Copilot, Windsurf, etc.). For Claude Code compatibility, create a symlink: `ln -s AGENTS.md CLAUDE.md`
 
 ## Core Files
 
@@ -86,16 +86,15 @@ For organization patterns: @external/agent-contexts/PRACTICES.md
 ```
 agent-contexts/
 ├── README.md         # This file
-├── AGENTS.md         # Example template
-├── CLAUDE.md         # Symlink for compatibility
-├── PRACTICES.md      # Core guidance (~600 words)
-├── ai/               # Our own working context
-│   ├── TODO.md
-│   ├── STATUS.md
-│   ├── DECISIONS.md
-│   ├── RESEARCH.md
-│   └── research/     # Detailed research files
-└── VERSION
+├── AGENTS.md         # Example template (primary standard)
+├── CLAUDE.md         # Symlink for Claude Code compatibility
+├── PRACTICES.md      # Core guidance (~800 words)
+└── ai/               # Our own working context
+    ├── TODO.md
+    ├── STATUS.md
+    ├── DECISIONS.md
+    ├── RESEARCH.md
+    └── research/     # Detailed research files
 ```
 
 ## Philosophy

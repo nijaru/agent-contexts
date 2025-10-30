@@ -136,32 +136,70 @@ Currently implementing [feature]
 - Loaded in EVERY conversation across projects
 - Maximum token efficiency required
 
-**Project CLAUDE.md/AGENTS.md**:
-- Brief project overview (~100-200 lines max)
-- Setup instructions, current focus, pointers
-- ✅ Use brief notices: `"⚠️ Model routing issues. See ai/STATUS.md"`
-- ❌ NOT detailed breakdowns: `"⚠️ Model Routing: 1. Problem A (5 lines)... 2. Problem B..."`
-- Detailed issues → ai/STATUS.md
-- Architectural decisions → ai/DECISIONS.md
-- Research findings → ai/RESEARCH.md
+**Project AGENTS.md** (repo-level, team-shared):
+- **Recommendation**: Use `AGENTS.md` as the universal standard (works with Cursor, Cline, Claude Code, Copilot, Windsurf, etc.)
+- For Claude Code compatibility: `ln -s AGENTS.md CLAUDE.md` or vice versa
+- **What belongs here**: Architecture, patterns, commands, code style (~100-200 lines)
+  - Build/test/deploy commands
+  - Coding standards and naming conventions
+  - Project architecture and structure
+  - Technology stack and framework patterns
+- **When to update**: On architectural changes, new patterns adopted, tooling changes
+- **What does NOT belong**: Current issues, active work, recent learnings
+- ✅ Brief pointers: `"⚠️ Model routing issues. See ai/STATUS.md"`
+- ❌ Detailed breakdowns: `"⚠️ Model Routing: 1. Problem A... 2. Problem B..."`
 
-## AGENTS.md Structure
+**ai/ files** (session-level, evolving context):
+- **ai/STATUS.md**: Current state, active work, implementation learnings
+- **ai/DECISIONS.md**: Architectural decisions with dates and rationale
+- **ai/RESEARCH.md**: External research findings and open questions
+- **When to update**: Every session (STATUS.md), on decisions (DECISIONS.md), during research (RESEARCH.md)
 
-Document the project structure you discover:
+## AGENTS.md Template
 
 ```markdown
 # Project Name
 
-## Project Structure
-- Documentation: docs/ (or wherever it exists)
-- AI working context: ai/
-- [Other discovered directories: .github/, internal/, etc.]
+Brief description of what this project does.
 
-## Development Setup
-[How to get started]
+## Project Structure
+- Documentation: docs/
+- AI working context: ai/ (read ai/STATUS.md first)
+- [Other key directories]
+
+## Technology Stack
+- Language: [e.g., TypeScript, Python]
+- Framework: [e.g., Next.js, FastAPI]
+- [Key libraries and tools]
+
+## Development Commands
+```bash
+# Install dependencies
+[command]
+
+# Run dev server
+[command]
+
+# Run tests
+[command]
+
+# Build
+[command]
+```
+
+## Code Standards
+- [Specific formatting rules]
+- [Naming conventions]
+- [Import patterns]
+- [Testing requirements]
+
+## Architecture Patterns
+- [Key architectural decisions]
+- [Folder structure conventions]
+- [Data flow patterns]
 
 ## Current Focus
-[What we're working on now]
+See ai/STATUS.md for current state and active work.
 ```
 
 ## Session Workflow
