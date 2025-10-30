@@ -121,6 +121,22 @@ Currently implementing [feature]
 - Is it permanent reference material? → docs/
 - When in doubt, start in ai/, move to docs/ when stable
 
+## Global vs Project Files
+
+**Global ~/.claude/CLAUDE.md** (or equivalent):
+- Universal rules for ALL projects (commit formats, naming, testing)
+- Loaded in EVERY conversation across projects
+- Maximum token efficiency required
+
+**Project CLAUDE.md/AGENTS.md**:
+- Brief project overview (~100-200 lines max)
+- Setup instructions, current focus, pointers
+- ✅ Use brief notices: `"⚠️ Model routing issues. See ai/STATUS.md"`
+- ❌ NOT detailed breakdowns: `"⚠️ Model Routing: 1. Problem A (5 lines)... 2. Problem B..."`
+- Detailed issues → ai/STATUS.md
+- Architectural decisions → ai/DECISIONS.md
+- Research findings → ai/RESEARCH.md
+
 ## AGENTS.md Structure
 
 Document the project structure you discover:
@@ -177,9 +193,10 @@ Document the project structure you discover:
 **❌ Don't create language/tool pattern docs**
 - Research current best practices instead
 
-**❌ Don't bloat AGENTS.md**
-- Keep concise (~100-200 lines max)
-- Link to docs, don't inline them
+**❌ Don't bloat AGENTS.md/CLAUDE.md**
+- Keep concise (~100-200 lines max) - loaded in EVERY conversation
+- Use pointers, not details: `"⚠️ Issue. See ai/STATUS.md"` (NOT multi-line breakdowns)
+- Link to ai/ and docs/, don't inline them
 
 **❌ Don't hoard old research**
 - Archive or delete, keep ai/ focused on current work
