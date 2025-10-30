@@ -31,6 +31,14 @@ YOUR_PROJECT/
 
 ## File Purposes and Update Modes
 
+**How files work together (history → status → next steps)**:
+- **DECISIONS.md**: Why we made architectural choices (append-only history)
+- **STATUS.md**: Where we are now + implementation learnings (edit-in-place, "What Worked/Didn't" = working history)
+- **TODO.md**: What's next (edit-in-place)
+- **RESEARCH.md**: External knowledge gathered (hybrid, index with details in research/)
+
+**Loading context**: Read STATUS.md first (current state + recent learnings), check TODO.md (active work), reference DECISIONS.md (architectural rationale), consult RESEARCH.md (domain knowledge).
+
 ### TODO.md (Edit in place)
 **Purpose**: Track active tasks and priorities
 **Update**: Edit in place - remove completed, add new
