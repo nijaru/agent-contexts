@@ -13,6 +13,7 @@ YOUR_PROJECT/
 ├── CLAUDE.md or AGENTS.md       # AI entry point
 ├── docs/                        # Permanent user/team docs
 ├── ai/                          # AI working context
+│   ├── PLAN.md                 # Strategic roadmap
 │   ├── TODO.md                 # Active tasks
 │   ├── STATUS.md               # Current state
 │   ├── DECISIONS.md            # Architectural choices
@@ -29,10 +30,11 @@ YOUR_PROJECT/
 
 ## File Purposes
 
-**How files work together (history → status → next steps):**
+**How files work together (plan → history → status → next steps):**
 
 | File | Purpose | Update Mode | Content |
 |------|---------|-------------|---------|
+| **PLAN.md** | Strategic roadmap and milestones | Edit-in-place | Goals, phases, dependencies, timeline |
 | **DECISIONS.md** | Why we made architectural choices | Append-only | Dated decisions with rationale |
 | **STATUS.md** | Current state + learnings | Edit-in-place | Metrics, what worked/didn't, blockers |
 | **TODO.md** | What's next | Edit-in-place | Active tasks, checkboxes |
@@ -41,10 +43,35 @@ YOUR_PROJECT/
 **Loading context order:**
 1. Read STATUS.md first (current state + recent learnings)
 2. Check TODO.md (active work)
-3. Reference DECISIONS.md (architectural rationale)
-4. Consult RESEARCH.md (domain knowledge)
+3. Review PLAN.md (strategic roadmap and milestones)
+4. Reference DECISIONS.md (architectural rationale)
+5. Consult RESEARCH.md (domain knowledge)
 
 ## File Templates
+
+### PLAN.md
+```markdown
+## Goal
+[Overall objective - what are we building/achieving?]
+
+## Milestones
+- **Phase 1 (Q1 2025)**: Core engine + CLI ← CURRENT
+  - Deliverables: [specific features]
+  - Success criteria: [measurable outcomes]
+- **Phase 2 (Q2 2025)**: REST API + authentication
+  - Deliverables: [specific features]
+  - Dependencies: Phase 1 complete (data model must stabilize)
+- **Phase 3 (Q3 2025)**: Web UI
+  - Deliverables: [specific features]
+
+## Critical Dependencies
+- [Dependency 1]: Must complete before [what]
+- [Dependency 2]: Blocks [what]
+
+## Out of Scope (for this plan)
+- [Feature X] - deferred to future
+- [Feature Y] - not aligned with current goal
+```
 
 ### TODO.md
 ```markdown
@@ -144,6 +171,7 @@ For research/investigations in ai/research/:
 
 | File | Format | Rules |
 |------|--------|-------|
+| **PLAN.md** | Milestones (bullets), dependencies (table) | Timeline with phases, NO detailed implementation |
 | **STATUS.md** | Tables for metrics, bullets for learnings | NO narrative paragraphs |
 | **TODO.md** | Checkbox lists only | One-line descriptions, link to details |
 | **DECISIONS.md** | Template: Context → Decision → Rationale (bullets) → Tradeoffs (table) | Date every entry, NO prose |
@@ -169,6 +197,7 @@ For research/investigations in ai/research/:
 |-------|------|---------|----------------|
 | **Global** | `~/.claude/CLAUDE.md` | Universal rules for ALL projects | On workflow changes |
 | **Project** | `CLAUDE.md` or `AGENTS.md` | Architecture, patterns, commands (~100-200 lines) | On architectural changes |
+| **Strategic** | `ai/PLAN.md` | Roadmap, milestones, dependencies | On major pivots, quarterly |
 | **Session** | `ai/STATUS.md` | Current state, learnings | Every session |
 | **Session** | `ai/TODO.md` | Active tasks | As tasks change |
 | **Append** | `ai/DECISIONS.md` | Architectural decisions | On decisions |
@@ -218,13 +247,37 @@ See AGENTS.md in this repo for complete example. Minimal version:
 See ai/STATUS.md for current state and active work.
 ```
 
+## Compaction Rules
+
+**Trust git history** - Delete old content instead of archiving when files get too large.
+
+### STATUS.md Compaction
+When ai/STATUS.md exceeds **400 lines**:
+1. Extract current state + key learnings to top
+2. Delete old detailed sections (git log preserves them)
+3. Commit with message: "Compact STATUS.md - see git log for history"
+
+### DECISIONS.md Migration
+When ai/DECISIONS.md exceeds **1000 lines** or **50+ decisions**:
+1. Create ai/decisions/ directory
+2. Split by category: architecture.md, database.md, security.md, etc.
+3. Keep index in DECISIONS.md pointing to decisions/*.md files
+
+**Default**: Keep DECISIONS.md as single file until compaction needed.
+
+### Research Cleanup
+For ai/research/ files no longer relevant:
+1. Consolidate key findings into RESEARCH.md
+2. Delete detailed file
+3. Commit: "Consolidate [topic] research - see commit [hash] for details"
+
 ## Session Workflow
 
 | Phase | Actions |
 |-------|---------|
 | **Starting** | Read ai/STATUS.md FIRST → Load CLAUDE.md → Check ai/TODO.md |
 | **During** | Research current best practices → Document in ai/research/{topic}.md → Record decisions in ai/DECISIONS.md |
-| **Ending (CRITICAL)** | Update ai/STATUS.md → Reference commits by hash (e.g., "Fixed in a1b2c3d") → Update ai/TODO.md → Archive old research |
+| **Ending (CRITICAL)** | Update ai/STATUS.md → Reference commits by hash (e.g., "Fixed in a1b2c3d") → Update ai/TODO.md → Compact if needed (see Compaction Rules) |
 | **Context reset (>80% full)** | Update ai/STATUS.md and ai/TODO.md → Start fresh session with essentials only |
 
 ## Anti-Patterns
@@ -237,12 +290,13 @@ See ai/STATUS.md for current state and active work.
 | Write narrative prose in ai/ | Tables, lists, key-value pairs |
 | Create language/tool pattern docs | Research current best practices |
 | Bloat CLAUDE.md/AGENTS.md (>200 lines) | Brief pointers to ai/ |
-| Hoard old research | Archive or delete |
+| Archive/hoard old content | Delete old content (git preserves history) |
 
 ## Token Optimization
 
 - Keep ai/ files concise and current
-- Archive old research to ai/research/archive/
+- Apply compaction rules when files exceed thresholds (see Compaction Rules)
+- Delete old content (git preserves history - don't archive)
 - Remove completed tasks from TODO.md promptly
 - Update STATUS.md, don't append to it
 - Use decision trees over prose
