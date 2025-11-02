@@ -23,6 +23,7 @@ agent-contexts/
 ├── CLAUDE.md        # Symlink to AGENTS.md (Claude Code compatibility)
 ├── PRACTICES.md     # Complete guide for AI agents (~900 words)
 └── ai/              # Our own working context
+    ├── PLAN.md      # Strategic roadmap for this repo
     ├── TODO.md      # Current work on this repo
     ├── STATUS.md    # State of this repo
     ├── DECISIONS.md # Decisions about this repo's structure
@@ -48,7 +49,8 @@ agent-contexts/
 1. Load @PRACTICES.md for organization guidance
 2. Read ai/STATUS.md for current state of this repo
 3. Check ai/TODO.md for active work
-4. Reference ai/DECISIONS.md for architectural rationale
+4. Review ai/PLAN.md for strategic roadmap
+5. Reference ai/DECISIONS.md for architectural rationale
 
 ## When to Use This Repo
 
