@@ -196,7 +196,7 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 | Level | File | Purpose | Update Mode |
 |-------|------|---------|-------------|
 | **Global** | `~/.claude/CLAUDE.md` | Rules for ALL projects | On workflow changes |
-| **Project** | `AGENTS.md` (+ symlink `CLAUDE.md`) | Architecture, commands (concise, well-structured) | On arch changes |
+| **Project** | `AGENTS.md` (+ symlink `CLAUDE.md`) | Architecture, commands, project overview | On arch changes |
 | **Strategic** | `ai/PLAN.md` | Roadmap (optional) | Quarterly/pivots |
 | **Session** | `ai/STATUS.md` | Current state | Every session |
 | **Session** | `ai/TODO.md` | Active tasks | As tasks change |
@@ -207,17 +207,20 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 
 **AGENTS.md = primary file, CLAUDE.md → AGENTS.md = symlink for Claude Code compatibility**
 
-**Length:** Target ~100-200 lines, but longer is fine if well-structured and doesn't duplicate ai/ files. Complex projects may need 500+ lines for comprehensive coverage.
+**Optimized for AI consumption:**
+- Use tables, lists, code blocks (machine-readable structure)
+- Clear sections with ## headers
+- Scannable - AI can quickly find relevant info
+- Comprehensive - include everything AI needs to understand project
+- No length limit - include what's needed, exclude what isn't
 
 **Belongs:** Build/test/deploy commands, coding standards, architecture, tech stack, project overview
 
-**Does NOT belong:** Current issues (→ STATUS.md), learnings (→ STATUS.md), roadmap (→ PLAN.md), detailed breakdowns (→ ai/)
+**Does NOT belong:** Current issues (→ STATUS.md), learnings (→ STATUS.md), tactical roadmap (→ PLAN.md), detailed breakdowns (→ ai/)
 
-**Well-structured means:**
-- Clear sections with headers
-- No duplication of ai/ content
-- Comprehensive but scannable
-- Serves as effective AI entry point
+**Quality over brevity:**
+- Well-structured 500-line file > poorly organized 100-line file
+- Focus: no duplication, effective AI entry point, comprehensive coverage
 
 **Format:**
 - ✅ `"⚠️ See ai/STATUS.md for routing issues"`
