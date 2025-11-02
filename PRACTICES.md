@@ -196,7 +196,7 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 | Level | File | Purpose | Update Mode |
 |-------|------|---------|-------------|
 | **Global** | `~/.claude/CLAUDE.md` | Rules for ALL projects | On workflow changes |
-| **Project** | `AGENTS.md` (+ symlink `CLAUDE.md`) | Architecture, commands (~100-200 lines) | On arch changes |
+| **Project** | `AGENTS.md` (+ symlink `CLAUDE.md`) | Architecture, commands (concise, well-structured) | On arch changes |
 | **Strategic** | `ai/PLAN.md` | Roadmap (optional) | Quarterly/pivots |
 | **Session** | `ai/STATUS.md` | Current state | Every session |
 | **Session** | `ai/TODO.md` | Active tasks | As tasks change |
@@ -207,9 +207,17 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 
 **AGENTS.md = primary file, CLAUDE.md → AGENTS.md = symlink for Claude Code compatibility**
 
-**Belongs:** Build/test/deploy commands, coding standards, architecture, tech stack
+**Length:** Target ~100-200 lines, but longer is fine if well-structured and doesn't duplicate ai/ files. Complex projects may need 500+ lines for comprehensive coverage.
+
+**Belongs:** Build/test/deploy commands, coding standards, architecture, tech stack, project overview
 
 **Does NOT belong:** Current issues (→ STATUS.md), learnings (→ STATUS.md), roadmap (→ PLAN.md), detailed breakdowns (→ ai/)
+
+**Well-structured means:**
+- Clear sections with headers
+- No duplication of ai/ content
+- Comprehensive but scannable
+- Serves as effective AI entry point
 
 **Format:**
 - ✅ `"⚠️ See ai/STATUS.md for routing issues"`
@@ -250,7 +258,7 @@ ai/STATUS.md (current state), ai/PLAN.md (roadmap)
 | Detailed tasks or daily updates in PLAN.md | Keep strategic (quarterly), use TODO.md for tasks |
 | PLAN.md for simple projects | Only if 3+ phases/dependencies |
 | Language/tool pattern docs | Research current best practices |
-| Bloat AGENTS.md (>200 lines) | Brief pointers to ai/ |
+| Duplicate ai/ content in AGENTS.md | Brief pointers to ai/, keep AGENTS.md scannable |
 
 ## Token Optimization
 
