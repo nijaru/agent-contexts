@@ -44,12 +44,12 @@ YOUR_PROJECT/
 
 | Phase | Actions |
 |-------|---------|
-| **Starting** | Read STATUS.md → Check TODO.md → Review PLAN.md (if exists) → Load CLAUDE.md |
+| **Starting** | Review PLAN.md (if exists) → Read STATUS.md → Check TODO.md → Load CLAUDE.md |
 | **During** | Research best practices → Document in research/ → Record decisions → Update PLAN.md if major pivot |
 | **Ending** | Update STATUS.md (state + learnings + commits) → Update TODO.md → Compact if needed |
 | **Reset (>80%)** | Compact STATUS.md → Update TODO.md → Keep essentials only |
 
-**Reading order:** STATUS (where am I?) → TODO (what's next?) → PLAN (strategic context) → DECISIONS (rationale) → RESEARCH (domain knowledge)
+**Reading order:** PLAN (strategic vision) → STATUS (current state) → TODO (next actions) → DECISIONS (rationale) → RESEARCH (domain knowledge)
 
 **Update PLAN.md:** Major pivots, phase completions, quarterly reviews. NOT every session.
 
