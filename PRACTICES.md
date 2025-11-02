@@ -10,7 +10,8 @@
 
 ```
 YOUR_PROJECT/
-├── CLAUDE.md or AGENTS.md       # AI entry point
+├── AGENTS.md                    # AI entry point (primary file)
+├── CLAUDE.md → AGENTS.md        # Symlink for Claude Code compatibility
 ├── docs/                        # Permanent user/team docs
 ├── ai/                          # AI working context
 │   ├── PLAN.md                 # Strategic roadmap (optional)
@@ -26,7 +27,7 @@ YOUR_PROJECT/
 **Core separation:**
 - **docs/** — Permanent user/team documentation (guides, API, specs)
 - **ai/** — Evolving AI working context (tasks, research, decisions)
-- **Respect existing structure** — If project has internal/, wiki/, .github/, note in CLAUDE.md and use them
+- **Respect existing structure** — If project has internal/, wiki/, .github/, note in AGENTS.md and use them
 
 ## File Purposes
 
@@ -44,7 +45,7 @@ YOUR_PROJECT/
 
 | Phase | Actions |
 |-------|---------|
-| **Starting** | Review PLAN.md (if exists) → Read STATUS.md → Check TODO.md → Load CLAUDE.md |
+| **Starting** | Review PLAN.md (if exists) → Read STATUS.md → Check TODO.md → Load AGENTS.md |
 | **During** | Research best practices → Document in research/ → Record decisions → Update PLAN.md if major pivot |
 | **Ending** | Update STATUS.md (state + learnings + commits) → Update TODO.md → Compact if needed |
 | **Reset (>80%)** | Compact STATUS.md → Update TODO.md → Keep essentials only |
@@ -195,14 +196,16 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 | Level | File | Purpose | Update Mode |
 |-------|------|---------|-------------|
 | **Global** | `~/.claude/CLAUDE.md` | Rules for ALL projects | On workflow changes |
-| **Project** | `CLAUDE.md` / `AGENTS.md` | Architecture, commands (~100-200 lines) | On arch changes |
+| **Project** | `AGENTS.md` (+ symlink `CLAUDE.md`) | Architecture, commands (~100-200 lines) | On arch changes |
 | **Strategic** | `ai/PLAN.md` | Roadmap (optional) | Quarterly/pivots |
 | **Session** | `ai/STATUS.md` | Current state | Every session |
 | **Session** | `ai/TODO.md` | Active tasks | As tasks change |
 | **Append** | `ai/DECISIONS.md` | Decisions | On decisions |
 | **Research** | `ai/RESEARCH.md` | Findings | During research |
 
-## Project CLAUDE.md/AGENTS.md
+## Project AGENTS.md
+
+**AGENTS.md = primary file, CLAUDE.md → AGENTS.md = symlink for Claude Code compatibility**
 
 **Belongs:** Build/test/deploy commands, coding standards, architecture, tech stack
 
@@ -247,7 +250,7 @@ ai/STATUS.md (current state), ai/PLAN.md (roadmap)
 | Detailed tasks or daily updates in PLAN.md | Keep strategic (quarterly), use TODO.md for tasks |
 | PLAN.md for simple projects | Only if 3+ phases/dependencies |
 | Language/tool pattern docs | Research current best practices |
-| Bloat CLAUDE.md (>200 lines) | Brief pointers to ai/ |
+| Bloat AGENTS.md (>200 lines) | Brief pointers to ai/ |
 
 ## Token Optimization
 
