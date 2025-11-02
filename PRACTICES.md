@@ -40,24 +40,16 @@ YOUR_PROJECT/
 
 **PLAN.md is optional** - Only create if project has 3+ phases, critical dependencies, or multi-month roadmap. Skip for simple projects.
 
-## Loading Context Order
-
-**Read strategic → tactical (high-level → details):**
-
-1. **PLAN.md** (if exists) — Overall roadmap, current phase
-2. **STATUS.md** — Current state, learnings, blockers
-3. **TODO.md** — Immediate next actions
-4. **DECISIONS.md** — Why architectural choices were made
-5. **RESEARCH.md** — Domain knowledge
-
 ## Session Workflow
 
 | Phase | Actions |
 |-------|---------|
-| **Starting** | Read STATUS.md → Review PLAN.md (if changed/first session) → Load CLAUDE.md → Check TODO.md |
+| **Starting** | Read STATUS.md → Check TODO.md → Review PLAN.md (if exists) → Load CLAUDE.md |
 | **During** | Research best practices → Document in research/ → Record decisions → Update PLAN.md if major pivot |
 | **Ending** | Update STATUS.md (state + learnings + commits) → Update TODO.md → Compact if needed |
 | **Reset (>80%)** | Compact STATUS.md → Update TODO.md → Keep essentials only |
+
+**Reading order:** STATUS (where am I?) → TODO (what's next?) → PLAN (strategic context) → DECISIONS (rationale) → RESEARCH (domain knowledge)
 
 **Update PLAN.md:** Major pivots, phase completions, quarterly reviews. NOT every session.
 
@@ -163,19 +155,7 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 - [ ] WebSocket vs SSE
 ```
 
-## Writing for AI: Machine-Optimized
-
-**ai/ is for AI (machine-readable), docs/ is for users (narrative)**
-
-| Principle | Implementation |
-|-----------|----------------|
-| **Structure over prose** | Tables, lists, key-value pairs (NO paragraphs) |
-| **Inverted pyramid** | Answer first, evidence second, rationale third |
-| **Token efficiency** | Make scannable |
-| **Cross-reference** | Link, don't duplicate |
-| **Executive summaries** | Docs >500 lines need TL;DR at top |
-
-### ai/ File Writing Rules
+## ai/ File Writing Rules
 
 | File | Format | Rules |
 |------|--------|-------|
@@ -184,7 +164,9 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 | **TODO.md** | Checkbox lists | One-line descriptions |
 | **DECISIONS.md** | Context → Decision → Rationale → Tradeoffs (table) | Date entries, link evidence |
 | **RESEARCH.md** | Index: Topic → Finding → Link | Tables for comparisons |
-| **research/ files** | Exec summary if >500 lines | Question → Answer → Evidence → Rationale |
+| **research/ files** | Question → Answer → Evidence (table) | Use exec summary if >500 lines |
+
+**Key principle:** Tables, lists, key-value pairs. NO narrative prose. Answer first, evidence second.
 
 ### Example
 
@@ -210,8 +192,8 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 
 ## File Hierarchy
 
-| Level | File | Purpose | Update Frequency |
-|-------|------|---------|------------------|
+| Level | File | Purpose | Update Mode |
+|-------|------|---------|-------------|
 | **Global** | `~/.claude/CLAUDE.md` | Rules for ALL projects | On workflow changes |
 | **Project** | `CLAUDE.md` / `AGENTS.md` | Architecture, commands (~100-200 lines) | On arch changes |
 | **Strategic** | `ai/PLAN.md` | Roadmap (optional) | Quarterly/pivots |
@@ -222,21 +204,13 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 
 ## Project CLAUDE.md/AGENTS.md
 
-**Belongs:**
-- Build/test/deploy commands
-- Coding standards, naming conventions
-- Project architecture, structure
-- Technology stack, framework patterns
+**Belongs:** Build/test/deploy commands, coding standards, architecture, tech stack
 
-**Does NOT belong:**
-- Current issues, active work (→ ai/STATUS.md)
-- Recent learnings (→ ai/STATUS.md)
-- Detailed breakdowns (→ ai/)
-- Strategic roadmap (→ ai/PLAN.md)
+**Does NOT belong:** Current issues (→ STATUS.md), learnings (→ STATUS.md), roadmap (→ PLAN.md), detailed breakdowns (→ ai/)
 
 **Format:**
-- ✅ Brief pointers: `"⚠️ See ai/STATUS.md for routing issues"`
-- ❌ Detailed breakdowns: `"⚠️ Routing: 1. Problem A... 2. Problem B..."`
+- ✅ `"⚠️ See ai/STATUS.md for routing issues"`
+- ❌ `"⚠️ Routing: 1. Problem A... 2. Problem B..."`
 
 ## Project Config Template
 
@@ -245,51 +219,42 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 [Brief description]
 
 ## Structure
-- docs/ — Permanent documentation
-- ai/ — Working context
-  - PLAN.md — Roadmap (if complex project)
-  - STATUS.md — Current state (read first)
-  - TODO.md — Next steps
+docs/, ai/ (PLAN.md if complex, STATUS.md read first, TODO.md)
 
 ## Stack
-- Language: [e.g., TypeScript]
-- Framework: [e.g., Next.js]
+[Language], [Framework]
 
 ## Commands
-[build/test/deploy]
+build: [cmd]
+test: [cmd]
+deploy: [cmd]
 
 ## Standards
 [formatting, naming, imports]
 
 ## Current Focus
-See ai/STATUS.md. For roadmap: ai/PLAN.md.
+ai/STATUS.md (current state), ai/PLAN.md (roadmap)
 ```
 
 ## Anti-Patterns
 
 | ❌ Don't | ✅ Do Instead |
 |---------|---------------|
-| Dated summary files (SUMMARY_OCT23.md) | Update STATUS.md in-place |
+| Dated files (SUMMARY_OCT23.md) or archive dirs | Update STATUS.md in-place, trust git history |
 | Duplicate docs/ and ai/ | docs/ = permanent, ai/ = working |
 | Code in ai/ | Code in src/, ai/ for meta-work only |
 | Narrative prose in ai/ | Tables, lists, key-value |
-| Detailed tasks in PLAN.md | Keep strategic, use TODO.md |
+| Detailed tasks or daily updates in PLAN.md | Keep strategic (quarterly), use TODO.md for tasks |
 | PLAN.md for simple projects | Only if 3+ phases/dependencies |
-| Update PLAN.md every session | Quarterly/milestones only |
-| Language/tool patterns | Research current best practices |
+| Language/tool pattern docs | Research current best practices |
 | Bloat CLAUDE.md (>200 lines) | Brief pointers to ai/ |
-| Archive/hoard | Delete (git preserves) |
 
 ## Token Optimization
 
-- Keep ai/ files concise and current
 - Apply compaction rules when thresholds hit
-- Delete old content (git preserves history)
-- Remove completed tasks from TODO.md promptly
 - Update STATUS.md in-place, don't append
-- Use tables and bullets over prose
-- Link to details instead of duplicating
 - Skip PLAN.md if project doesn't need it
+- Use tables/bullets over prose
 
 ---
 
