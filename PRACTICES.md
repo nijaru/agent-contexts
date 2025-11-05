@@ -33,13 +33,13 @@ YOUR_PROJECT/
 
 | File | Purpose | Update Mode | Scope |
 |------|---------|-------------|-------|
-| **PLAN.md** | Strategic roadmap | Edit-in-place | Months/quarters - optional |
+| **PLAN.md** | Dependencies, architecture, scope | Edit-in-place | Project lifecycle - optional |
 | **STATUS.md** | Current state + learnings | Edit-in-place | Current session |
-| **TODO.md** | Tactical next steps | Edit-in-place | Days/weeks |
+| **TODO.md** | Tactical next steps | Edit-in-place | Active work |
 | **DECISIONS.md** | Architectural rationale | Append-only | Permanent record |
 | **RESEARCH.md** | Knowledge index | Hybrid | As needed |
 
-**PLAN.md is optional** - Only create if project has 3+ phases, critical dependencies, or multi-month roadmap. Skip for simple projects.
+**PLAN.md is optional** - Only create if project has 3+ phases, critical dependencies, or external deadlines. Focus: what blocks what, technical approach, scope boundaries. Skip time estimates unless external deadline exists.
 
 ## Session Workflow
 
@@ -60,22 +60,30 @@ YOUR_PROJECT/
 
 ```markdown
 ## Goal
-Production-ready v1.0 by Q2 2025
+[What building? Why? External deadline if exists]
 
-## Milestones
-| Phase | Timeline | Status | Deliverables | Success Criteria |
-|-------|----------|--------|--------------|------------------|
-| Phase 1 | Q1 2025 | ← CURRENT | Core engine, CLI | 10K req/s, <100ms p95 |
-| Phase 2 | Q2 2025 | Planned | REST API, auth | 100 users |
+## Phases
+| Phase | Status | Deliverables | Success Criteria |
+|-------|--------|--------------|------------------|
+| Phase 1 | ← CURRENT | Core engine, CLI | 10K req/s, <100ms p95 |
+| Phase 2 | Planned | REST API, auth | 100 users |
 
-## Critical Dependencies
-| Dependency | Blocks | Reason |
-|------------|--------|--------|
-| Phase 1 complete | Phase 2 | Data model must stabilize |
+## Dependencies
+| Must Complete | Before Starting | Why |
+|---------------|-----------------|-----|
+| Phase 1 | Phase 2 | Data model must stabilize |
+| Auth design | REST API | Security model affects all endpoints |
+
+## Technical Architecture
+| Component | Approach | Rationale |
+|-----------|----------|-----------|
+| Database | PostgreSQL + jsonb | ACID + flexibility |
 
 ## Out of Scope
-- Mobile apps (deferred to 2026)
-- GraphQL (REST sufficient)
+- Mobile apps (v2.0 feature)
+- GraphQL (REST sufficient for v1.0)
+
+**Note**: Timeline optional - only add if external deadline exists (customer launch, conference demo)
 ```
 
 ### TODO.md
@@ -160,7 +168,7 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 
 | File | Format | Rules |
 |------|--------|-------|
-| **PLAN.md** | Tables for milestones/dependencies | Timeline with phases, NO detailed tasks |
+| **PLAN.md** | Tables for phases/dependencies/architecture | Focus: dependencies (A before B), technical approach, scope. Detail okay. NO time estimates (days/weeks/quarters) unless external deadline |
 | **STATUS.md** | Tables for metrics, bullets for learnings | NO prose, date measurements |
 | **TODO.md** | Checkbox lists | One-line descriptions |
 | **DECISIONS.md** | Context → Decision → Rationale → Tradeoffs (table) | Date entries, link evidence |
@@ -254,12 +262,13 @@ ai/STATUS.md (current state), ai/PLAN.md (roadmap)
 
 | ❌ Don't | ✅ Do Instead |
 |---------|---------------|
-| Dated files (SUMMARY_OCT23.md) or archive dirs | Update STATUS.md in-place, trust git history |
+| Dated files (SUMMARY_OCT23.md, WEEK*_DAY*.md) | Update STATUS.md in-place, trust git history |
 | Duplicate docs/ and ai/ | docs/ = permanent, ai/ = working |
 | Code in ai/ | Code in src/, ai/ for meta-work only |
 | Narrative prose in ai/ | Tables, lists, key-value |
-| Detailed tasks or daily updates in PLAN.md | Keep strategic (quarterly), use TODO.md for tasks |
-| PLAN.md for simple projects | Only if 3+ phases/dependencies |
+| Time estimates in PLAN.md ("~3-4 days", "Q1 2025") | Dependencies + scope. Add time only if external deadline exists |
+| Progress tracking ("Week X Day Y") in PLAN.md | Use git log for timeline, STATUS.md for current state |
+| PLAN.md for simple projects | Only if 3+ phases/dependencies/deadlines |
 | Language/tool pattern docs | Research current best practices |
 | Duplicate ai/ content in AGENTS.md | Brief pointers to ai/, keep AGENTS.md scannable |
 
