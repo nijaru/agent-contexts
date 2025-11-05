@@ -262,7 +262,7 @@ ai/STATUS.md (current state), ai/PLAN.md (roadmap)
 
 | ❌ Don't | ✅ Do Instead |
 |---------|---------------|
-| Dated files (SUMMARY_OCT23.md, WEEK*_DAY*.md) | Update STATUS.md in-place, trust git history |
+| Artificial time tracking files (WEEK*_DAY*.md) | Update STATUS.md in-place, trust git history. Real dates okay (ANALYSIS_2025-11-05.md) |
 | Duplicate docs/ and ai/ | docs/ = permanent, ai/ = working |
 | Code in ai/ | Code in src/, ai/ for meta-work only |
 | Narrative prose in ai/ | Tables, lists, key-value |
