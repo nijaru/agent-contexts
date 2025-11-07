@@ -188,16 +188,57 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 **Tradeoff**: Service dependency
 ```
 
-## Compaction Rules
+## File Maintenance
 
-**Trust git history** - Delete old content when files get large.
+**Trust git history** - Delete old content when files become unwieldy. Prune when files contain substantial irrelevant or historical content that wastes tokens and obscures current state.
 
-| File | Threshold | Action |
-|------|-----------|--------|
-| **STATUS.md** | 400 lines | Extract current + key learnings → Delete old (git preserves) → Commit: "Compact STATUS.md" |
-| **DECISIONS.md** | 1000 lines / 50+ decisions | Create ai/decisions/ dir → Split by category → Keep index in DECISIONS.md |
-| **PLAN.md** | 200 lines / 10+ phases | Archive completed phases to DECISIONS.md → Keep current + next 1-2 phases |
-| **research/** | No longer relevant | Consolidate findings to RESEARCH.md → Delete file → Reference commit |
+### STATUS.md: Current state only
+
+**What to delete:**
+- Old pivots, completed phases, superseded approaches
+- Historical metrics from previous architectures
+- Resolved blockers
+
+**What to keep:**
+- Current metrics and performance data
+- Active blockers and ongoing issues
+- Recent learnings (last 1-2 sessions)
+
+**Action:** Extract current state + key learnings → Delete rest → Commit: "Compact STATUS.md - removed historical content"
+
+### DECISIONS.md: Active decisions only
+
+**For superseded decisions:**
+- Create `ai/decisions/superseded-YYYY-MM.md`
+- Move reversed/replaced decisions there
+- Keep main file for decisions still affecting codebase
+
+**For topic-based splits (when growing large):**
+- Create `ai/decisions/architecture.md`, `ai/decisions/database.md`, etc.
+- Keep index/summary in main DECISIONS.md linking to topic files
+- Use when file exceeds ~50 decisions or becomes hard to navigate
+
+**Delete entirely:** Decisions that were reversed AND have no historical value
+
+### TODO.md: Active work only
+
+- Delete completed tasks immediately (no "Done" section)
+- Git preserves completion history
+- Keep only pending/in-progress work
+
+### PLAN.md: Current + next phases
+
+- Archive/delete completed phases
+- Keep current phase + dependencies for next 1-2 phases
+- Major pivots: update in-place, old content to git history
+
+### research/: Consolidate or delete
+
+- Consolidate key findings to RESEARCH.md
+- Delete file when no longer relevant
+- Reference commit hash if needed later: "See abc123d for auth research"
+
+**Principle:** Files should efficiently answer "what's current?" without loading substantial irrelevant historical content. Prune when old content dominates token usage or obscures current state.
 
 ## File Hierarchy
 
