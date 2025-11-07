@@ -259,7 +259,7 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 **Optimized for AI consumption:**
 - Use tables, lists, code blocks (machine-readable structure)
 - Clear sections with ## headers
-- Scannable - AI can quickly find relevant info
+- Well-structured - logical organization, easy to parse
 - Comprehensive - include everything AI needs to understand project
 - No length limit - include what's needed, exclude what isn't
 
@@ -311,15 +311,15 @@ ai/STATUS.md (current state), ai/PLAN.md (roadmap)
 | Progress tracking ("Week X Day Y") in PLAN.md | Use git log for timeline, STATUS.md for current state |
 | PLAN.md for simple projects | Only if 3+ phases/dependencies/deadlines |
 | Language/tool pattern docs | Research current best practices |
-| Duplicate ai/ content in AGENTS.md | Brief pointers to ai/, keep AGENTS.md scannable |
+| Duplicate ai/ content in AGENTS.md | Brief pointers to ai/, keep AGENTS.md well-structured |
 
 ## Token Optimization
 
-- Apply compaction rules when thresholds hit
+- Apply file maintenance when files contain substantial irrelevant content
 - Update STATUS.md in-place, don't append
-- Skip PLAN.md if project doesn't need it
+- Skip PLAN.md if project doesn't need it (3+ phases/dependencies)
 - Use tables/bullets over prose
 
 ---
 
-**Remember:** This structure should feel lightweight. If ai/ becomes a burden, you're doing too much. Goal: standardized working environment, not comprehensive documentation.
+**Remember:** Keep ai/ minimal and current. Goal: standardized working environment, not comprehensive documentation. If files contain substantial historical/irrelevant content, apply file maintenance.
