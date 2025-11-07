@@ -322,4 +322,4 @@ ai/STATUS.md (current state), ai/PLAN.md (roadmap)
 
 ---
 
-**Remember:** Keep ai/ minimal and current. Goal: standardized working environment, not comprehensive documentation. If files contain substantial historical/irrelevant content, apply file maintenance.
+**Remember:** Keep ai/ minimal and current. Goal: efficient context handoff across agent instances/conversations, not comprehensive documentation.
