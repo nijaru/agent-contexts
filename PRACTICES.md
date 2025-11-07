@@ -19,8 +19,10 @@ YOUR_PROJECT/
 │   ├── STATUS.md               # Current state
 │   ├── DECISIONS.md            # Architectural choices
 │   ├── RESEARCH.md             # Research index
-│   └── research/               # Detailed research
-│       └── {topic}.md
+│   ├── research/               # Detailed research (inputs)
+│   │   └── {topic}.md
+│   └── design/                 # Design documents (outputs)
+│       └── {component}.md
 └── [existing project structure]
 ```
 
@@ -237,6 +239,22 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 - Consolidate key findings to RESEARCH.md
 - Delete file when no longer relevant
 - Reference commit hash if needed later: "See abc123d for auth research"
+
+### design/: Optional design documents
+
+**Purpose:** Design documents and specifications (API designs, system designs, protocol specs). These are outputs from research that document concrete design decisions before implementation.
+
+**Workflow:** research/ (inputs/findings) → design/ (specifications) → implementation
+
+**When to use:**
+- Documenting API designs before implementation
+- System architecture specifications
+- Protocol or data format specifications
+- Complex component designs requiring review
+
+**Example:** `ai/research/python_api_research.md` (compared 6 different API approaches) → `ai/design/python_api.md` (concrete specification for our API design)
+
+**Maintenance:** Delete or archive to git history when implemented and stabilized. Design docs are pre-implementation artifacts; once code exists, it becomes the source of truth.
 
 **Principle:** Files should efficiently answer "what's current?" without loading substantial irrelevant historical content. Prune when old content dominates token usage or obscures current state.
 
