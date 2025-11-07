@@ -322,4 +322,4 @@ ai/STATUS.md (current state), ai/PLAN.md (roadmap)
 
 ---
 
-**Remember:** Keep ai/ minimal and current. Goal: efficient context handoff across agent instances/conversations, not comprehensive documentation.
+**Remember:** Keep ai/ minimal and current. Goal: efficient context handoff across agent sessions, not comprehensive documentation.
