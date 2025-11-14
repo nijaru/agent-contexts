@@ -6,6 +6,13 @@
 
 **This guide teaches ORGANIZATION, not CODING.** AI agents already know how to code. What they need: standardized way to organize work, track progress, maintain context across sessions.
 
+**ai/ is your AI agent's workspace** - This is where AI agents manage project state, maintain context between sessions, and track progress. Not for human documentation (that's docs/). Think of ai/ as the agent's working memory and scratch space for maintaining continuity across sessions.
+
+**Token efficiency through structure:**
+- **Session files** (ai/ root): Read every session - keep minimal, current only (<500 lines each)
+- **Reference files** (subdirectories): Read only when needed - detailed research, design specs
+- Subdirectories prevent paying token cost for unused context each session
+
 ## Standard Directory Structure
 
 ```
@@ -28,8 +35,144 @@ YOUR_PROJECT/
 
 **Core separation:**
 - **docs/** — Permanent user/team documentation (guides, API, specs)
-- **ai/** — Evolving AI working context (tasks, research, decisions)
+- **ai/** — AI session context management (agent's workspace for tracking state across sessions)
 - **Respect existing structure** — If project has internal/, wiki/, .github/, note in AGENTS.md and use them
+
+**Token efficiency:** Session files in ai/ root are read every session. Reference files in subdirectories (research/, design/, decisions/) are loaded only when needed, preventing token waste on unused context.
+
+## ai/ Directory Organization
+
+**Purpose:** AI agent session context management - track state, decisions, and research across sessions
+
+**Design principle:** Minimize tokens loaded per session while maintaining comprehensive context
+
+### File Tiers
+
+| Tier | Location | Read Frequency | Size Guideline | Purpose |
+|------|----------|----------------|----------------|---------|
+| **Session** | ai/*.md | Every session | <500 lines each | Current state, active work |
+| **Reference** | ai/research/ | On demand | Any size | Detailed research findings |
+| **Reference** | ai/design/ | On demand | Any size | Design specifications |
+| **Reference** | ai/decisions/ | On demand | Archive only | Superseded/split decisions |
+
+### Session Files (ai/ root)
+
+**These are read EVERY session** - keep minimal, current, focused:
+
+| File | Required? | When to Create | Max Size | Purpose |
+|------|-----------|----------------|----------|---------|
+| STATUS.md | ✅ Always | Project start | ~200 lines | Current state, metrics, blockers |
+| TODO.md | ✅ Always | Project start | ~300 lines | Active tasks only |
+| DECISIONS.md | ✅ Recommended | First decision | ~500 lines* | Architectural decisions |
+| RESEARCH.md | ⚠️ If researching | When needed | ~300 lines* | Research index |
+| PLAN.md | ⚠️ Optional | 3+ phases/dependencies | ~400 lines | Strategic roadmap |
+
+*Split to subdirectory when exceeding size
+
+### Reference Subdirectories
+
+**Only loaded when AI needs them** - no token cost unless accessed:
+
+#### research/ - Detailed Research Findings
+
+**Create when:**
+- First research document >200 lines
+- OR 2+ research topics
+
+**Contents:**
+- Deep dives: `ai/research/database-comparison.md`
+- Benchmarks: `ai/research/performance-analysis.md`
+- Technology evaluations: `ai/research/framework-evaluation.md`
+
+**Maintenance:**
+- Keep while relevant to active work
+- Delete when insights consolidated to RESEARCH.md
+- Reference in git if needed later: "See commit abc123d for details"
+
+#### design/ - Design Specifications
+
+**Create when:**
+- Formal design review needed
+- OR design document >150 lines
+- OR complex component requiring detailed spec
+
+**Contents:**
+- API specifications: `ai/design/rest-api-v1.md`
+- System architecture: `ai/design/architecture.md`
+- Protocol specs: `ai/design/websocket-protocol.md`
+
+**Workflow:** research/ (inputs) → design/ (specifications) → code (implementation)
+
+**Maintenance:**
+- Delete after implementation stabilizes (code becomes source of truth)
+- Design docs are pre-implementation artifacts
+
+#### decisions/ - Decision Organization
+
+**Create when:**
+- DECISIONS.md >50 entries (split by topic)
+- OR many superseded decisions (archive old ones)
+
+**Patterns:**
+- `ai/decisions/superseded-YYYY-MM.md` - Archived reversed decisions
+- `ai/decisions/{topic}.md` - Topic-based splits (architecture, database, etc.)
+
+### Scaling Complexity
+
+**Minimal (small projects, <1 month):**
+```
+ai/
+├── STATUS.md
+└── TODO.md
+```
+
+**Standard (typical projects, 1-6 months):**
+```
+ai/
+├── STATUS.md
+├── TODO.md
+├── DECISIONS.md
+└── RESEARCH.md
+```
+
+**Complex (multi-phase, 6+ months):**
+```
+ai/
+├── PLAN.md
+├── STATUS.md
+├── TODO.md
+├── DECISIONS.md
+├── RESEARCH.md
+├── research/
+│   ├── db-comparison.md
+│   └── auth-eval.md
+└── design/
+    └── api-v2.md
+```
+
+**Very Complex (major projects, 1+ year):**
+```
+ai/
+├── PLAN.md
+├── STATUS.md
+├── TODO.md
+├── DECISIONS.md
+├── RESEARCH.md
+├── research/
+│   ├── db-comparison.md
+│   ├── auth-eval.md
+│   └── performance-2025-Q1.md
+├── design/
+│   ├── api-v1.md
+│   ├── api-v2.md
+│   └── data-model.md
+└── decisions/
+    ├── superseded-2024-12.md
+    ├── architecture.md
+    └── database.md
+```
+
+**Principle:** Start minimal, grow as needed. Don't create structure you don't use.
 
 ## File Purposes
 
@@ -55,6 +198,48 @@ YOUR_PROJECT/
 **Reading order:** PLAN (strategic vision) → STATUS (current state) → TODO (next actions) → DECISIONS (rationale) → RESEARCH (domain knowledge)
 
 **Update PLAN.md:** Major pivots, phase completions, quarterly reviews. NOT every session.
+
+## Token Efficiency Strategy
+
+**Goal:** Minimize tokens per session while maintaining comprehensive context
+
+**How subdirectories help:**
+1. Session files (ai/ root): ~1K-2K tokens per session (always loaded)
+2. Reference files (subdirs): 0 tokens unless explicitly needed
+3. AI reads STATUS.md → sees "See ai/research/db-comparison.md for details" → loads only if relevant
+
+**Example token savings:**
+
+**Without subdirectories:**
+```
+ai/
+├── STATUS.md (200 lines)
+├── TODO.md (300 lines)
+└── RESEARCH.md (2,500 lines - 5 research topics inline)
+Total per session: ~3,000 lines = ~3,000 tokens
+```
+
+**With subdirectories:**
+```
+ai/
+├── STATUS.md (200 lines)
+├── TODO.md (300 lines)
+├── RESEARCH.md (200 lines - index only)
+└── research/
+    ├── database-comparison.md (600 lines)
+    ├── auth-eval.md (400 lines)
+    └── performance.md (1,500 lines)
+Session files: ~700 lines = ~700 tokens per session
+Reference files: ~2,500 lines = 0 tokens (unless needed)
+```
+
+**Savings:** ~2,300 tokens per session (~77% reduction)
+
+**Best practices:**
+- Keep session files under 500 lines each
+- Move detailed content to subdirectories when files grow large
+- Use indexes (RESEARCH.md, DECISIONS.md) to point to subdirectories
+- Reference format: "→ Details: ai/research/topic.md"
 
 ## File Templates
 
@@ -192,7 +377,31 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 
 ## File Maintenance
 
-**Trust git history** - Delete old content when files become unwieldy. Prune when files contain substantial irrelevant or historical content that wastes tokens and obscures current state.
+**Trust git history** - Delete old content when files grow large. Prune when files contain substantial irrelevant or historical content that wastes tokens and obscures current state.
+
+**Remember:** ai/ is for AI session context, not permanent documentation. Permanent docs go in docs/. Historical context lives in git history.
+
+### When to Prune
+
+| File | Prune When | Keep | Target Size |
+|------|-----------|------|-------------|
+| STATUS.md | Old pivots/completed phases | Current metrics, active blockers, recent learnings | ~200 lines |
+| TODO.md | Any completed tasks | Only pending/in-progress work | ~300 lines |
+| DECISIONS.md | >500 lines | Active decisions affecting codebase | ~500 lines |
+| RESEARCH.md | >300 lines | Active research, pointers to research/ | ~300 lines |
+| PLAN.md | Completed phases | Current phase + next 1-2 phases | ~400 lines |
+
+### Session Files vs Reference Files
+
+**Session files (ai/ root):**
+- Pruned aggressively (edit-in-place, delete old content)
+- Read every session - keep current only
+- When >500 lines, split detailed content to subdirectory
+
+**Reference files (subdirs):**
+- Deleted entirely when no longer relevant
+- Not pruned - either useful or deleted
+- No token cost unless loaded
 
 ### STATUS.md: Current state only
 
@@ -321,8 +530,13 @@ ai/STATUS.md (current state), ai/PLAN.md (roadmap)
 
 | ❌ Don't | ✅ Do Instead |
 |---------|---------------|
+| Detailed research in RESEARCH.md (wastes tokens every session) | Use research/ for >200 line research, RESEARCH.md as index |
+| All decisions in DECISIONS.md when >500 lines | Split to decisions/{topic}.md or archive superseded |
+| Session files >500 lines | Move detailed content to subdirectories |
+| Create design/ on day 1 | Start minimal, add subdirs when needed (3+ files) |
+| Human documentation in ai/ | User docs → docs/, AI context → ai/ |
 | Artificial time tracking files (WEEK*_DAY*.md) | Update STATUS.md in-place, trust git history. Real dates okay (ANALYSIS_2025-11-05.md) |
-| Duplicate docs/ and ai/ | docs/ = permanent, ai/ = working |
+| Duplicate docs/ and ai/ | docs/ = permanent, ai/ = session context |
 | Code in ai/ | Code in src/, ai/ for meta-work only |
 | Narrative prose in ai/ | Tables, lists, key-value |
 | Time estimates in PLAN.md ("~3-4 days", "Q1 2025") | Dependencies + scope. Add time only if external deadline exists |
@@ -333,11 +547,23 @@ ai/STATUS.md (current state), ai/PLAN.md (roadmap)
 
 ## Token Optimization
 
-- Apply file maintenance when files contain substantial irrelevant content
-- Update STATUS.md in-place, don't append
-- Skip PLAN.md if project doesn't need it (3+ phases/dependencies)
+**Session files (read every time):**
+- Keep <500 lines each (target: STATUS ~200, TODO ~300, DECISIONS ~500, RESEARCH ~300, PLAN ~400)
+- Update in-place, don't append (edit STATUS.md, don't add to bottom)
+- Delete completed/historical content (trust git history)
 - Use tables/bullets over prose
+
+**Reference files (read on demand):**
+- Move detailed research to ai/research/ when >200 lines
+- Move design specs to ai/design/ when formal review needed
+- Archive superseded decisions to ai/decisions/superseded-YYYY-MM.md
+- Split large DECISIONS.md (>50 entries) to topic files
+
+**Structure decisions:**
+- Skip PLAN.md if project doesn't need it (3+ phases/dependencies)
+- Start with minimal structure (STATUS + TODO), grow as needed
+- Create subdirectories when you have 3+ files OR single file >200 lines
 
 ---
 
-**Remember:** Keep ai/ minimal and current. Goal: efficient context handoff across agent sessions, not comprehensive documentation.
+**Remember:** ai/ is AI session context management, not comprehensive documentation. Goal: efficient context handoff - load only what's needed per session.
