@@ -59,15 +59,15 @@ YOUR_PROJECT/
 
 **These are read EVERY session** - keep minimal, current, focused:
 
-| File | Required? | When to Create | Max Size | Purpose |
-|------|-----------|----------------|----------|---------|
-| STATUS.md | ✅ Always | Project start | ~200 lines | Current state, metrics, blockers |
-| TODO.md | ✅ Always | Project start | ~300 lines | Active tasks only |
-| DECISIONS.md | ✅ Recommended | First decision | ~500 lines* | Architectural decisions |
-| RESEARCH.md | ⚠️ If researching | When needed | ~300 lines* | Research index |
-| PLAN.md | ⚠️ Optional | 3+ phases/dependencies | ~400 lines | Strategic roadmap |
+| File | Required? | When to Create | Purpose |
+|------|-----------|----------------|---------|
+| STATUS.md | ✅ Always | Project start | Current state, metrics, blockers |
+| TODO.md | ✅ Always | Project start | Active tasks only |
+| DECISIONS.md | ✅ Recommended | First decision | Architectural decisions |
+| RESEARCH.md | ⚠️ If researching | When needed | Research index |
+| PLAN.md | ⚠️ Optional | 3+ phases/dependencies | Strategic roadmap |
 
-*Split to subdirectory when exceeding size
+**Principle:** Keep session files focused on current/active work. If accumulating historical/completed content, prune it. If accumulating detailed content still relevant, move to subdirectories.
 
 ### Reference Subdirectories
 
@@ -76,8 +76,9 @@ YOUR_PROJECT/
 #### research/ - Detailed Research Findings
 
 **Create when:**
-- First research document >200 lines
-- OR 2+ research topics
+- Research becomes detailed/lengthy
+- OR multiple research topics
+- OR RESEARCH.md becoming cluttered with details
 
 **Contents:**
 - Deep dives: `ai/research/database-comparison.md`
@@ -93,7 +94,7 @@ YOUR_PROJECT/
 
 **Create when:**
 - Formal design review needed
-- OR design document >150 lines
+- OR design becomes detailed/lengthy
 - OR complex component requiring detailed spec
 
 **Contents:**
@@ -110,7 +111,7 @@ YOUR_PROJECT/
 #### decisions/ - Decision Organization
 
 **Create when:**
-- DECISIONS.md >50 entries (split by topic)
+- DECISIONS.md becomes difficult to navigate (split by topic)
 - OR many superseded decisions (archive old ones)
 
 **Patterns:**
@@ -201,43 +202,43 @@ ai/
 
 ## Token Efficiency Strategy
 
-**Goal:** Minimize tokens per session while maintaining comprehensive context
+**Goal:** Load only relevant context per session while maintaining comprehensive project knowledge
 
 **How subdirectories help:**
-1. Session files (ai/ root): ~1K-2K tokens per session (always loaded)
-2. Reference files (subdirs): 0 tokens unless explicitly needed
+1. Session files (ai/ root): Always loaded - keep current/active work only
+2. Reference files (subdirs): Loaded only when needed - zero token cost unless accessed
 3. AI reads STATUS.md → sees "See ai/research/db-comparison.md for details" → loads only if relevant
 
-**Example token savings:**
+**Example:**
 
 **Without subdirectories:**
 ```
 ai/
-├── STATUS.md (200 lines)
-├── TODO.md (300 lines)
-└── RESEARCH.md (2,500 lines - 5 research topics inline)
-Total per session: ~3,000 lines = ~3,000 tokens
+├── STATUS.md (current state)
+├── TODO.md (active tasks)
+└── RESEARCH.md (all research inline: 5 detailed topics)
+Total: All research loaded every session (even if not needed)
 ```
 
 **With subdirectories:**
 ```
 ai/
-├── STATUS.md (200 lines)
-├── TODO.md (300 lines)
-├── RESEARCH.md (200 lines - index only)
+├── STATUS.md (current state)
+├── TODO.md (active tasks)
+├── RESEARCH.md (index with summaries only)
 └── research/
-    ├── database-comparison.md (600 lines)
-    ├── auth-eval.md (400 lines)
-    └── performance.md (1,500 lines)
-Session files: ~700 lines = ~700 tokens per session
-Reference files: ~2,500 lines = 0 tokens (unless needed)
+    ├── database-comparison.md (detailed analysis)
+    ├── auth-eval.md (detailed analysis)
+    └── performance.md (detailed analysis)
+Session: Only index loaded
+Reference: Detailed research loaded only when AI needs it
 ```
 
-**Savings:** ~2,300 tokens per session (~77% reduction)
+**Result:** Significant token savings by loading detailed content only when relevant to current work
 
 **Best practices:**
-- Keep session files under 500 lines each
-- Move detailed content to subdirectories when files grow large
+- Keep session files focused on current/active work only
+- Move detailed content to subdirectories (loaded on demand)
 - Use indexes (RESEARCH.md, DECISIONS.md) to point to subdirectories
 - Reference format: "→ Details: ai/research/topic.md"
 
@@ -353,16 +354,25 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 
 ## ai/ File Writing Rules
 
-| File | Format | Rules |
-|------|--------|-------|
-| **PLAN.md** | Tables for phases/dependencies/architecture | Focus: dependencies (A before B), technical approach, scope. Detail okay. NO time estimates (days/weeks/quarters) unless external deadline |
-| **STATUS.md** | Tables for metrics, bullets for learnings | NO prose, date measurements |
-| **TODO.md** | Checkbox lists | One-line descriptions |
-| **DECISIONS.md** | Context → Decision → Rationale → Tradeoffs (table) | Date entries, link evidence |
-| **RESEARCH.md** | Index: Topic → Finding → Link | Tables for comparisons |
-| **research/ files** | Question → Answer → Evidence (table) | Use exec summary if >500 lines |
+**All ai/ files are for AI consumption** - optimize for machine readability, not human narrative.
 
-**Key principle:** Tables, lists, key-value pairs. NO narrative prose. Answer first, evidence second.
+| File/Directory | Format | Rules |
+|----------------|--------|-------|
+| **PLAN.md** | Tables for phases/dependencies/architecture | Focus: dependencies (A before B), technical approach, scope. NO time estimates unless external deadline |
+| **STATUS.md** | Tables for metrics, bullets for learnings | NO prose, date measurements, current state only |
+| **TODO.md** | Checkbox lists | One-line descriptions, active work only |
+| **DECISIONS.md** | Context → Decision → Rationale → Tradeoffs (table) | Date entries, link evidence, active decisions |
+| **RESEARCH.md** | Index: Topic → Finding → Link to details | Summary + pointers to research/ |
+| **research/** | Question → Answer → Evidence (tables) | Exec summary if lengthy (helps AI decide if needs full details) |
+| **design/** | Spec format: API/system/protocol | Tables for parameters/endpoints, clear sections, exec summary if lengthy |
+| **decisions/** | Same as DECISIONS.md | Organized by topic or superseded status |
+
+**Key principles:**
+- **Tables, lists, key-value pairs** - NO narrative prose
+- **Answer first, evidence second** - conclusions up front
+- **Exec summary for lengthy files** - helps AI decide if it needs full details
+- **Clear ## sections** - easy navigation
+- **All ai/ files follow same rules** - session files AND reference files
 
 ### Example
 
@@ -383,20 +393,22 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 
 ### When to Prune
 
-| File | Prune When | Keep | Target Size |
-|------|-----------|------|-------------|
-| STATUS.md | Old pivots/completed phases | Current metrics, active blockers, recent learnings | ~200 lines |
-| TODO.md | Any completed tasks | Only pending/in-progress work | ~300 lines |
-| DECISIONS.md | >500 lines | Active decisions affecting codebase | ~500 lines |
-| RESEARCH.md | >300 lines | Active research, pointers to research/ | ~300 lines |
-| PLAN.md | Completed phases | Current phase + next 1-2 phases | ~400 lines |
+| File | Prune When | Keep |
+|------|-----------|------|
+| STATUS.md | Old pivots/completed phases/resolved blockers | Current metrics, active blockers, recent learnings |
+| TODO.md | Any completed tasks | Only pending/in-progress work |
+| DECISIONS.md | Difficult to navigate OR many superseded | Active decisions affecting codebase |
+| RESEARCH.md | Accumulating detailed research | Index with summaries, pointers to research/ |
+| PLAN.md | Completed phases | Current phase + next 1-2 phases |
+
+**Guidance:** Prune when files contain substantial **irrelevant or historical content**, not based on size. Growing files usually indicate accumulated past content that should be pruned or moved to subdirectories.
 
 ### Session Files vs Reference Files
 
 **Session files (ai/ root):**
-- Pruned aggressively (edit-in-place, delete old content)
-- Read every session - keep current only
-- When >500 lines, split detailed content to subdirectory
+- Prune historical/completed content (edit-in-place, delete old)
+- Read every session - keep current/active work only
+- If accumulating relevant details, move to subdirectory
 
 **Reference files (subdirs):**
 - Deleted entirely when no longer relevant
@@ -424,10 +436,10 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 - Move reversed/replaced decisions there
 - Keep main file for decisions still affecting codebase
 
-**For topic-based splits (when growing large):**
+**For topic-based splits (when becomes difficult to navigate):**
 - Create `ai/decisions/architecture.md`, `ai/decisions/database.md`, etc.
 - Keep index/summary in main DECISIONS.md linking to topic files
-- Use when file exceeds ~50 decisions or becomes hard to navigate
+- Use when file becomes hard to navigate
 
 **Delete entirely:** Decisions that were reversed AND have no historical value
 
@@ -530,15 +542,15 @@ ai/STATUS.md (current state), ai/PLAN.md (roadmap)
 
 | ❌ Don't | ✅ Do Instead |
 |---------|---------------|
-| Detailed research in RESEARCH.md (wastes tokens every session) | Use research/ for >200 line research, RESEARCH.md as index |
-| All decisions in DECISIONS.md when >500 lines | Split to decisions/{topic}.md or archive superseded |
-| Session files >500 lines | Move detailed content to subdirectories |
-| Create design/ on day 1 | Start minimal, add subdirs when needed (3+ files) |
+| Detailed research in RESEARCH.md (wastes tokens every session) | Use research/ for detailed research, RESEARCH.md as index |
+| All decisions in DECISIONS.md when hard to navigate | Split to decisions/{topic}.md or archive superseded |
+| Detailed content in session files | Move to subdirectories (loaded on demand) |
+| Create full structure on day 1 | Start minimal, add subdirs as needed |
 | Human documentation in ai/ | User docs → docs/, AI context → ai/ |
+| Narrative prose in ai/ files | Tables, lists, structured content (all ai/ files) |
 | Artificial time tracking files (WEEK*_DAY*.md) | Update STATUS.md in-place, trust git history. Real dates okay (ANALYSIS_2025-11-05.md) |
 | Duplicate docs/ and ai/ | docs/ = permanent, ai/ = session context |
 | Code in ai/ | Code in src/, ai/ for meta-work only |
-| Narrative prose in ai/ | Tables, lists, key-value |
 | Time estimates in PLAN.md ("~3-4 days", "Q1 2025") | Dependencies + scope. Add time only if external deadline exists |
 | Progress tracking ("Week X Day Y") in PLAN.md | Use git log for timeline, STATUS.md for current state |
 | PLAN.md for simple projects | Only if 3+ phases/dependencies/deadlines |
@@ -548,21 +560,21 @@ ai/STATUS.md (current state), ai/PLAN.md (roadmap)
 ## Token Optimization
 
 **Session files (read every time):**
-- Keep <500 lines each (target: STATUS ~200, TODO ~300, DECISIONS ~500, RESEARCH ~300, PLAN ~400)
+- Keep current/active content only (prune completed/historical)
 - Update in-place, don't append (edit STATUS.md, don't add to bottom)
 - Delete completed/historical content (trust git history)
 - Use tables/bullets over prose
 
 **Reference files (read on demand):**
-- Move detailed research to ai/research/ when >200 lines
-- Move design specs to ai/design/ when formal review needed
+- Move detailed research to ai/research/ (keep RESEARCH.md as index)
+- Move design specs to ai/design/ when detailed/formal
 - Archive superseded decisions to ai/decisions/superseded-YYYY-MM.md
-- Split large DECISIONS.md (>50 entries) to topic files
+- Split DECISIONS.md by topic when becomes difficult to navigate
 
 **Structure decisions:**
 - Skip PLAN.md if project doesn't need it (3+ phases/dependencies)
 - Start with minimal structure (STATUS + TODO), grow as needed
-- Create subdirectories when you have 3+ files OR single file >200 lines
+- Create subdirectories when helpful for organizing detailed/reference content
 
 ---
 
