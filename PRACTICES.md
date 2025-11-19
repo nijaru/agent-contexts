@@ -28,8 +28,9 @@ YOUR_PROJECT/
 │   ├── RESEARCH.md             # Research index
 │   ├── research/               # Detailed research (inputs)
 │   │   └── {topic}.md
-│   └── design/                 # Design documents (outputs)
-│       └── {component}.md
+│   ├── design/                 # Design documents (outputs)
+│   │   └── {component}.md
+│   └── tmp/                    # Temporary artifacts (gitignored)
 └── [existing project structure]
 ```
 
@@ -54,6 +55,7 @@ YOUR_PROJECT/
 | **Reference** | ai/research/ | On demand | Any size | Detailed research findings |
 | **Reference** | ai/design/ | On demand | Any size | Design specifications |
 | **Reference** | ai/decisions/ | On demand | Archive only | Superseded/split decisions |
+| **Scratch** | ai/tmp/ | On demand | Any size | Temporary artifacts, logs, diffs |
 
 ### Session Files (ai/ root)
 
@@ -275,19 +277,19 @@ Reference: Detailed research loaded only when AI needs it
 ```
 
 ### TODO.md
-
-```markdown
-## High Priority
-- [ ] Fix cache invalidation bug
-- [ ] Add error handling to parse_query()
-
-## In Progress
-- [ ] Implement auth
-  - [x] Schema design
-  - [ ] Session management
-
-## Backlog
-- [ ] Optimize query planner
+ 
+ ```markdown
+ ## High Priority
+ - [ ] Fix cache invalidation bug [src/lib/cache.ts]
+ - [ ] Add error handling to parse_query() [src/parser/query.rs]
+ 
+ ## In Progress
+ - [ ] Implement auth
+   - [x] Schema design [src/db/schema.sql]
+   - [ ] Session management [src/auth/session.ts]
+ 
+ ## Backlog
+ - [ ] Optimize query planner
 ```
 
 ### STATUS.md
@@ -360,7 +362,7 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 |----------------|--------|-------|
 | **PLAN.md** | Tables for phases/dependencies/architecture | Focus: dependencies (A before B), technical approach, scope. NO time estimates unless external deadline |
 | **STATUS.md** | Tables for metrics, bullets for learnings | NO prose, date measurements, current state only |
-| **TODO.md** | Checkbox lists | One-line descriptions, active work only |
+| **TODO.md** | Checkbox lists | One-line descriptions + file links, active work only |
 | **DECISIONS.md** | Context → Decision → Rationale → Tradeoffs (table) | Date entries, link evidence, active decisions |
 | **RESEARCH.md** | Index: Topic → Finding → Link to details | Summary + pointers to research/ |
 | **research/** | Question → Answer → Evidence (tables) | Exec summary if lengthy (helps AI decide if needs full details) |
@@ -402,6 +404,13 @@ Implementing auth (see TODO.md) - schema complete, working on sessions
 | PLAN.md | Completed phases | Current phase + next 1-2 phases |
 
 **Guidance:** Prune when files contain substantial **irrelevant or historical content**, not based on size. Growing files usually indicate accumulated past content that should be pruned or moved to subdirectories.
+
+### Promoting Learnings
+
+**Before pruning "Recent Learnings" from STATUS.md:**
+1. **Permanent project rule?** → Move to `AGENTS.md` (Standards section)
+2. **Permanent codebase quirk?** → Move to `ai/KNOWLEDGE.md` or `docs/internal/`
+3. **Transient/Fixed?** → Delete
 
 ### Session Files vs Reference Files
 
