@@ -24,6 +24,7 @@ Initialize AI agent context management for project.
 | Existing config | AGENTS.md, CLAUDE.md (check symlink target) | ✓ |
 | Claude Code | .claude/commands/, settings.json, settings.local.json | ✓ |
 | Beads | `which bd`, .beads/ directory | ✓ |
+| Existing ai/ | ai/PLAN.md, ai/RESEARCH.md, ai/KNOWLEDGE.md | ✓ |
 
 **Action:** Read all sources in parallel. Consolidate detected info.
 
@@ -38,7 +39,23 @@ Initialize AI agent context management for project.
 | Both files | Merge → AGENTS.md, remove old CLAUDE.md, create symlink |
 | CLAUDE.md → elsewhere | Ask user before modifying |
 
-## 3. Determine Structure
+## 3. Migrate Existing ai/ Structure
+
+**Check for old patterns and migrate:**
+
+| Old File | Action |
+|----------|--------|
+| ai/PLAN.md | Rename → ai/ROADMAP.md |
+| ai/RESEARCH.md | Keep or delete (research/ preferred) |
+| ai/KNOWLEDGE.md | Merge to AGENTS.md or delete |
+| ai/decisions/ | Keep if needed, otherwise delete |
+
+```bash
+# Migrate PLAN.md → ROADMAP.md
+[ -f ai/PLAN.md ] && mv ai/PLAN.md ai/ROADMAP.md && echo "Migrated PLAN.md → ROADMAP.md"
+```
+
+## 4. Determine Structure
 
 ### Task Tracking Decision
 
@@ -58,7 +75,7 @@ Initialize AI agent context management for project.
 **ROADMAP.md criteria:** 3+ phases OR critical dependencies OR external deadline
 **Subdirs:** Create when needed (empty okay - 0 token cost, clear structure)
 
-## 4. Create Structure
+## 5. Create Structure
 
 ```bash
 mkdir -p ai/research ai/design ai/tmp
@@ -143,7 +160,7 @@ Initial AI context setup.
 
 **ai/ROADMAP.md (if complex):** Use PRACTICES.md template
 
-## 5. Create AGENTS.md
+## 6. Create AGENTS.md
 
 **Structure:** Tables/lists/code blocks (machine-readable). Comprehensive coverage. NO duplication with ai/ (use pointers).
 
@@ -261,7 +278,7 @@ See ai/STATUS.md for current state, ai/DESIGN.md for architecture
 
 **Create symlink:** `ln -s AGENTS.md CLAUDE.md`
 
-## 6. Verify & Report
+## 7. Verify & Report
 
 **Check (parallel):**
 ```bash
