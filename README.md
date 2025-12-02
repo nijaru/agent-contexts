@@ -15,9 +15,10 @@ Set up ai/ context management for this project following those patterns.
 
 The agent will create:
 - `AGENTS.md` - Project config for AI agents
-- `ai/STATUS.md` - Current state
-- `ai/DECISIONS.md` - Architectural choices
-- `ai/` subdirs for research, design, etc.
+- `ai/STATUS.md` - Current state (always)
+- `ai/DESIGN.md` - System architecture (recommended)
+- `ai/DECISIONS.md` - Architectural choices (recommended)
+- `ai/` subdirs for research, component designs
 
 ## What You Get
 
@@ -26,11 +27,11 @@ your-project/
 ├── AGENTS.md              # AI entry point
 └── ai/                    # AI session context
     ├── STATUS.md         # Current state (always)
-    ├── TODO.md           # Tasks (or use beads)
-    ├── DECISIONS.md      # Architectural choices
-    ├── RESEARCH.md       # Research index
-    ├── research/         # Detailed research (on demand)
-    ├── design/           # Specifications (on demand)
+    ├── DESIGN.md         # System architecture (recommended)
+    ├── DECISIONS.md      # Architectural choices (recommended)
+    ├── ROADMAP.md        # Phases, milestones (situational)
+    ├── research/         # External research (on demand)
+    ├── design/           # Component specs (on demand)
     └── tmp/              # Temporary artifacts (gitignored)
 ```
 
@@ -41,6 +42,13 @@ your-project/
 **Task tracking**: [Beads](https://github.com/steveyegge/beads) (`bd`) recommended for dependency graphs. Falls back to TODO.md.
 
 **Separation**: `ai/` = AI workspace (tables, lists). `docs/` = Human docs (prose).
+
+**File tiers**:
+| Tier | Files |
+|------|-------|
+| Always | STATUS.md |
+| Recommended | DESIGN.md, DECISIONS.md |
+| Situational | ROADMAP.md (multi-phase), TODO.md (no beads) |
 
 ## Integration Options
 
@@ -62,7 +70,10 @@ Copy relevant sections from `global/CLAUDE.md` into your config.
 
 **For Claude Code:**
 ```bash
-# Copy global config
+# Append patterns to existing config
+cat global/CLAUDE.md >> ~/.claude/CLAUDE.md
+
+# Or if starting fresh
 cp global/CLAUDE.md ~/.claude/CLAUDE.md
 
 # Copy commands (optional)
@@ -73,14 +84,14 @@ cp commands/*.md ~/.claude/commands/
 /setup-ai
 ```
 
-**For other tools:** Check if your tool supports user-level config files.
+**For other tools:** Append `global/CLAUDE.md` to your tool's config file.
 
 ## Files
 
 | File | Audience | Purpose |
 |------|----------|---------|
 | `README.md` | Humans + AI | Quick start, overview |
-| `PRACTICES.md` | AI agents | Detailed organization patterns (~900 words) |
+| `PRACTICES.md` | AI agents | Detailed organization patterns |
 | `global/CLAUDE.md` | AI agents | Template for user/project config |
 | `commands/*.md` | Claude Code | Slash commands (`/setup-ai`, `/save`) |
 

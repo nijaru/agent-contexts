@@ -11,7 +11,7 @@ Standardized structure for AI working context. Use to set up any project with ai
 **For complete guidance:** @PRACTICES.md
 
 **Core pattern:**
-- **ai/** — AI session context (state, decisions, research)
+- **ai/** — AI session context (state, design, decisions)
 - **docs/** — User documentation (guides, API, specs)
 - **Task tracking:** Beads (`bd`) recommended, or ai/TODO.md
 
@@ -30,12 +30,28 @@ agent-contexts/
     └── save.md            # /save command
 ```
 
+## ai/ Structure
+
+| File | When | Purpose |
+|------|------|---------|
+| STATUS.md | **Always** | Current state, blockers (read FIRST) |
+| DESIGN.md | **Recommended** | System architecture, components |
+| DECISIONS.md | **Recommended** | Architectural decisions |
+| ROADMAP.md | Situational | Phases, milestones (multi-phase only) |
+| TODO.md | Situational | Tasks (if no beads) |
+
+**Subdirectories (on demand):**
+- research/ — External research findings
+- design/ — Component specifications
+- tmp/ — Temporary artifacts (gitignored)
+
 ## Core Principles
 
 1. **Organization over coding** - AI knows syntax, needs structure
 2. **Token efficiency** - Session files minimal, subdirs on demand
 3. **Standardization** - Same ai/ structure across projects
 4. **Machine-optimized** - Tables/lists, not prose
+5. **Single source of truth** - Each type of info has one home
 
 ## Usage
 
