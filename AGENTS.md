@@ -30,7 +30,8 @@ agent-contexts/
 │   ├── researcher.md
 │   ├── designer.md
 │   ├── developer.md
-│   └── reviewer.md
+│   ├── reviewer.md
+│   └── profiler.md
 └── commands/
     ├── setup-ai.md        # /setup-ai command
     └── save.md            # /save command
@@ -63,6 +64,7 @@ For context isolation, parallelism, fresh perspective. ai/ files are shared memo
 | `designer`   | Architecture, planning           | ai/design/   |
 | `developer`  | Well-scoped implementation       | —            |
 | `reviewer`   | Full validation (build/run/test) | ai/review/   |
+| `profiler`   | Deep performance analysis        | ai/review/   |
 
 See `agents/` for reference implementations.
 
