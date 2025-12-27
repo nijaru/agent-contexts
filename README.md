@@ -114,6 +114,7 @@ Reference implementations in `agents/`:
 | `designer`   | Architecture, planning | Complex task decomposition, system design         |
 | `developer`  | Implementation         | Well-scoped, independent work with clear criteria |
 | `reviewer`   | Quality validation     | After implementation, before commit               |
+| `profiler`   | Performance analysis   | Bottlenecks, optimization, benchmarking           |
 
 ## License
 
