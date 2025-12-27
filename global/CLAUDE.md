@@ -55,6 +55,8 @@ jb stop/wait/retry <id>      # Control jobs
 | Exa       | Code examples, RAG, semantic search                |
 | Parallel  | Multi-hop research (spawn researcher—large output) |
 
+Batch/multi-search → spawn researcher to isolate context.
+
 ## Development
 
 **Philosophy:** Do it right first—workarounds become permanent. Research → understand → plan → implement.
