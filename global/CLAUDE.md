@@ -13,7 +13,9 @@
 
 **Packages:** Use CLI tools (`cargo add`, `uv add`, `go get`, `bun add`), not manual manifest edits. Pin versions only for reproducibility or known breaking changes.
 
-**Python:** `uv` always. `uvx` one-off, `uv tool install` daily drivers. Never pip.
+**Python:** `uv` always. `uvx` one-off, `uv tool install` daily drivers. Lint/format: `ruff`. Types: `ty`. Never pip.
+
+**TypeScript:** `bun` always. Lint: `oxlint`. Format: `oxfmt`. Test: `vitest` or `bun test`.
 
 **Go:** `golines --base-formatter gofumpt`
 
