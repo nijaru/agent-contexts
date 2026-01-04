@@ -14,7 +14,7 @@ Standardized structure for AI working context. Use to set up any project with ai
 
 - **ai/** — AI session context (state, design, decisions)
 - **docs/** — User documentation (guides, API, specs)
-- **Task tracking:** Beads (`bd`) recommended, or ai/TODO.md
+- **Task tracking:** ai/TODO.md
 
 ## Project Structure
 
@@ -45,7 +45,7 @@ agent-contexts/
 | DESIGN.md    | **Recommended** | System architecture, components       |
 | DECISIONS.md | **Recommended** | Architectural decisions               |
 | ROADMAP.md   | Situational     | Phases, milestones (multi-phase only) |
-| TODO.md      | Situational     | Tasks (if no beads)                   |
+| TODO.md      | Situational     | Task tracking                         |
 
 **Subdirectories (on demand):**
 

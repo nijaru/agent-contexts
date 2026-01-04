@@ -14,7 +14,6 @@ Organization patterns for AI coding agents. **Teaches organization, not coding.*
 project/
 ├── AGENTS.md              # Project config (AI entry point)
 ├── CLAUDE.md → AGENTS.md  # Symlink for Claude Code
-├── .beads/                # Task tracking (if using beads)
 ├── docs/                  # Human documentation
 └── ai/                    # AI context
     ├── STATUS.md          # Current state (always)
@@ -30,9 +29,7 @@ project/
 
 ## Task Tracking
 
-**Beads (`bd`)** preferred—graph-based, survives compaction. See github.com/steveyegge/beads
-
-**TODO.md** fallback—simpler but lost on /compact.
+Use `ai/TODO.md` for task tracking across sessions.
 
 ## ai/ Files
 
@@ -42,7 +39,7 @@ project/
 | DESIGN.md    | What are we building? | Non-trivial projects            |
 | DECISIONS.md | Why did we choose X?  | Architectural decisions made    |
 | ROADMAP.md   | What's the plan?      | 3+ phases or external deadlines |
-| TODO.md      | What's next?          | No beads available              |
+| TODO.md      | What's next?          | Task tracking needed            |
 
 | Subdir    | Purpose                    | When                 |
 | --------- | -------------------------- | -------------------- |
@@ -63,14 +60,14 @@ project/
 
 ## Single Source of Truth
 
-| Info            | Lives in      | Not in        |
-| --------------- | ------------- | ------------- |
-| Current state   | STATUS.md     | anywhere else |
-| Architecture    | DESIGN.md     | AGENTS.md     |
-| Component specs | design/       | DESIGN.md     |
-| Decisions       | DECISIONS.md  | scattered     |
-| Research        | research/     | inline        |
-| Tasks           | beads/TODO.md | STATUS.md     |
+| Info            | Lives in     | Not in        |
+| --------------- | ------------ | ------------- |
+| Current state   | STATUS.md    | anywhere else |
+| Architecture    | DESIGN.md    | AGENTS.md     |
+| Component specs | design/      | DESIGN.md     |
+| Decisions       | DECISIONS.md | scattered     |
+| Research        | research/    | inline        |
+| Tasks           | TODO.md      | STATUS.md     |
 
 ## Session Workflow
 
