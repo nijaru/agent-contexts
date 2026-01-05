@@ -26,6 +26,7 @@ The agent will create:
 ```
 your-project/
 ├── AGENTS.md              # AI entry point
+├── .tasks/                # Task tracking (tk CLI)
 └── ai/                    # AI session context
     ├── STATUS.md         # Current state (always)
     ├── DESIGN.md         # System architecture (recommended)
