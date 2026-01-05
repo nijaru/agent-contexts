@@ -15,12 +15,12 @@ project/
 ├── AGENTS.md              # Project config (AI entry point)
 ├── CLAUDE.md → AGENTS.md  # Symlink for Claude Code
 ├── docs/                  # Human documentation
+├── .tasks/                # Task tracking (tk CLI)
 └── ai/                    # AI context
     ├── STATUS.md          # Current state (always)
     ├── DESIGN.md          # Architecture (recommended)
     ├── DECISIONS.md       # Decision log (recommended)
     ├── ROADMAP.md         # Phases (situational)
-    ├── TODO.md            # Task tracking
     ├── research/          # External research
     ├── design/            # Component specs
     ├── review/            # Review findings
@@ -29,7 +29,9 @@ project/
 
 ## Task Tracking
 
-Use `ai/TODO.md` for task tracking across sessions.
+Use `tk` CLI for task tracking. Tasks stored in `.tasks/` directory.
+
+- `tk add "title" -p1` | `tk ls` | `tk ready` | `tk start <id>` | `tk done <id>`
 
 ## ai/ Files
 
@@ -39,7 +41,6 @@ Use `ai/TODO.md` for task tracking across sessions.
 | DESIGN.md    | What are we building? | Non-trivial projects            |
 | DECISIONS.md | Why did we choose X?  | Architectural decisions made    |
 | ROADMAP.md   | What's the plan?      | 3+ phases or external deadlines |
-| TODO.md      | What's next?          | Task tracking needed            |
 
 | Subdir    | Purpose                    | When                 |
 | --------- | -------------------------- | -------------------- |
@@ -67,15 +68,15 @@ Use `ai/TODO.md` for task tracking across sessions.
 | Component specs | design/      | DESIGN.md     |
 | Decisions       | DECISIONS.md | scattered     |
 | Research        | research/    | inline        |
-| Tasks           | TODO.md      | STATUS.md     |
+| Tasks           | .tasks/ (tk) | STATUS.md     |
 
 ## Session Workflow
 
 | Phase  | Actions                                                |
 | ------ | ------------------------------------------------------ |
-| Start  | Read STATUS.md → check tasks → load context as needed  |
+| Start  | Read STATUS.md → `tk ready` → load context as needed   |
 | During | Research → synthesize → implement → document decisions |
-| End    | Update STATUS.md → sync tasks → prune if needed        |
+| End    | Update STATUS.md → `tk done` completed tasks → prune   |
 
 ## Project AGENTS.md
 

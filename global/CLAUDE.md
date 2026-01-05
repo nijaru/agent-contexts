@@ -36,6 +36,10 @@
 
 - `jb run "cmd" --follow` | `jb list` | `jb logs <id> --tail` | `jb stop <id>`
 
+**Task tracking:** `tk` for project tasks. Uses `.tasks/` directory, git-friendly.
+
+- `tk add "title" -p1` | `tk ls` | `tk ready` | `tk start <id>` | `tk done <id>`
+
 **UI:** lucide/heroicons. No emoji unless requested.
 
 **Search:**
@@ -73,20 +77,16 @@ Parallel MCP search + batch searches: spawn researcher (large output).
 
 **Versions:** Bump only when instructed. Sequential only (0.0.1 → 0.0.2).
 
-## Task Tracking
-
-Use `ai/TODO.md` for task tracking across sessions.
-
-**Workflow:**
-
-- Start: Read TODO.md, pick highest priority unblocked task
-- Work: Update subtasks as you go, mark blocked if stuck
-- End: Update STATUS.md, commit TODO.md changes
-- Resume: "Continue [task name]: [context]"
-
 ## ai/ Directory
 
 Cross-session context. Root files read every session—keep minimal. Subdirs read on demand.
+
+| Action               | Update First |
+| -------------------- | ------------ |
+| New task             | `tk add`     |
+| Architecture change  | DESIGN.md    |
+| Non-obvious decision | DECISIONS.md |
+| Task complete        | `tk done`    |
 
 | File         | When        | Purpose                          |
 | ------------ | ----------- | -------------------------------- |
@@ -94,7 +94,6 @@ Cross-session context. Root files read every session—keep minimal. Subdirs rea
 | DESIGN.md    | Recommended | Architecture (no status markers) |
 | DECISIONS.md | Recommended | Context → Decision → Rationale   |
 | ROADMAP.md   | Situational | Phase timeline                   |
-| TODO.md      | Situational | Task tracking                    |
 
 **Subdirs:** research/, design/, review/, tmp/ (gitignored) — loaded on demand
 
@@ -128,4 +127,4 @@ For context isolation, parallelism, fresh perspective. ai/ files are shared memo
 
 **Benchmarks:** Compare equivalent configs. Report config, dataset, environment, methodology.
 
-**Updated:** 2025-12-29 | github.com/nijaru/agent-contexts
+**Updated:** 2026-01-05 | github.com/nijaru/agent-contexts

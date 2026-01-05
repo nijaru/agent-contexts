@@ -40,7 +40,7 @@ your-project/
 
 **Token efficiency**: Session files (ai/ root) load every session—keep under 500 lines. Subdirectories load only when needed.
 
-**Task tracking**: Use `ai/TODO.md` for task tracking across sessions.
+**Task tracking**: Use `tk` CLI for task tracking. Tasks stored in `.tasks/` directory.
 
 **Separation**: `ai/` = AI workspace (tables, lists). `docs/` = Human docs (prose).
 
@@ -51,7 +51,7 @@ your-project/
 |------|-------|
 | Always | STATUS.md |
 | Recommended | DESIGN.md, DECISIONS.md |
-| Situational | ROADMAP.md (multi-phase), TODO.md |
+| Situational | ROADMAP.md (multi-phase) |
 
 ## Integration Options
 

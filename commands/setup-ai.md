@@ -2,7 +2,7 @@ Initialize AI agent context management for project.
 
 **Reference:** github.com/nijaru/agent-contexts PATTERNS.md
 **Philosophy:** Session files (<500 lines, current only) + Reference subdirs (on-demand) = token efficiency
-**Task tracking:** ai/TODO.md
+**Task tracking:** `tk` CLI (`.tasks/` directory)
 
 ## Execution Guidelines
 
@@ -60,9 +60,11 @@ Initialize AI agent context management for project.
 
 | Project Size                   | Files                     | Subdirs                  |
 | ------------------------------ | ------------------------- | ------------------------ |
-| Minimal (scripts, small tools) | STATUS.md, TODO.md        | tmp/                     |
+| Minimal (scripts, small tools) | STATUS.md                 | tmp/                     |
 | Standard (typical projects)    | +DESIGN.md, +DECISIONS.md | research/, design/, tmp/ |
 | Complex (multi-phase, 6+mo)    | +ROADMAP.md               | research/, design/, tmp/ |
+
+**Task tracking:** Run `tk init` to initialize `.tasks/` directory.
 
 **ROADMAP.md criteria:** 3+ phases OR critical dependencies OR external deadline
 **Subdirs:** Create when needed (empty okay - 0 token cost, clear structure)
@@ -77,24 +79,6 @@ echo '*' > ai/tmp/.gitignore
 **Templates:** See PATTERNS.md for file content guidance
 
 **File initialization:**
-
-**ai/TODO.md:**
-
-```markdown
-## Ready
-
-- [ ] [Add tasks from detection: missing tests, TODO comments, etc.] [file/path]
-
-## In Progress
-
-- [ ]
-
-## Blocked
-
-- [ ]
-
-**Note:** Include file links [src/lib/cache.ts] for context. Delete completed immediately.
-```
 
 **ai/STATUS.md:**
 
@@ -202,7 +186,8 @@ Initial AI context setup.
 - ai/DESIGN.md — System architecture, components
 - ai/DECISIONS.md — Architectural decisions
 - ai/ROADMAP.md — Phases, milestones (only if created)
-- ai/TODO.md — Task tracking
+
+**Task tracking:** `tk` CLI — `.tasks/` directory (git-friendly JSON files)
 
 **Reference files** (loaded on demand):
 
@@ -298,15 +283,15 @@ wc -l AGENTS.md ai/*.md
 
 **Verification:**
 
-| Check             | Expected                                                                            |
-| ----------------- | ----------------------------------------------------------------------------------- |
-| Symlink           | CLAUDE.md → AGENTS.md                                                               |
-| AGENTS.md format  | Tables/lists, clear ## sections                                                     |
-| AGENTS.md content | Comprehensive, no ai/ duplication, explains ai/ purpose                             |
-| Task tracking     | ai/TODO.md created                                                                  |
-| ai/ files         | STATUS.md, TODO.md (+DESIGN.md, +DECISIONS.md if standard+, +ROADMAP.md if complex) |
-| ai/ subdirs       | research/, design/, tmp/ exist (tmp/ gitignored)                                    |
-| Claude Code       | Documented if .claude/ exists                                                       |
+| Check             | Expected                                                                   |
+| ----------------- | -------------------------------------------------------------------------- |
+| Symlink           | CLAUDE.md → AGENTS.md                                                      |
+| AGENTS.md format  | Tables/lists, clear ## sections                                            |
+| AGENTS.md content | Comprehensive, no ai/ duplication, explains ai/ purpose                    |
+| Task tracking     | `.tasks/` initialized via `tk init`                                        |
+| ai/ files         | STATUS.md (+DESIGN.md, +DECISIONS.md if standard+, +ROADMAP.md if complex) |
+| ai/ subdirs       | research/, design/, tmp/ exist (tmp/ gitignored)                           |
+| Claude Code       | Documented if .claude/ exists                                              |
 
 **Output:**
 
@@ -333,11 +318,14 @@ wc -l AGENTS.md ai/*.md
 **ai/ structure:**
 
 - STATUS.md ✓
-- TODO.md ✓
 - DESIGN.md: [✓ created / ⊘ skipped - minimal project]
 - DECISIONS.md: [✓ created / ⊘ skipped - minimal project]
 - ROADMAP.md: [✓ created / ⊘ skipped - why]
 - Subdirs: research/, design/, tmp/ (gitignored) ✓
+
+**Task tracking:**
+
+- .tasks/ ✓ (initialized via `tk init`)
 
 **Preview AGENTS.md** (first 50 lines):
 [SHOW]
@@ -345,7 +333,7 @@ wc -l AGENTS.md ai/*.md
 **Next:**
 
 1. Update ai/STATUS.md with current project state
-2. Add tasks to ai/TODO.md
+2. Add initial tasks: `tk add "task" -p<priority>`
 3. Commit: `git add . && git commit -m "Initialize AI context"`
 ```
 
