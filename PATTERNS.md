@@ -20,7 +20,7 @@ project/
     ├── DESIGN.md          # Architecture (recommended)
     ├── DECISIONS.md       # Decision log (recommended)
     ├── ROADMAP.md         # Phases (situational)
-    ├── TODO.md            # Tasks (if no beads)
+    ├── TODO.md            # Task tracking
     ├── research/          # External research
     ├── design/            # Component specs
     ├── review/            # Review findings

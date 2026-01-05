@@ -40,7 +40,7 @@ your-project/
 
 **Token efficiency**: Session files (ai/ root) load every session—keep under 500 lines. Subdirectories load only when needed.
 
-**Task tracking**: [Beads](https://github.com/steveyegge/beads) (`bd`) recommended for dependency graphs. Falls back to TODO.md.
+**Task tracking**: Use `ai/TODO.md` for task tracking across sessions.
 
 **Separation**: `ai/` = AI workspace (tables, lists). `docs/` = Human docs (prose).
 
@@ -51,7 +51,7 @@ your-project/
 |------|-------|
 | Always | STATUS.md |
 | Recommended | DESIGN.md, DECISIONS.md |
-| Situational | ROADMAP.md (multi-phase), TODO.md (no beads) |
+| Situational | ROADMAP.md (multi-phase), TODO.md |
 
 ## Integration Options
 
