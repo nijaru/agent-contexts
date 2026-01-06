@@ -1,77 +1,25 @@
 # Agent Instructions
 
-## Environment
-
-| Machine | Specs                      | Tailscale     |
-| ------- | -------------------------- | ------------- |
-| Mac     | M3 Max, 128GB              | `nick@apple`  |
-| Fedora  | i9-13900KF, 32GB, RTX 4090 | `nick@fedora` |
-
-## Stack
-
-**Languages:** Python, Rust, Go, TypeScript (Bun), Mojo
-
-**Packages:** Use CLI tools (`cargo add`, `uv add`, `go get`, `bun add`), not manual manifest edits. Pin versions only for reproducibility or known breaking changes.
-
-**Python:** `uv` always. `uvx` one-off, `uv tool install` daily drivers. Lint/format: `ruff`. Types: `ty`. Never pip.
-
-**TypeScript:** `bun` always. Lint: `oxlint`. Format: `oxfmt`. Test: `vitest` or `bun test`.
-
-**Go:** `golines --base-formatter gofumpt`
-
-**Rust:** `&str` > `String`, `&[T]` > `Vec<T>`. Errors: `anyhow` (apps), `thiserror` (libs). Async: `tokio` (network), `rayon` (CPU), sync (files). Edition 2024.
-
-**Tools:**
-
-- `mise` — runtime versions
-- `gh` — GitHub CLI
-- `hf` — Hugging Face CLI
-
-**Code search:** `hhg` (semantic) for concepts, Grep for exact strings.
-
-- "where is X?", "how does Y work?", exploring unfamiliar code
-- `hhg "query" ./path` | `hhg file#func` (by name) | `hhg file:42` (by line)
-
-**Background jobs:** Use `jb` for commands expected to run >30s (builds, test suites, benchmarks, dev servers).
-
-- `jb run "cmd" --follow` | `jb list` | `jb logs <id> --tail` | `jb stop <id>`
-
-**Task tracking:** Use `tk` for project tasks. Uses `.tasks/` directory, git-friendly.
-
-- `tk add "title"` | `tk ls` | `tk ready` | `tk start <id>` | `tk done <id>`
-
-**UI:** lucide/heroicons. No emoji unless requested.
-
-**Search:**
-
-| Tool                | Use                                   |
-| ------------------- | ------------------------------------- |
-| WebSearch           | Quick facts, current events (default) |
-| Context7            | Library/framework docs                |
-| Exa                 | Code examples, RAG, semantic search   |
-| Parallel MCP search | Multi-hop research                    |
-
-Parallel MCP search + batch searches: spawn researcher (large output).
-
 ## Development
 
 **Philosophy:** Do it right first—workarounds become permanent. Research → understand → plan → implement.
 
-**Quality:** Research first · Fix root cause · Production-ready (errors, logging, validation) · Read before changing · Update docs (README, ai/, AGENTS.md) · Ask before breaking APIs
+**Quality:** Research first · Fix root cause · Production-ready (errors, logging, validation) · Read before changing · Update docs · Ask before breaking APIs
 
 **Corrections:** Update AGENTS.md when corrected on non-obvious project patterns—prevents repeat mistakes.
-
-**Review:** Consider `reviewer` for significant changes. `/review` before major commits.
 
 **Style:**
 
 - **Naming:** Proportional to scope. No `_v2`/`_new`—use `_batched`, `_async`.
 - **Comments:** WHY only. No WHAT, no TODOs.
 - **Files:** Single concern. Tests separate.
+- **No breadcrumbs:** When deleting/moving code, just remove it. No `// moved to X`, `// removed`, `// deprecated`.
+
+**Testing:** Unit or e2e only. No mocks—they invent behaviors that hide real bugs.
 
 ## Workflow
 
-**Git:** Commit often, push regularly. Confirm before PRs/publishing/force ops. No force push main. Messages: concise WHY.
+**Git:** Proactively commit after completing logical units of work—don't wait to be asked. Push regularly. Confirm before PRs/publishing/force ops. No force push main. Messages: concise WHY.
 
 **Releases:** NEVER trigger without explicit approval. Wait for CI.
 
@@ -94,6 +42,12 @@ Root files read every session—keep minimal. Subdirs (research/, design/, revie
 
 **Project config:** AGENTS.md primary. Claude Code: `ln -s ../AGENTS.md .claude/CLAUDE.md`
 
+## Task Tracking
+
+Use `tk` for multi-step or cross-session work—persists across compaction.
+
+- `tk add "title"` | `tk ls` | `tk ready` | `tk start <id>` | `tk done <id>`
+
 ## Subagents
 
 For context isolation, parallelism, fresh perspective. ai/ files are shared memory.
@@ -112,10 +66,6 @@ For context isolation, parallelism, fresh perspective. ai/ files are shared memo
 
 **Prompt user to compact at:** Feature complete · Switching codebase areas · Research synthesized · ~100k tokens
 
-**Before compact:** Update ai/STATUS.md.
-
 ---
 
-**Benchmarks:** Compare equivalent configs. Report config, dataset, environment, methodology.
-
-**Updated:** 2026-01-05 | github.com/nijaru/agent-contexts
+**Updated:** 2026-01-06 | github.com/nijaru/agent-contexts
