@@ -29,9 +29,11 @@ project/
 
 ## Task Tracking
 
-Use `tk` CLI for task tracking. Tasks stored in `.tasks/` directory.
+Use `tk` CLI for discrete tasks. Tasks stored in `.tasks/` directory, git-friendly.
 
-- `tk add "title" -p1` | `tk ls` | `tk ready` | `tk start <id>` | `tk done <id>`
+- `tk add "title"` | `tk ls` | `tk ready` | `tk start <id>` | `tk done <id>`
+
+**tk vs STATUS.md:** tk tracks discrete tasks. STATUS.md tracks session state, blockers, notes.
 
 ## ai/ Files
 
@@ -72,11 +74,11 @@ Use `tk` CLI for task tracking. Tasks stored in `.tasks/` directory.
 
 ## Session Workflow
 
-| Phase  | Actions                                                |
-| ------ | ------------------------------------------------------ |
-| Start  | Read STATUS.md → `tk ready` → load context as needed   |
-| During | Research → synthesize → implement → document decisions |
-| End    | Update STATUS.md → `tk done` completed tasks → prune   |
+| Phase  | Actions                                                      |
+| ------ | ------------------------------------------------------------ |
+| Start  | Read STATUS.md → `tk ready` → `tk start <id>` → load context |
+| During | Research → synthesize → implement → document decisions       |
+| End    | `tk done <id>` → update STATUS.md if blockers → prune        |
 
 ## Project AGENTS.md
 

@@ -32,13 +32,13 @@
 - "where is X?", "how does Y work?", exploring unfamiliar code
 - `hhg "query" ./path` | `hhg file#func` (by name) | `hhg file:42` (by line)
 
-**Background jobs:** `jb` for long-running (>30s, test suites, dev servers).
+**Background jobs:** Use `jb` for commands expected to run >30s (builds, test suites, benchmarks, dev servers).
 
 - `jb run "cmd" --follow` | `jb list` | `jb logs <id> --tail` | `jb stop <id>`
 
-**Task tracking:** `tk` for project tasks. Uses `.tasks/` directory, git-friendly.
+**Task tracking:** Use `tk` for project tasks. Uses `.tasks/` directory, git-friendly.
 
-- `tk add "title" -p1` | `tk ls` | `tk ready` | `tk start <id>` | `tk done <id>`
+- `tk add "title"` | `tk ls` | `tk ready` | `tk start <id>` | `tk done <id>`
 
 **UI:** lucide/heroicons. No emoji unless requested.
 
