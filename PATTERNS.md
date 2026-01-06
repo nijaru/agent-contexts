@@ -29,11 +29,11 @@ project/
 
 ## Task Tracking
 
-Use `tk` CLI for discrete tasks. Tasks stored in `.tasks/` directory, git-friendly.
+Use `tk` for multi-step or cross-session work—persists across compaction.
 
 - `tk add "title"` | `tk ls` | `tk ready` | `tk start <id>` | `tk done <id>`
 
-**tk vs STATUS.md:** tk tracks discrete tasks. STATUS.md tracks session state, blockers, notes.
+**Todos/tasks go in tk, not STATUS.md.** STATUS.md is for session state, blockers, notes.
 
 ## ai/ Files
 

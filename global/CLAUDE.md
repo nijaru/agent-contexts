@@ -79,23 +79,14 @@ Parallel MCP search + batch searches: spawn researcher (large output).
 
 ## ai/ Directory
 
-Cross-session context. Root files read every session—keep minimal. Subdirs read on demand.
+Persistent memory—survives compaction. Update BEFORE implementing.
 
-| Action               | Update First |
-| -------------------- | ------------ |
-| New task             | `tk add`     |
-| Architecture change  | DESIGN.md    |
-| Non-obvious decision | DECISIONS.md |
-| Task complete        | `tk done`    |
+**Todos/tasks:** Use `tk`, never STATUS.md.
+**Blockers/session notes:** STATUS.md
+**Architecture:** DESIGN.md
+**Decisions:** DECISIONS.md (context → decision → rationale)
 
-| File         | When        | Purpose                          |
-| ------------ | ----------- | -------------------------------- |
-| STATUS.md    | Always      | Current state (read first)       |
-| DESIGN.md    | Recommended | Architecture (no status markers) |
-| DECISIONS.md | Recommended | Context → Decision → Rationale   |
-| ROADMAP.md   | Situational | Phase timeline                   |
-
-**Subdirs:** research/, design/, review/, tmp/ (gitignored) — loaded on demand
+Root files read every session—keep minimal. Subdirs (research/, design/, review/, tmp/) on demand.
 
 **Flow:** research/ → DESIGN.md → design/ → code → review/
 
