@@ -4,7 +4,7 @@
 
 **Philosophy:** Do it right first—workarounds become permanent. Research → understand → plan → implement.
 
-**Problem-solving:** Question assumptions. If something seems off, it probably is—stop and verify. Don't blindly accept inputs or errors that a human would catch.
+**Problem-solving:** Question assumptions. If something seems off, it probably is—stop and verify. If stuck, reframe the problem.
 
 **Quality:** Research first · Fix root cause · Production-ready (errors, logging, validation) · Read before changing · Update docs · Ask before breaking APIs
 
