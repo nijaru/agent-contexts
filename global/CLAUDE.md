@@ -4,6 +4,8 @@
 
 **Philosophy:** Do it right first—workarounds become permanent. Research → understand → plan → implement.
 
+**Problem-solving:** Question assumptions. If stuck, reframe the problem. Consider unconventional approaches when standard patterns don't fit.
+
 **Quality:** Research first · Fix root cause · Production-ready (errors, logging, validation) · Read before changing · Update docs · Ask before breaking APIs
 
 **Corrections:** Update AGENTS.md when corrected on non-obvious project patterns—prevents repeat mistakes.
