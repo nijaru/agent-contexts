@@ -31,8 +31,8 @@
 
 Persistent memory—survives compaction. Update BEFORE implementing.
 
-**Todos/tasks:** Use `tk`, never STATUS.md.
-**Blockers/session notes:** STATUS.md
+**STATUS.md:** Session state—current focus, external blockers, handoff notes. Pointers to tasks, not details.
+**Tasks:** Use `tk`. Details and findings go in task logs, not STATUS.md.
 **Architecture:** DESIGN.md
 **Decisions:** DECISIONS.md (context → decision → rationale)
 
@@ -48,7 +48,13 @@ Root files read every session—keep minimal. Subdirs (research/, design/, revie
 
 Use `tk` for multi-step or cross-session work—persists across compaction.
 
-- `tk add "title"` | `tk ls` | `tk ready` | `tk start <id>` | `tk done <id>`
+**Before investigating:** `tk show <id>` for existing logs, check ai/ and git history. Never start fresh without checking.
+
+**Creating:** `tk add "title" -d "context"` — always include description.
+
+**During work:** `tk log <id> "finding"` immediately. Include errors, root cause, file paths.
+
+**Status:** Keep current—`tk start` when beginning, `tk done` when complete, not later. Stale status causes confusion.
 
 ## Subagents
 
@@ -70,4 +76,4 @@ For context isolation, parallelism, fresh perspective. ai/ files are shared memo
 
 ---
 
-**Updated:** 2026-01-06 | github.com/nijaru/agent-contexts
+**Updated:** 2026-01-29 | github.com/nijaru/agent-contexts
