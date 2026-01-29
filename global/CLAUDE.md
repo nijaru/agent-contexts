@@ -31,10 +31,11 @@
 
 Persistent memory—survives compaction. Update BEFORE implementing.
 
-**STATUS.md:** Session state—current focus, external blockers, handoff notes. Pointers to tasks, not details.
-**Tasks:** Use `tk`. Details and findings go in task logs, not STATUS.md.
-**Architecture:** DESIGN.md
-**Decisions:** DECISIONS.md (context → decision → rationale)
+| File         | Purpose                                                                                |
+| ------------ | -------------------------------------------------------------------------------------- |
+| STATUS.md    | Session state: current focus, external blockers, handoff notes. Pointers, not details. |
+| DESIGN.md    | Architecture decisions and system design                                               |
+| DECISIONS.md | Context → decision → rationale                                                         |
 
 Root files read every session—keep minimal. Subdirs (research/, design/, review/, tmp/) on demand.
 
@@ -44,17 +45,19 @@ Root files read every session—keep minimal. Subdirs (research/, design/, revie
 
 **Project config:** AGENTS.md primary. Claude Code: `ln -s ../AGENTS.md .claude/CLAUDE.md`
 
-## Task Tracking
+## Task Discipline
 
-Use `tk` for multi-step or cross-session work—persists across compaction.
+Use `tk` for all tasks—persists across compaction. Details in task logs, not STATUS.md.
 
-**Before investigating:** `tk show <id>` for existing logs, check ai/ and git history. Never start fresh without checking.
+**Session start:** Read STATUS.md → `tk ready` → `tk start <id>`
 
-**Creating:** `tk add "title" -d "context"` — always include description.
+**Before investigating:** `tk show <id>` for existing logs, check ai/, git history. Never start fresh without checking.
 
-**During work:** `tk log <id> "finding"` immediately. Include errors, root cause, file paths.
+**During work:** `tk log <id> "finding"` immediately—errors, root cause, file paths.
 
-**Status:** Keep current—`tk start` when beginning, `tk done` when complete, not later. Stale status causes confusion.
+**Creating tasks:** `tk add "title" -d "context"`. Always include description.
+
+**Completion:** `tk start` when beginning, `tk done` when complete. Stale status causes confusion.
 
 ## Subagents
 
@@ -73,6 +76,8 @@ For context isolation, parallelism, fresh perspective. ai/ files are shared memo
 ## Context Management
 
 **Prompt user to compact at:** Feature complete · Switching codebase areas · Research synthesized · ~100k tokens
+
+**Before compact:** Update STATUS.md, `tk done` completed tasks, `tk log` any uncommitted findings.
 
 ---
 
