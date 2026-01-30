@@ -32,9 +32,9 @@ agent-contexts/
 │   ├── developer.md
 │   ├── reviewer.md
 │   └── profiler.md
-└── commands/
-    ├── setup-ai.md        # /setup-ai command
-    └── save.md            # /save command
+└── skills/
+    ├── setup-ai.md        # /setup-ai skill
+    └── save.md            # /save skill
 ```
 
 ## ai/ Structure

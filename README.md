@@ -82,9 +82,9 @@ cat global/CLAUDE.md >> ~/.claude/CLAUDE.md
 # Or if starting fresh
 cp global/CLAUDE.md ~/.claude/CLAUDE.md
 
-# Copy commands (optional)
-mkdir -p ~/.claude/commands
-cp commands/*.md ~/.claude/commands/
+# Copy skills (optional)
+mkdir -p ~/.claude/skills
+cp skills/*.md ~/.claude/skills/
 
 # Copy agent definitions (optional)
 mkdir -p ~/.claude/agents
@@ -98,13 +98,13 @@ cp agents/*.md ~/.claude/agents/
 
 ## Files
 
-| File               | Audience    | Purpose                               |
-| ------------------ | ----------- | ------------------------------------- |
-| `README.md`        | Humans + AI | Quick start, overview                 |
-| `PATTERNS.md`      | AI agents   | Detailed organization patterns        |
-| `global/CLAUDE.md` | AI agents   | Template for user/project config      |
-| `agents/*.md`      | AI agents   | Reference subagent implementations    |
-| `commands/*.md`    | Claude Code | Slash commands (`/setup-ai`, `/save`) |
+| File               | Audience    | Purpose                            |
+| ------------------ | ----------- | ---------------------------------- |
+| `README.md`        | Humans + AI | Quick start, overview              |
+| `PATTERNS.md`      | AI agents   | Detailed organization patterns     |
+| `global/CLAUDE.md` | AI agents   | Template for user/project config   |
+| `agents/*.md`      | AI agents   | Reference subagent implementations |
+| `skills/*.md`      | Claude Code | Skills (`/setup-ai`, `/save`)      |
 
 ## Subagents
 
