@@ -59,6 +59,7 @@ Persistent memory—survives compaction. Update BEFORE implementing.
 | STATUS.md    | Session state: current focus, external blockers, handoff notes. Pointers, not details. |
 | DESIGN.md    | Architecture decisions and system design                                               |
 | DECISIONS.md | Context → decision → rationale                                                         |
+| ROADMAP.md   | Phases, milestones (situational—3+ phases or external deadlines)                       |
 
 Root files read every session—keep minimal. Subdirs (research/, design/, review/, tmp/) on demand.
 
@@ -66,21 +67,19 @@ Root files read every session—keep minimal. Subdirs (research/, design/, revie
 
 **Format:** Tables/lists over prose. Answer first, evidence second.
 
-**Project config:** AGENTS.md primary. Claude Code: `ln -s ../AGENTS.md .claude/CLAUDE.md`
+**Project config:** AGENTS.md primary. Claude Code: `ln -s AGENTS.md CLAUDE.md`
 
-## Task Discipline
+## Task Tracking
 
-Use `tk` for all tasks—persists across compaction. Details in task logs, not STATUS.md.
+Use TodoWrite or a persistent task system for multi-step work.
 
-**Session start:** Read STATUS.md → `tk ready` → `tk start <id>`
+**Session start:** Read STATUS.md → check tasks → start next task
 
-**Before investigating:** `tk show <id>` for existing logs, check ai/, git history. Never start fresh without checking.
+**Before investigating:** Check existing task logs, ai/, git history. Never start fresh without checking.
 
-**During work:** `tk log <id> "finding"` immediately—errors, root cause, file paths.
+**During work:** Log findings immediately—errors, root cause, file paths.
 
-**Creating tasks:** `tk add "title" -d "context"`. Always include description.
-
-**Completion:** `tk start` when beginning, `tk done` when complete. Stale status causes confusion.
+**Completion:** Mark tasks done when complete. Stale status causes confusion.
 
 ## Subagents
 
@@ -102,7 +101,7 @@ For context isolation, parallelism, fresh perspective. ai/ files are shared memo
 
 **Prompt user to compact at:** Feature complete · Switching codebase areas · Research synthesized · ~100k tokens
 
-**Before compact:** Update STATUS.md, `tk done` completed tasks, `tk log` any uncommitted findings.
+**Before compact:** Update STATUS.md, mark completed tasks, log any uncommitted findings.
 
 ---
 

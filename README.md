@@ -26,32 +26,32 @@ The agent will create:
 ```
 your-project/
 ├── AGENTS.md              # AI entry point
-├── .tasks/                # Task tracking (tk CLI)
 └── ai/                    # AI session context
-    ├── STATUS.md         # Current state (always)
-    ├── DESIGN.md         # System architecture (recommended)
-    ├── DECISIONS.md      # Architectural choices (recommended)
-    ├── ROADMAP.md        # Phases, milestones (situational)
-    ├── research/         # External research (on demand)
-    ├── design/           # Component specs (on demand)
-    └── tmp/              # Temporary artifacts (gitignored)
+    ├── STATUS.md          # Current state (always)
+    ├── DESIGN.md          # System architecture (recommended)
+    ├── DECISIONS.md       # Architectural choices (recommended)
+    ├── ROADMAP.md         # Phases, milestones (situational)
+    ├── research/          # External research (on demand)
+    ├── design/            # Component specs (on demand)
+    └── tmp/               # Temporary artifacts (gitignored)
 ```
 
 ## Key Concepts
 
 **Token efficiency**: Session files (ai/ root) load every session—keep under 500 lines. Subdirectories load only when needed.
 
-**Task tracking**: Use `tk` CLI for task tracking. Tasks stored in `.tasks/` directory.
+**Task tracking**: Use TodoWrite or a persistent task system for multi-step work.
 
 **Separation**: `ai/` = AI workspace (tables, lists). `docs/` = Human docs (prose).
 
 **Subagents**: Main agent handles most work. Subagents for context isolation and parallel execution. See `agents/` for reference implementations.
 
 **File tiers**:
-| Tier | Files |
-|------|-------|
-| Always | STATUS.md |
-| Recommended | DESIGN.md, DECISIONS.md |
+
+| Tier        | Files                    |
+| ----------- | ------------------------ |
+| Always      | STATUS.md                |
+| Recommended | DESIGN.md, DECISIONS.md  |
 | Situational | ROADMAP.md (multi-phase) |
 
 ## Integration Options

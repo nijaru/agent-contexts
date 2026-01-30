@@ -1,8 +1,12 @@
+---
+description: Initialize AI agent context management for project
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+---
+
 Initialize AI agent context management for project.
 
 **Reference:** github.com/nijaru/agent-contexts PATTERNS.md
 **Philosophy:** Session files (<500 lines, current only) + Reference subdirs (on-demand) = token efficiency
-**Task tracking:** `tk` CLI (`.tasks/` directory)
 
 ## Execution Guidelines
 
@@ -15,15 +19,15 @@ Initialize AI agent context management for project.
 
 | Item            | Detection Sources                                            | Parallel Read |
 | --------------- | ------------------------------------------------------------ | ------------- |
-| Name            | git remote, package.json, Cargo.toml, pyproject.toml, go.mod | ✓             |
-| Language        | File extensions (.rs/.py/.ts), package managers              | ✓             |
-| Framework       | package.json deps, Cargo.toml deps, imports                  | ✓             |
-| Commands        | package.json scripts, Makefile, Cargo.toml, justfile         | ✓             |
-| Description     | README first paragraph                                       | ✓             |
-| Complexity      | README/docs for: "phases", "milestones", "roadmap", "v1/v2"  | ✓             |
-| Existing config | AGENTS.md, CLAUDE.md (check symlink target)                  | ✓             |
-| Claude Code     | .claude/commands/, settings.json, settings.local.json        | ✓             |
-| Existing ai/    | ai/PLAN.md, ai/RESEARCH.md, ai/KNOWLEDGE.md                  | ✓             |
+| Name            | git remote, package.json, Cargo.toml, pyproject.toml, go.mod | yes           |
+| Language        | File extensions (.rs/.py/.ts), package managers              | yes           |
+| Framework       | package.json deps, Cargo.toml deps, imports                  | yes           |
+| Commands        | package.json scripts, Makefile, Cargo.toml, justfile         | yes           |
+| Description     | README first paragraph                                       | yes           |
+| Complexity      | README/docs for: "phases", "milestones", "roadmap", "v1/v2"  | yes           |
+| Existing config | AGENTS.md, CLAUDE.md (check symlink target)                  | yes           |
+| Claude Code     | .claude/commands/, settings.json, settings.local.json        | yes           |
+| Existing ai/    | ai/PLAN.md, ai/RESEARCH.md, ai/KNOWLEDGE.md                  | yes           |
 
 **Action:** Read all sources in parallel. Consolidate detected info.
 
@@ -63,8 +67,6 @@ Initialize AI agent context management for project.
 | Minimal (scripts, small tools) | STATUS.md                 | tmp/                     |
 | Standard (typical projects)    | +DESIGN.md, +DECISIONS.md | research/, design/, tmp/ |
 | Complex (multi-phase, 6+mo)    | +ROADMAP.md               | research/, design/, tmp/ |
-
-**Task tracking:** Run `tk init` to initialize `.tasks/` directory.
 
 **ROADMAP.md criteria:** 3+ phases OR critical dependencies OR external deadline
 **Subdirs:** Create when needed (empty okay - 0 token cost, clear structure)
@@ -187,8 +189,6 @@ Initial AI context setup.
 - ai/DECISIONS.md — Architectural decisions
 - ai/ROADMAP.md — Phases, milestones (only if created)
 
-**Task tracking:** `tk` CLI — `.tasks/` directory (git-friendly JSON files)
-
 **Reference files** (loaded on demand):
 
 - ai/research/ — External research
@@ -288,7 +288,6 @@ wc -l AGENTS.md ai/*.md
 | Symlink           | CLAUDE.md → AGENTS.md                                                      |
 | AGENTS.md format  | Tables/lists, clear ## sections                                            |
 | AGENTS.md content | Comprehensive, no ai/ duplication, explains ai/ purpose                    |
-| Task tracking     | `.tasks/` initialized via `tk init`                                        |
 | ai/ files         | STATUS.md (+DESIGN.md, +DECISIONS.md if standard+, +ROADMAP.md if complex) |
 | ai/ subdirs       | research/, design/, tmp/ exist (tmp/ gitignored)                           |
 | Claude Code       | Documented if .claude/ exists                                              |
@@ -311,21 +310,17 @@ wc -l AGENTS.md ai/*.md
 
 **AGENTS.md:** [X] lines
 
-- Symlink: CLAUDE.md → AGENTS.md ✓
-- Format: Tables/lists ✓
+- Symlink: CLAUDE.md → AGENTS.md
+- Format: Tables/lists
 - Claude Code: [commands/MCP/hooks or "none"]
 
 **ai/ structure:**
 
-- STATUS.md ✓
-- DESIGN.md: [✓ created / ⊘ skipped - minimal project]
-- DECISIONS.md: [✓ created / ⊘ skipped - minimal project]
-- ROADMAP.md: [✓ created / ⊘ skipped - why]
-- Subdirs: research/, design/, tmp/ (gitignored) ✓
-
-**Task tracking:**
-
-- .tasks/ ✓ (initialized via `tk init`)
+- STATUS.md
+- DESIGN.md: [created / skipped - minimal project]
+- DECISIONS.md: [created / skipped - minimal project]
+- ROADMAP.md: [created / skipped - why]
+- Subdirs: research/, design/, tmp/ (gitignored)
 
 **Preview AGENTS.md** (first 50 lines):
 [SHOW]
@@ -333,11 +328,10 @@ wc -l AGENTS.md ai/*.md
 **Next:**
 
 1. Update ai/STATUS.md with current project state
-2. Add initial tasks: `tk add "task" -p<priority>`
-3. Commit: `git add . && git commit -m "Initialize AI context"`
+2. Commit: `git add . && git commit -m "Initialize AI context"`
 ```
 
 ## Maintenance
 
-**Version:** 2025-12 (review quarterly or when PRACTICES.md changes)
+**Version:** 2026-01 (review quarterly or when PATTERNS.md changes)
 **Self-optimization:** Apply same token efficiency principles to this command
