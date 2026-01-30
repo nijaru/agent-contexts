@@ -71,15 +71,18 @@ Root files read every session—keep minimal. Subdirs (research/, design/, revie
 
 ## Task Tracking
 
-Use TodoWrite or a persistent task system for multi-step work.
+Use `tk` for multi-step or cross-session work—persists across compaction.
 
-**Session start:** Read STATUS.md → check tasks → start next task
+- `tk add "title"` | `tk ls` | `tk ready` | `tk start <id>` | `tk done <id>`
+- `tk show <id>` | `tk log <id> "msg"` | `tk block <id> <blocker>`
 
-**Before investigating:** Check existing task logs, ai/, git history. Never start fresh without checking.
+**Session start:** Read STATUS.md → `tk ready` → `tk start <id>`
 
-**During work:** Log findings immediately—errors, root cause, file paths.
+**Before investigating:** `tk show <id>` for existing logs, check ai/, git history. Never start fresh without checking.
 
-**Completion:** Mark tasks done when complete. Stale status causes confusion.
+**During work:** `tk log <id> "finding"` immediately—errors, root cause, file paths.
+
+**Completion:** `tk start` when beginning, `tk done` when complete. Stale status causes confusion.
 
 ## Subagents
 

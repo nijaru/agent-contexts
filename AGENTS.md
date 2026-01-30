@@ -14,6 +14,7 @@ Standardized structure for AI working context. Use to set up any project with ai
 
 - **ai/** — AI session context (state, design, decisions)
 - **docs/** — User documentation (guides, API, specs)
+- **Task tracking:** `tk` CLI (`.tasks/` directory)
 
 ## Project Structure
 

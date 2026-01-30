@@ -26,6 +26,7 @@ The agent will create:
 ```
 your-project/
 ├── AGENTS.md              # AI entry point
+├── .tasks/                # Task tracking (tk CLI)
 └── ai/                    # AI session context
     ├── STATUS.md          # Current state (always)
     ├── DESIGN.md          # System architecture (recommended)
@@ -40,7 +41,7 @@ your-project/
 
 **Token efficiency**: Session files (ai/ root) load every session—keep under 500 lines. Subdirectories load only when needed.
 
-**Task tracking**: Use TodoWrite or a persistent task system for multi-step work.
+**Task tracking**: Use `tk` CLI for task tracking. Tasks stored in `.tasks/` directory.
 
 **Separation**: `ai/` = AI workspace (tables, lists). `docs/` = Human docs (prose).
 

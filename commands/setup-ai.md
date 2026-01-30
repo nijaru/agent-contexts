@@ -68,6 +68,8 @@ Initialize AI agent context management for project.
 | Standard (typical projects)    | +DESIGN.md, +DECISIONS.md | research/, design/, tmp/ |
 | Complex (multi-phase, 6+mo)    | +ROADMAP.md               | research/, design/, tmp/ |
 
+**Task tracking:** Run `tk init` to initialize `.tasks/` directory.
+
 **ROADMAP.md criteria:** 3+ phases OR critical dependencies OR external deadline
 **Subdirs:** Create when needed (empty okay - 0 token cost, clear structure)
 
@@ -189,6 +191,8 @@ Initial AI context setup.
 - ai/DECISIONS.md — Architectural decisions
 - ai/ROADMAP.md — Phases, milestones (only if created)
 
+**Task tracking:** `tk` CLI — `.tasks/` directory (git-friendly JSON files)
+
 **Reference files** (loaded on demand):
 
 - ai/research/ — External research
@@ -288,6 +292,7 @@ wc -l AGENTS.md ai/*.md
 | Symlink           | CLAUDE.md → AGENTS.md                                                      |
 | AGENTS.md format  | Tables/lists, clear ## sections                                            |
 | AGENTS.md content | Comprehensive, no ai/ duplication, explains ai/ purpose                    |
+| Task tracking     | `.tasks/` initialized via `tk init`                                        |
 | ai/ files         | STATUS.md (+DESIGN.md, +DECISIONS.md if standard+, +ROADMAP.md if complex) |
 | ai/ subdirs       | research/, design/, tmp/ exist (tmp/ gitignored)                           |
 | Claude Code       | Documented if .claude/ exists                                              |
@@ -322,13 +327,18 @@ wc -l AGENTS.md ai/*.md
 - ROADMAP.md: [created / skipped - why]
 - Subdirs: research/, design/, tmp/ (gitignored)
 
+**Task tracking:**
+
+- .tasks/ initialized via `tk init`
+
 **Preview AGENTS.md** (first 50 lines):
 [SHOW]
 
 **Next:**
 
 1. Update ai/STATUS.md with current project state
-2. Commit: `git add . && git commit -m "Initialize AI context"`
+2. Add initial tasks: `tk add "task" -p<priority>`
+3. Commit: `git add . && git commit -m "Initialize AI context"`
 ```
 
 ## Maintenance

@@ -28,9 +28,11 @@ project/
 
 ## Task Tracking
 
-Use TodoWrite or a persistent task system for multi-step work.
+Use `tk` for multi-step or cross-session work—persists across compaction.
 
-**Todos/tasks go in task system, not STATUS.md.** STATUS.md is for session state, blockers, notes.
+- `tk add "title"` | `tk ls` | `tk ready` | `tk start <id>` | `tk done <id>`
+
+**Todos/tasks go in tk, not STATUS.md.** STATUS.md is for session state, blockers, notes.
 
 ## ai/ Files
 
@@ -67,15 +69,15 @@ Use TodoWrite or a persistent task system for multi-step work.
 | Component specs | design/      | DESIGN.md     |
 | Decisions       | DECISIONS.md | scattered     |
 | Research        | research/    | inline        |
-| Tasks           | task system  | STATUS.md     |
+| Tasks           | .tasks/ (tk) | STATUS.md     |
 
 ## Session Workflow
 
-| Phase  | Actions                                                |
-| ------ | ------------------------------------------------------ |
-| Start  | Read STATUS.md → check tasks → load relevant context   |
-| During | Research → synthesize → implement → document decisions |
-| End    | Mark tasks done → update STATUS.md if blockers → prune |
+| Phase  | Actions                                                      |
+| ------ | ------------------------------------------------------------ |
+| Start  | Read STATUS.md → `tk ready` → `tk start <id>` → load context |
+| During | Research → synthesize → implement → document decisions       |
+| End    | `tk done <id>` → update STATUS.md if blockers → prune        |
 
 ## Project AGENTS.md
 
