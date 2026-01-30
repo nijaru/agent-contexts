@@ -4,24 +4,47 @@
 
 **Philosophy:** Do it right first—workarounds become permanent. Research → understand → plan → implement.
 
+**Performance:** Idiomatic > clever. Profile before optimizing.
+
 **Problem-solving:** Question assumptions. If something seems off, it probably is—stop and verify. If stuck, reframe the problem.
 
-**Quality:** Research first · Fix root cause · Production-ready (errors, logging, validation) · Read before changing · Update docs · Ask before breaking APIs
+**Quality:**
 
-**Corrections:** Update AGENTS.md when corrected on non-obvious project patterns—prevents repeat mistakes.
+- Research before implementing
+- Fix root cause, not symptoms
+- Read code before changing it
+- Update docs (README, ai/, AGENTS.md)
+- Ask before breaking APIs
+
+**Errors:** Let errors propagate. Catch only to recover.
+
+**Refactoring:** Clean breaks, not gradual migrations. When changing interfaces, signatures, or patterns:
+
+- Replace completely in one commit—old code and all callers
+- No version suffixes (V2, V3), no "old"/"legacy"/"new" markers
+- No shims, adapters, or re-exports "for compatibility"
+- No deprecation unless explicitly instructed
+- If callers exist outside the repo, ask before breaking
+
+**Corrections:** Update AGENTS.md when corrected—prevents repeat mistakes.
 
 **Style:**
 
-- **Naming:** Proportional to scope. No `_v2`/`_new`—use `_batched`, `_async`.
+- **Naming:** Proportional to scope. Descriptive suffixes (`_batched`, `_async`) over version markers.
 - **Comments:** Non-obvious context only. Never comment your edits. No TODOs.
 - **Files:** Single concern. Tests separate.
 - **No breadcrumbs:** When deleting/moving code, just remove it. No `// moved to X`, `// removed`, `// deprecated`.
+- **Maintenance:** Fix what you touch. Technical debt compounds.
 
-**Testing:** Unit or e2e only. No mocks—they invent behaviors that hide real bugs.
+**Testing:** Unit or e2e only. No mocks—they invent behaviors. Flaky tests are bugs. Verify tests actually ran.
+
+**Benchmarks:** Compare equivalent configs. Report config, dataset, environment, methodology.
 
 ## Workflow
 
-**Git:** Proactively commit after completing logical units of work—don't wait to be asked. Push regularly. Confirm before PRs/publishing/force ops. No force push main. Messages: concise WHY.
+**Stopping Points:** Proactively advise the user when to compact context or start a new session (e.g., after feature completion, major milestones, or significant context shifts).
+
+**Git:** Commit after each fix, feature, or milestone. Push regularly. Confirm before PRs/publishing/force ops. No force push main. Messages: concise WHY.
 
 **Releases:** NEVER trigger without explicit approval. Wait for CI.
 
@@ -71,7 +94,9 @@ For context isolation, parallelism, fresh perspective. ai/ files are shared memo
 | `reviewer`   | Full validation (build/run/test) | ai/review/   |
 | `profiler`   | Deep performance analysis        | ai/review/   |
 
-**Context handoff:** Curate relevant context, don't dump history. Put objectives at END (recency bias).
+**When to spawn:** Batch searches, large research → `researcher`. Significant changes → `reviewer`.
+
+**Context handoff:** Curate relevant context, don't dump history. Objectives at END (recency bias).
 
 ## Context Management
 
@@ -81,4 +106,4 @@ For context isolation, parallelism, fresh perspective. ai/ files are shared memo
 
 ---
 
-**Updated:** 2026-01-29 | github.com/nijaru/agent-contexts
+**Updated:** 2026-01-30 | github.com/nijaru/agent-contexts
