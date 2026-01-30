@@ -33,8 +33,15 @@ agent-contexts/
 │   ├── reviewer.md
 │   └── profiler.md
 └── skills/
-    ├── setup-ai.md        # /setup-ai skill
-    └── save.md            # /save skill
+    ├── setup-ai.md        # Initialize AI context for project
+    ├── save.md            # Save session state before compact
+    ├── sprint.md          # Break specs into sprints and tasks
+    ├── review.md          # Code review with parallel subagents
+    ├── refactor.md        # Analyze and suggest refactorings
+    ├── profile.md         # Deep performance analysis
+    ├── prune.md           # Clean up cruft and organize ai/
+    ├── writer.md          # Review text for AI patterns
+    └── creating-skills.md # Turn techniques into reusable skills
 ```
 
 ## ai/ Structure
