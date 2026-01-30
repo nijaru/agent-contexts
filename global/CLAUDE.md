@@ -80,7 +80,7 @@ Use `tk` for multi-step or cross-session work—persists across compaction.
 
 **Before investigating:** `tk show <id>` for existing logs, check ai/, git history. Never start fresh without checking.
 
-**During work:** `tk log <id> "finding"` immediately—errors, root cause, file paths.
+**During work:** `tk log <id> "finding"` immediately—errors, root cause, file paths. Update STATUS.md when focus shifts, blockers emerge, or significant progress is made.
 
 **Completion:** `tk start` when beginning, `tk done` when complete. Stale status causes confusion.
 
