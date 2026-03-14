@@ -19,7 +19,7 @@ project/
     ├── STATUS.md          # Current state (always)
     ├── DESIGN.md          # Architecture (recommended)
     ├── DECISIONS.md       # Decision log (recommended)
-    ├── ROADMAP.md         # Phases (situational)
+    ├── SPRINTS.md         # Sprint plans (situational)
     ├── research/          # External research
     ├── design/            # Component specs
     ├── review/            # Review findings
@@ -36,12 +36,12 @@ Use `tk` for multi-step or cross-session work—persists across compaction.
 
 ## ai/ Files
 
-| File         | Question              | Create When                     |
-| ------------ | --------------------- | ------------------------------- |
-| STATUS.md    | Where are we?         | Always                          |
-| DESIGN.md    | What are we building? | Non-trivial projects            |
-| DECISIONS.md | Why did we choose X?  | Architectural decisions made    |
-| ROADMAP.md   | What's the plan?      | 3+ phases or external deadlines |
+| File         | Question              | Create When                      |
+| ------------ | --------------------- | -------------------------------- |
+| STATUS.md    | Where are we?         | Always                           |
+| DESIGN.md    | What are we building? | Non-trivial projects             |
+| DECISIONS.md | Why did we choose X?  | Architectural decisions made     |
+| SPRINTS.md   | What's the plan?      | Use `/sprint` when spec is ready |
 
 | Subdir    | Purpose                    | When                 |
 | --------- | -------------------------- | -------------------- |
@@ -58,7 +58,7 @@ Use `tk` for multi-step or cross-session work—persists across compaction.
 
 **DECISIONS.md:** Append-only. Date, context, decision, rationale, tradeoffs.
 
-**ROADMAP.md:** Phases table, dependencies, out-of-scope. No time estimates.
+**SPRINTS.md:** Sprint index with goals and status. Individual sprint files in ai/sprints/.
 
 ## Single Source of Truth
 
@@ -91,7 +91,7 @@ Point to ai/ for current state: "See ai/STATUS.md for current state, ai/DESIGN.m
 | -------- | ------------------------- | -------------------- |
 | Minimal  | STATUS.md                 | tmp/                 |
 | Standard | +DESIGN.md, +DECISIONS.md | +research/, +design/ |
-| Complex  | +ROADMAP.md               | +review/             |
+| Complex  | +SPRINTS.md               | +review/             |
 
 Start minimal, add as needed.
 

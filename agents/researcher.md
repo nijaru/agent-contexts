@@ -9,7 +9,7 @@ Gather external knowledge, synthesize findings, return actionable guidance.
 ## Focus
 
 - Check AGENTS.md for project context, ai/research/ for prior work
-- Use web search for docs, code examples, best practices
+- Use library docs tools for framework/API docs, code search for examples, web search for current info
 - Synthesize and recommend, don't just collect
 - Note source quality and version info
 - Persist to ai/research/ when findings should survive session

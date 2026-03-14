@@ -29,16 +29,14 @@ agent-contexts/
 ├── agents/                # Reference subagent implementations
 │   ├── researcher.md
 │   ├── designer.md
-│   ├── developer.md
 │   ├── reviewer.md
 │   └── profiler.md
 └── skills/
     ├── setup-ai.md        # Initialize AI context for project
     ├── save.md            # Save session state before compact
     ├── sprint.md          # Break specs into sprints and tasks
-    ├── review.md          # Code review with parallel subagents
+    ├── review.md          # Code review with reviewer subagent
     ├── refactor.md        # Analyze and suggest refactorings
-    ├── profile.md         # Deep performance analysis
     ├── prune.md           # Clean up cruft and organize ai/
     ├── writer.md          # Review text for AI patterns
     └── creating-skills.md # Turn techniques into reusable skills
@@ -46,12 +44,12 @@ agent-contexts/
 
 ## ai/ Structure
 
-| File         | When            | Purpose                               |
-| ------------ | --------------- | ------------------------------------- |
-| STATUS.md    | **Always**      | Current state, blockers (read FIRST)  |
-| DESIGN.md    | **Recommended** | System architecture, components       |
-| DECISIONS.md | **Recommended** | Architectural decisions               |
-| ROADMAP.md   | Situational     | Phases, milestones (multi-phase only) |
+| File         | When            | Purpose                                  |
+| ------------ | --------------- | ---------------------------------------- |
+| STATUS.md    | **Always**      | Current state, blockers (read FIRST)     |
+| DESIGN.md    | **Recommended** | System architecture, components          |
+| DECISIONS.md | **Recommended** | Architectural decisions                  |
+| SPRINTS.md   | Situational     | Sprint plans (use `/sprint` to generate) |
 
 **Subdirectories (on demand):**
 
@@ -68,7 +66,6 @@ For context isolation, parallelism, fresh perspective. ai/ files are shared memo
 | ------------ | -------------------------------- | ------------ |
 | `researcher` | External knowledge, synthesis    | ai/research/ |
 | `designer`   | Architecture, planning           | ai/design/   |
-| `developer`  | Well-scoped implementation       | —            |
 | `reviewer`   | Full validation (build/run/test) | ai/review/   |
 | `profiler`   | Deep performance analysis        | ai/review/   |
 
