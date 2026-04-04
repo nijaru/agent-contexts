@@ -86,7 +86,7 @@ Incorporate feedback, then write final plan.
 
 Create two things:
 
-**Index file** `ai/SPRINTS.md`:
+**Index file** `ai/PLAN.md`:
 
 ```markdown
 # Sprint Plan: [Project Name]
@@ -129,7 +129,7 @@ Goal: User authentication working end-to-end
 
 When a sprint completes:
 
-1. Update status in `ai/SPRINTS.md` index
+1. Update status in `ai/PLAN.md` index
 2. Mark tasks complete in the sprint file
 3. Set next sprint to `active`
 

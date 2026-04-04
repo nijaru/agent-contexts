@@ -1,125 +1,97 @@
 ---
-description: Initialize AI agent context management for project
+name: setup-ai
+description: Initialize or audit AI agent context management for a project. Run on new repos to scaffold, and on existing repos to consolidate and migrate to current conventions.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
-Initialize AI agent context management for project.
+Initialize a new project's AI context, or audit and migrate an existing one to current conventions. This is the canonical definition of the ai/ structure.
 
-**Reference:** github.com/nijaru/agent-contexts PATTERNS.md
-**Philosophy:** Session files (<500 lines, current only) + Reference subdirs (on-demand) = token efficiency
+## Topic File Frontmatter Standard
 
-## Execution Guidelines
+All files in `research/`, `design/`, `review/` must start with:
 
-- Run independent operations in parallel (file reads, git commands, directory creation)
-- Use extended reasoning for complex projects (>100 files, multi-phase)
-- Research current best practices before implementing (research/ → DESIGN.md → design/ → code)
-- Apply detection rigorously: fill ALL detected info, [TBD] only if truly cannot detect
+```yaml
+---
+date: YYYY-MM-DD
+summary: one-line description
+status: active | resolved | stale
+---
+```
 
 ## 1. Detect Project Info
 
-| Item            | Detection Sources                                            | Parallel Read |
-| --------------- | ------------------------------------------------------------ | ------------- |
-| Name            | git remote, package.json, Cargo.toml, pyproject.toml, go.mod | yes           |
-| Language        | File extensions (.rs/.py/.ts), package managers              | yes           |
-| Framework       | package.json deps, Cargo.toml deps, imports                  | yes           |
-| Commands        | package.json scripts, Makefile, Cargo.toml, justfile         | yes           |
-| Description     | README first paragraph                                       | yes           |
-| Complexity      | README/docs for: "phases", "milestones", "roadmap", "v1/v2"  | yes           |
-| Existing config | AGENTS.md, CLAUDE.md (check symlink target)                  | yes           |
-| Claude Code     | .claude/commands/, settings.json, settings.local.json        | yes           |
-| Existing ai/    | ai/PLAN.md, ai/RESEARCH.md, ai/KNOWLEDGE.md                  | yes           |
+Read all sources in parallel:
 
-**Action:** Read all sources in parallel. Consolidate detected info.
+| Item            | Detection Sources                                            |
+| --------------- | ------------------------------------------------------------ |
+| Name            | `git remote -v`, `package.json`, `Cargo.toml`, `go.mod`      |
+| Language/Stack  | File extensions, package managers, dependency files          |
+| Commands        | `package.json` scripts, `Makefile`, `Cargo.toml`, `justfile` |
+| Description     | README first paragraph                                       |
+| Existing config | `AGENTS.md`, `CLAUDE.md` (check symlink target)              |
+| Existing ai/    | `ls -la ai/` if it exists                                    |
+| Infrastructure  | `.claude/settings.json`, `.claude/commands/`                 |
 
-## 2. Handle Existing Config
+Determine mode: **Init** (no ai/ exists) or **Audit** (ai/ exists).
 
-| Scenario              | Action                                                  |
-| --------------------- | ------------------------------------------------------- |
-| Neither exists        | Create AGENTS.md + symlink CLAUDE.md → AGENTS.md        |
-| Only AGENTS.md        | Add symlink CLAUDE.md → AGENTS.md                       |
-| Only CLAUDE.md        | Rename → AGENTS.md + create symlink                     |
-| CLAUDE.md → AGENTS.md | Update content if needed                                |
-| Both files            | Merge → AGENTS.md, remove old CLAUDE.md, create symlink |
-| CLAUDE.md → elsewhere | Ask user before modifying                               |
+## 2. Handle AGENTS.md / CLAUDE.md
 
-## 3. Migrate Existing ai/ Structure
+| Scenario                 | Action                                                            |
+| :----------------------- | :---------------------------------------------------------------- |
+| Neither file exists      | Create `AGENTS.md`, symlink `.claude/CLAUDE.md` → `../AGENTS.md`  |
+| Only `AGENTS.md`         | Add symlink if missing                                            |
+| Only `CLAUDE.md` at root | Rename to `AGENTS.md`, create symlink (leave as-is for OSS repos) |
+| Both exist               | Merge to `AGENTS.md`, remove old `CLAUDE.md`, create symlink      |
+| `CLAUDE.md` → elsewhere  | Ask user before modifying                                         |
 
-**Check for old patterns and migrate:**
+## Mode: Init (New Repo)
 
-| Old File        | Action                               |
-| --------------- | ------------------------------------ |
-| ai/PLAN.md      | Rename → ai/ROADMAP.md               |
-| ai/RESEARCH.md  | Keep or delete (research/ preferred) |
-| ai/KNOWLEDGE.md | Merge to AGENTS.md or delete         |
-| ai/decisions/   | Keep if needed, otherwise delete     |
+### 3a. Scaffold
 
 ```bash
-# Migrate PLAN.md → ROADMAP.md
-[ -f ai/PLAN.md ] && mv ai/PLAN.md ai/ROADMAP.md && echo "Migrated PLAN.md → ROADMAP.md"
-```
-
-## 4. Determine Structure
-
-### ai/ Structure
-
-| Project Size                   | Files                     | Subdirs                  |
-| ------------------------------ | ------------------------- | ------------------------ |
-| Minimal (scripts, small tools) | STATUS.md                 | tmp/                     |
-| Standard (typical projects)    | +DESIGN.md, +DECISIONS.md | research/, design/, tmp/ |
-| Complex (multi-phase, 6+mo)    | +ROADMAP.md               | research/, design/, tmp/ |
-
-**Task tracking:** Run `tk init` to initialize `.tasks/` directory.
-
-**ROADMAP.md criteria:** 3+ phases OR critical dependencies OR external deadline
-**Subdirs:** Create when needed (empty okay - 0 token cost, clear structure)
-
-## 5. Create Structure
-
-```bash
-mkdir -p ai/research ai/design ai/tmp
+mkdir -p ai/research ai/design ai/review ai/sprints ai/tmp
 echo '*' > ai/tmp/.gitignore
+tk init
 ```
 
-**Templates:** See PATTERNS.md for file content guidance
+Keep ai/ local (not committed):
 
-**File initialization:**
+```bash
+echo 'ai/' >> .git/info/exclude
+echo '.tasks/' >> .git/info/exclude
+```
+
+### 4a. Create ai/ Files
+
+**ai/README.md** — index only, pointers, no content:
+
+```markdown
+# AI Context Index
+
+- [STATUS.md](STATUS.md) — current phase and active focus
+- [DESIGN.md](DESIGN.md) — system architecture
+- [DECISIONS.md](DECISIONS.md) — architectural decisions and rationale
+- [PLAN.md](PLAN.md) — current active plan
+```
 
 **ai/STATUS.md:**
 
 ```markdown
-## Current State
+# Status
 
-| Metric                                              | Value | Updated    |
-| --------------------------------------------------- | ----- | ---------- |
-| [Detect if applicable: test coverage, build status] |       | YYYY-MM-DD |
-
-## What Worked
-
-- Initial setup complete
-
-## What Didn't Work
-
--
-
-## Active Work
-
-Initial AI context setup.
-
-## Blockers
-
-- **Note:** Update EVERY session. Prune historical content (trust git history).
+**Phase:** initial setup
+**Focus:** [current task]
+**Blockers:** none
 ```
 
-**ai/DESIGN.md (if standard+):**
+**ai/DESIGN.md:**
 
 ```markdown
-## System Overview
-
-[Detected description or TBD]
+# Design
 
 ## Architecture
 
-[Detect from codebase structure or TBD]
+[Detected system overview or TBD]
 
 ## Components
 
@@ -127,42 +99,34 @@ Initial AI context setup.
 | --------- | ------- | ------ |
 
 [Detect from src/, lib/, etc.]
-
-## Data Flow
-
-[TBD - fill in during development]
-
-## Key Design Decisions
-
-→ See DECISIONS.md for rationale
-
-## Component Details
-
-→ See ai/design/{component}.md for detailed specs
-
-**Note:** System-level overview. Component specs go in design/.
 ```
 
-**ai/DECISIONS.md (if standard+):** Date, context, decision, rationale, tradeoffs. Append-only.
+**ai/DECISIONS.md:**
 
-**ai/ROADMAP.md (if complex):** Phases table, dependencies, out-of-scope. No time estimates.
+```markdown
+# Decisions
 
-## 6. Create AGENTS.md
+## Principles
 
-**Structure:** Tables/lists/code blocks (machine-readable). Comprehensive coverage. NO duplication with ai/ (use pointers).
+_Distilled from resolved decisions. Stable, load-bearing context._
 
-**Include:**
+## Log
 
-- Project overview (detected description)
-- Structure table (docs/, ai/, src/, tests/, etc.)
-- AI context organization (session vs reference files - see template)
-- Tech stack table (detected: language, framework, package manager, tools)
-- Commands (detected: build/test/run or TBD)
-- Verification steps (commands that must pass: build/test/lint)
-- Code standards (detect from existing code or empty table)
-- Examples section (concrete code patterns if detectable)
-- Claude Code integration (if .claude/ exists: commands, MCP, hooks)
-- Current focus pointers (ai/STATUS.md, ai/DESIGN.md)
+_Recent decisions, ~20 entries max. Format: `[date] Context → Decision → Rationale`_
+```
+
+**ai/PLAN.md:**
+
+```markdown
+# Plan
+
+[Current plan. One plan at a time — replace when complete. Extract outcomes to DECISIONS.md/DESIGN.md first.]
+[For multi-sprint projects, use /sprint to generate a sprint index table here with detail files in ai/sprints/.]
+```
+
+### 5a. Create AGENTS.md
+
+Comprehensive, machine-readable. Tables/lists/code blocks. No duplication with ai/ — use pointers.
 
 **Template:**
 
@@ -173,43 +137,38 @@ Initial AI context setup.
 
 ## Project Structure
 
-| Directory | Purpose                                                               |
-| --------- | --------------------------------------------------------------------- |
-| docs/     | User/team documentation                                               |
-| ai/       | **AI session context** - workspace for tracking state across sessions |
+| Directory | Purpose                                               |
+| --------- | ----------------------------------------------------- |
+| ai/       | **AI session context** — tracks state across sessions |
+| [src/]    | [detected]                                            |
+| [tests/]  | [detected]                                            |
 
-[DETECTED: src/, lib/, tests/, etc.]
+### AI Context
 
-### AI Context Organization
+**Session files** (loaded every session):
 
-**Purpose:** AI maintains project context between sessions using ai/
-
-**Session files** (read every session):
-
-- ai/STATUS.md — Current state, metrics, blockers (read FIRST)
-- ai/DESIGN.md — System architecture, components
-- ai/DECISIONS.md — Architectural decisions
-- ai/ROADMAP.md — Phases, milestones (only if created)
-
-**Task tracking:** `tk` CLI — `.tasks/` directory (git-friendly JSON files)
+- `ai/README.md` — index of all topic files (read first)
+- `ai/STATUS.md` — current phase, focus, blockers
+- `ai/DESIGN.md` — system architecture
+- `ai/DECISIONS.md` — architectural decisions (Principles + Log)
+- `ai/PLAN.md` — current active plan
 
 **Reference files** (loaded on demand):
 
-- ai/research/ — External research
-- ai/design/ — Component specs
-- ai/tmp/ — Temporary artifacts (gitignored)
+- `ai/research/` — investigation docs
+- `ai/design/` — detailed design docs
+- `ai/sprints/` — sprint detail files (if using /sprint)
+- `ai/tmp/` — scratch (gitignored)
 
-**Token efficiency:** Session files = current work only. Details in subdirs.
+**Task tracking:** `tk` CLI — `.tasks/` directory
 
 ## Technology Stack
 
-| Component       | Technology         |
-| --------------- | ------------------ |
-| Language        | [DETECTED]         |
-| Framework       | [DETECTED or None] |
-| Package Manager | [DETECTED]         |
-
-[DETECTED: database, testing, linting, etc.]
+| Component       | Technology |
+| --------------- | ---------- |
+| Language        | [DETECTED] |
+| Framework       | [DETECTED] |
+| Package Manager | [DETECTED] |
 
 ## Commands
 
@@ -220,128 +179,118 @@ Initial AI context setup.
 # Test
 [DETECTED or TBD]
 
-# Run
-[DETECTED or TBD]
-
 # Lint
 [DETECTED or TBD]
 ```
-````
 
 ## Verification Steps
 
-Commands to verify correctness (must pass):
-
-- Build: [DETECTED build command] (zero errors)
-- Tests: [DETECTED test command] (all pass)
-- Lint: [DETECTED lint command or TBD] (zero warnings)
+- Build: [command] (zero errors)
+- Tests: [command] (all pass)
+- Lint: [command] (zero warnings)
 
 ## Code Standards
 
-[DETECT from existing code or provide empty table]
-
-| Aspect | Standard |
-| ------ | -------- |
-
-[naming, formatting, imports, error handling if detected]
-
-## Examples
-
-[Concrete code patterns specific to this project - add if detectable]
+| Aspect           | Standard          |
+| ---------------- | ----------------- |
+| [naming]         | [detected or TBD] |
+| [error handling] | [detected or TBD] |
 
 ## Claude Code Integration
 
 [Only if .claude/ exists]
-| Feature | Details |
-|---------|---------|
-| Commands | [LIST from .claude/commands/] |
-| MCP Servers | [FROM settings.json] |
-| Hooks | [FROM settings.local.json or "None"] |
+
+| Feature     | Details                       |
+| ----------- | ----------------------------- |
+| Commands    | [list from .claude/commands/] |
+| MCP Servers | [from settings.json]          |
+| Hooks       | [from settings.local.json]    |
 
 ## Development Workflow
 
-**Before implementing:**
-
-1. Research best practices → ai/research/{topic}.md
-2. Synthesize to DESIGN.md or design/{component}.md
-3. Document decision → DECISIONS.md
+1. Research → `ai/research/{topic}.md`
+2. Synthesize → `DESIGN.md` or `ai/design/{component}.md`
+3. Document decision → `DECISIONS.md` Log
 4. Implement → [src dir]
-5. Update STATUS.md with learnings
+5. Update `ai/STATUS.md`
 
 ## Current Focus
 
-See ai/STATUS.md for current state, ai/DESIGN.md for architecture
-
+See `ai/README.md` for index, `ai/STATUS.md` for current state.
 ````
 
-**Create symlink:** `ln -s AGENTS.md CLAUDE.md`
+## Mode: Audit (Existing Repo)
 
-## 7. Verify & Report
+Run when ai/ is out of sync, overlapping, or bloated. Work through steps in order.
 
-**Check (parallel):**
+### 3b. Inventory
+
 ```bash
-ls -la AGENTS.md CLAUDE.md
-ls -la ai/
-wc -l AGENTS.md ai/*.md
-````
-
-**Verification:**
-
-| Check             | Expected                                                                   |
-| ----------------- | -------------------------------------------------------------------------- |
-| Symlink           | CLAUDE.md → AGENTS.md                                                      |
-| AGENTS.md format  | Tables/lists, clear ## sections                                            |
-| AGENTS.md content | Comprehensive, no ai/ duplication, explains ai/ purpose                    |
-| Task tracking     | `.tasks/` initialized via `tk init`                                        |
-| ai/ files         | STATUS.md (+DESIGN.md, +DECISIONS.md if standard+, +ROADMAP.md if complex) |
-| ai/ subdirs       | research/, design/, tmp/ exist (tmp/ gitignored)                           |
-| Claude Code       | Documented if .claude/ exists                                              |
-
-**Output:**
-
-```markdown
-## AI Context Setup Complete
-
-**Scenario:** [detected scenario from step 2]
-
-**Project detected:**
-
-- Name: [detected]
-- Language: [detected]
-- Framework: [detected]
-- Build: [detected or TBD]
-- Test: [detected or TBD]
-- Size: [minimal/standard/complex]
-
-**AGENTS.md:** [X] lines
-
-- Symlink: CLAUDE.md → AGENTS.md
-- Format: Tables/lists
-- Claude Code: [commands/MCP/hooks or "none"]
-
-**ai/ structure:**
-
-- STATUS.md
-- DESIGN.md: [created / skipped - minimal project]
-- DECISIONS.md: [created / skipped - minimal project]
-- ROADMAP.md: [created / skipped - why]
-- Subdirs: research/, design/, tmp/ (gitignored)
-
-**Task tracking:**
-
-- .tasks/ initialized via `tk init`
-
-**Preview AGENTS.md** (first 50 lines):
-[SHOW]
-
-**Next:**
-
-1. Update ai/STATUS.md with current project state
-2. Add initial tasks: `tk add "task" -p<priority>`
-3. Commit: `git add . && git commit -m "Initialize AI context"`
+find ai/ -name "*.md" | sort
 ```
 
-## Maintenance
+Read all root files. Note which topic files have frontmatter and their `status` field.
 
-**Version:** 2026-01 (review quarterly or when PATTERNS.md changes)
-**Self-optimization:** Apply same token efficiency principles to this command
+### 4b. Structure Migration
+
+Ensure current conventions are in place:
+
+- `ai/README.md` exists and is index-only (pointers, ~150 chars/entry, no content)
+- `ai/STATUS.md` has Phase / Focus / Blockers format
+- `ai/PLAN.md` exists — rename `SPRINTS.md` or `ROADMAP.md` if present, migrate content
+- `ai/DECISIONS.md` has **Principles** + **Log** sections
+
+### 5b. Stale Detection
+
+For each topic file in `research/`, `design/`, `review/`:
+
+- Missing frontmatter → add it
+- `status: resolved` or `status: stale` → candidate for deletion
+- Last modified > 3 months with no reference in `README.md` → verify relevance, delete if stale
+
+### 6b. Consolidation
+
+- Merge files covering the same topic. One focused file beats three overlapping ones.
+- Delete resolved files — don't mark done, delete.
+- Don't persist derivable facts — if it's grep-able from code or git history, remove it.
+
+### 7b. DECISIONS.md Compaction
+
+If Log section exceeds ~20 entries:
+
+1. Read oldest entries in the Log
+2. Identify recurring themes → distill into concise Principles at the top
+3. Remove distilled entries from the Log
+4. Keep recent ~10 entries verbatim in the Log
+
+### 8b. Index Rebuild
+
+Rewrite `ai/README.md` from scratch based on what actually exists after consolidation:
+
+```markdown
+# AI Context Index
+
+- [Title](path) — one-line hook (~150 chars max)
+```
+
+Every root file should have an entry. Topic files in subdirs get entries only if actively referenced.
+
+## Verification
+
+```bash
+ls -la AGENTS.md .claude/CLAUDE.md   # verify symlink
+tk ready                               # verify task tracking
+ls -R ai/                              # verify structure
+```
+
+Check: README.md has no content (pointers only), DECISIONS.md has both sections, PLAN.md exists.
+
+## Anti-Patterns
+
+| Excuse                             | Reality                                                         |
+| :--------------------------------- | :-------------------------------------------------------------- |
+| "It's a small project"             | Inconsistent structure causes context drift in 3 sessions       |
+| "I'll update README.md later"      | Stale index = agent loads wrong files = hallucinations          |
+| "I'll keep old files just in case" | Dead files pollute context. Delete resolved work.               |
+| "I'll mark this decision as done"  | Append Log + periodic distillation into Principles is correct   |
+| "STATUS.md can hold the index too" | Index belongs in README.md. STATUS.md is operational state only |

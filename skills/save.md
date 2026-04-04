@@ -18,7 +18,7 @@ tk ls
 
 For each task:
 
-- **Log findings first:** `tk log <id> "what was learned"` — errors, root cause, file paths
+- **Log findings first:** `tk log <id> "what was learned"` — errors, root cause, file paths. High-signal only; skip what's derivable from code.
 - **Mark complete:** `tk done <id>`
 - **Add new:** `tk add "title" -d "context"`
 
@@ -26,21 +26,21 @@ Don't leave stale tasks.
 
 ## 2. Update ai/
 
-**STATUS.md** (always): Current focus, blockers, what worked. Prune stale content.
+**README.md** (if files added, changed, or deleted): Update index pointers. Format: `- [Title](path) — one-line hook`. Verify all links are live; remove dead ones.
+
+**STATUS.md** (always): Phase, active focus, blockers. Prune stale content.
 
 **DESIGN.md** (if architecture changed): Components, patterns, interfaces.
 
-**DECISIONS.md** (if decisions made): Context → Decision → Rationale.
+**DECISIONS.md** (if decisions made): Append to Log section: `[date] Context → Decision → Rationale`. If Log exceeds ~20 entries, run `/setup-ai` next session to compact into Principles.
 
-**SPRINTS.md** (if sprint progress): Mark completed, update status.
-
-Keep files <500 lines. Move details to subdirs if needed.
+**PLAN.md** (if sprint progress): Update sprint status or task progress.
 
 ## 3. Commit
 
 ```bash
 git add ai/ .tasks/
-git commit -m "Update session context"
+git commit -m "chore(ai): update session context"
 ```
 
 ## 4. Report
