@@ -6,69 +6,58 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 # Prune
 
-Clean up project cruft. Run when things feel cluttered.
+Clean up project cruft and keep ai/ healthy. Run when things feel cluttered.
 
 ## 1. Survey
 
 ```bash
 ls -la
-ls -la ai/ ai/**/* 2>/dev/null
+ls -R ai/
 tk ls
 git status --short
 ```
 
-## 2. Clean
+## 2. Clean Files
 
-**Files:** For each file in root and other unexpected places—does it serve an ongoing purpose?
+For each file in root or unexpected locations:
 
 - **No purpose** → delete it
-- **Has purpose, wrong location** → move to proper place (tests/, scripts/, etc.)
+- **Has purpose, wrong location** → move (`scripts/`, `tests/`, etc.)
 - **Has purpose, right location** → keep
 
-Examples:
-
-- `test.py` in root, throwaway → delete
-- `test.py` in root, useful test → move to tests/
-- `debug.sh` worth keeping → move to scripts/
-- `benchmark.py` with structure → keep (ongoing tooling)
-
-The difference is purpose, not name. Ask when uncertain.
-
-Don't touch: `.git/`, config files, source code
-
-**Tasks:** Mark completed done, delete stale ones, consolidate duplicates.
+Don't touch: `.git/`, config files, source code.
 
 ## 3. Organize ai/
 
-Goal: hierarchical organization where agents can find any topic easily.
-
-- **Overview docs** at top level for high-level context
-- **Detailed docs** split out by specific topic
-- **One doc per topic** - no scattered duplicates
-
-Read each file to understand its content before acting.
+Goal: every file is findable via `ai/README.md`. One doc per topic, no scattered duplicates.
 
 **Root files:**
 
-- STATUS.md - prune aggressively (resolved blockers, completed work, outdated state)
-- DESIGN.md - update if stale (remove descriptions of deleted code)
-- DECISIONS.md - keep all entries (it's a log)
-- SPRINTS.md - update sprint status
+- `README.md` — index only (pointers, ~150 chars/entry). Rebuild after any changes.
+- `STATUS.md` — prune aggressively: remove resolved blockers, completed work, outdated state.
+- `DESIGN.md` — remove descriptions of deleted/changed components.
+- `DECISIONS.md` — never delete Log entries. If Log > ~20 entries, distill oldest into Principles section.
+- `PLAN.md` — update sprint status if progress was made.
 
-**Subdirs (research/, design/, sprints/, etc.):**
+**Subdirs (research/, design/, review/, sprints/):**
 
-- Consolidate scattered content on same topic into one file
-- Split multi-topic files into focused single-topic docs
-- Leave alone if already well-organized
+- Add missing frontmatter (`date`, `summary`, `status: active|resolved|stale`).
+- `status: resolved` or `status: stale` → delete (don't archive).
+- Consolidate files on the same topic into one focused doc.
+- Split multi-topic files into single-topic docs.
 
-Preserve all important content. Delete old files only after content is safely moved. If already well-organized, say so and move on.
+**After changes:** Rewrite `ai/README.md` to reflect what actually exists. Remove dead links.
 
-## 4. Finish
+## 4. Tasks
+
+Mark completed done (`tk done <id>`), delete stale ones, consolidate duplicates.
+
+## 5. Finish
 
 ```bash
-git add -A
+git add ai/ .tasks/
 git diff --cached --stat  # review what changed
-git commit -m "Prune: clean up and organize"
+git commit -m "chore(ai): prune workspace"
 ```
 
 Report what was removed, reorganized, or left alone.
