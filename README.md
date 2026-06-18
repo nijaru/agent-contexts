@@ -65,38 +65,36 @@ Add the patterns to your project's AI config file:
 
 | Tool        | Config File                               |
 | ----------- | ----------------------------------------- |
-| Claude Code | `CLAUDE.md` (or `AGENTS.md` with symlink) |
+| Claude Code | `AGENTS.md` (or `CLAUDE.md` symlink)      |
+| pi          | `AGENTS.md`                               |
+| Codex       | `AGENTS.md`                               |
 | Cursor      | `.cursorrules`                            |
 | Cline       | `.clinerules`                             |
 | Windsurf    | `.windsurfrules`                          |
 | Other       | `AGENTS.md`                               |
 
-Copy relevant sections from `global/CLAUDE.md` into your config.
+Copy relevant sections from `global/AGENTS.md` into your config.
 
 ### Option 2: User-Level (all projects)
 
-**For Claude Code:**
-
 ```bash
 # Append patterns to existing config
-cat global/CLAUDE.md >> ~/.claude/CLAUDE.md
+cat global/AGENTS.md >> ~/.agents/AGENTS.md
 
 # Or if starting fresh
-cp global/CLAUDE.md ~/.claude/CLAUDE.md
+mkdir -p ~/.agents
+cp global/AGENTS.md ~/.agents/AGENTS.md
 
 # Copy skills (optional)
-mkdir -p ~/.claude/skills
-cp skills/*.md ~/.claude/skills/
+mkdir -p ~/.agents/skills
+cp skills/*.md ~/.agents/skills/
 
 # Copy agent definitions (optional)
-mkdir -p ~/.claude/agents
-cp agents/*.md ~/.claude/agents/
-
-# Now in any project:
-/setup-ai
+mkdir -p ~/.agents/agents
+cp agents/*.md ~/.agents/agents/
 ```
 
-**For other tools:** Append `global/CLAUDE.md` to your tool's config file.
+**For other tools:** Append `global/AGENTS.md` to your tool's config file (`.cursorrules`, `.clinerules`, etc.).
 
 ## Files
 
@@ -104,7 +102,7 @@ cp agents/*.md ~/.claude/agents/
 | ------------------ | ----------- | ---------------------------------- |
 | `README.md`        | Humans + AI | Quick start, overview              |
 | `PATTERNS.md`      | AI agents   | Detailed organization patterns     |
-| `global/CLAUDE.md` | AI agents   | Template for user/project config   |
+| `global/AGENTS.md` | AI agents   | Template for user/project config   |
 | `agents/*.md`      | AI agents   | Reference subagent implementations |
 | `skills/*.md`      | Claude Code | Skills (`/setup-ai`, `/save`)      |
 
