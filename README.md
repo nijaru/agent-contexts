@@ -16,9 +16,9 @@ Set up ai/ context management for this project following those patterns.
 The agent will create:
 
 - `AGENTS.md` - Project config for AI agents
-- `ai/STATUS.md` - Current state (always)
-- `ai/DESIGN.md` - System architecture (recommended)
-- `ai/DECISIONS.md` - Architectural choices (recommended)
+- `ai/brief.md` - Current state (always, <80 lines)
+- `ai/architecture.md` - System architecture (recommended)
+- `ai/decisions.md` - Architectural choices (recommended)
 - `ai/` subdirs for research, component designs
 
 ## What You Get
@@ -26,12 +26,14 @@ The agent will create:
 ```
 your-project/
 ├── AGENTS.md              # AI entry point
+├── CLAUDE.md → AGENTS.md  # Symlink for Claude Code
 ├── .tasks/                # Task tracking (tk CLI)
 └── ai/                    # AI session context
-    ├── STATUS.md          # Current state (always)
-    ├── DESIGN.md          # System architecture (recommended)
-    ├── DECISIONS.md       # Architectural choices (recommended)
-    ├── ROADMAP.md         # Phases, milestones (situational)
+    ├── brief.md           # Current state (always, <80 lines)
+    ├── journal.md         # Append-only session log
+    ├── architecture.md    # System architecture (recommended)
+    ├── decisions.md       # Architectural choices — Principles + Log
+    ├── PLAN.md            # Active plan or sprint index (situational)
     ├── research/          # External research (on demand)
     ├── design/            # Component specs (on demand)
     └── tmp/               # Temporary artifacts (gitignored)
@@ -39,7 +41,7 @@ your-project/
 
 ## Key Concepts
 
-**Token efficiency**: Session files (ai/ root) load every session—keep under 500 lines. Subdirectories load only when needed.
+**Token efficiency**: Session files (ai/ root) load every session—keep minimal. Subdirectories load only when needed.
 
 **Task tracking**: Use `tk` CLI for task tracking. Tasks stored in `.tasks/` directory.
 
@@ -49,11 +51,11 @@ your-project/
 
 **File tiers**:
 
-| Tier        | Files                    |
-| ----------- | ------------------------ |
-| Always      | STATUS.md                |
-| Recommended | DESIGN.md, DECISIONS.md  |
-| Situational | ROADMAP.md (multi-phase) |
+| Tier        | Files                              |
+| ----------- | ---------------------------------- |
+| Always      | brief.md, journal.md               |
+| Recommended | architecture.md, decisions.md      |
+| Situational | PLAN.md (multi-phase planning)     |
 
 ## Integration Options
 
@@ -114,7 +116,6 @@ Reference implementations in `agents/`:
 | ------------ | ---------------------- | ------------------------------------------------- |
 | `researcher` | External knowledge     | Need library docs, best practices, current info   |
 | `designer`   | Architecture, planning | Complex task decomposition, system design         |
-| `developer`  | Implementation         | Well-scoped, independent work with clear criteria |
 | `reviewer`   | Quality validation     | After implementation, before commit               |
 | `profiler`   | Performance analysis   | Bottlenecks, optimization, benchmarking           |
 

@@ -1,57 +1,40 @@
 ---
 name: save
-description: Update ai/ files and tk tasks.
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+description: Use when persisting session state before compaction, session handoff, or completion of substantial work in a repo that already uses ai/ context or tk tasks.
+allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 
-# Context Save
+# Save (Session Persistence)
 
-Persist session state to ai/ and tk. Priority: tk and ai/ first (from context), git last.
+**Iron Law:** Persist only non-derivable state to the repo's existing memory surfaces. Never assume chat context survives compaction.
 
-**Trigger:** Before `/compact`, session end, context switch, or explicitly.
+## Preflight
 
-## 1. Update tk Tasks
+- Check which persistence surfaces exist: `ai/`, `.tasks/`, and `tk`.
+- Do not create `ai/`, initialize `tk`, add new task systems, or commit purely because this skill ran.
+- If neither `ai/` nor `tk` exists, summarize the handoff in the final response instead.
 
-```bash
-tk ls
-```
+## Checklist
 
-For each task:
+### 1. Tasks (`tk`)
 
-- **Log findings first:** `tk log <id> "what was learned"` — errors, root cause, file paths. High-signal only; skip what's derivable from code.
-- **Mark complete:** `tk done <id>`
-- **Add new:** `tk add "title" -d "context"`
+- Only use when `tk` is installed and `.tasks/` exists.
+- Log key findings before closing work: `tk log <id> "finding (file:line)"` - high-signal only, skip what's derivable from code.
+- Close completed active tasks: `tk done <id>`.
+- Add remaining work only when it is real, actionable follow-up: `tk add "title" -p N -d "context"`.
 
-Don't leave stale tasks.
+### 2. AI Context (`ai/`)
 
-## 2. Update ai/
+- Only update files that already exist or are required by the repo's documented `ai/` convention.
+- **brief.md:** Regenerate from journal + decisions. Keep <80 lines, active context only.
+- **journal.md:** Append timestamped session summary. Format: `- [YYYY-MM-DD] Action/Decision/Learning`.
+- **decisions.md:** Append to Log section: `[date] Context -> Decision -> Rationale`. If Log exceeds ~20 entries, compact into Principles.
+- **architecture.md:** Record architectural changes only.
+- **research/:** Consolidate new findings into the appropriate topic file (Findings / Applied / Open Questions). Create new topic file only if no existing file covers it. Update index.md. No frontmatter on topic files.
+- **design/:** Update component docs as needed. Update index.md. No frontmatter on topic files.
 
-**README.md** (if files added, changed, or deleted): Update index pointers. Format: `- [Title](path) — one-line hook`. Verify all links are live; remove dead ones.
+### 3. Source Control
 
-**STATUS.md** (always): Phase, active focus, blockers. Prune stale content.
-
-**DESIGN.md** (if architecture changed): Components, patterns, interfaces.
-
-**DECISIONS.md** (if decisions made): Append to Log section: `[date] Context → Decision → Rationale`. If Log exceeds ~20 entries, run `/setup-ai` next session to compact into Principles.
-
-**PLAN.md** (if sprint progress): Update sprint status or task progress.
-
-## 3. Commit
-
-```bash
-git add ai/ .tasks/
-git commit -m "chore(ai): update session context"
-```
-
-## 4. Report
-
-```
-## Saved
-
-Tasks: [N done, N added, N pending]
-ai/: [what changed]
-
-## Next Session
-
-[2-4 bullets: what to do next based on pending tasks, blockers, incomplete work]
-```
+- Check `git status` before and after edits.
+- If repo policy says to commit and the persistence files are tracked, include them in the relevant logical commit.
+- Prefer keeping `ai/` local via `.git/info/exclude` when repo policy allows it.

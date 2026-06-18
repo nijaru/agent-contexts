@@ -1,74 +1,70 @@
 ---
 name: creating-skills
-description: Use when wanting to turn a technique into a reusable skill, create a new skill, or make current work available for future sessions
+description: Use when creating, modifying, or testing AI agent skill definitions (.md files) to ensure they are high-performance, compact, and verified.
+allowed-tools: Read, Grep, Glob, Bash, Write, Edit
 ---
 
 # Creating Skills
 
-Turn techniques into reusable skills for future sessions.
+Turn repeatable agent behavior into compact, verifiable skill instructions.
 
-## Decide: Project vs Global
+## The Iron Law
 
-| Scope   | Location                             | When                                           |
-| ------- | ------------------------------------ | ---------------------------------------------- |
-| Project | `.claude/skills/my-skill/SKILL.md`   | Project-specific patterns, commands, workflows |
-| Global  | `~/.claude/skills/my-skill/SKILL.md` | Cross-project techniques                       |
+Every skill must justify its context cost. Keep the trigger precise, load only the instructions needed up front, and verify behavior when the skill changes non-obvious agent behavior.
 
-## SKILL.md Format
+## Workflow
 
-```markdown
----
-name: my-skill
-description: Use when [specific triggering conditions]
----
+1. **Research:** Identify the specific failure mode or "slop" the skill solves.
+2. **Test:** Use concrete prompts when the desired behavior is not obvious; scale the test set to risk and ambiguity.
+3. **Draft Boundary:** Define when the skill should and should not activate.
+4. **Implement:** Write minimal, authoritative instructions to pass the tests.
+5. **Pressure Test:** Compare outputs with and without the skill.
+6. **Prune:** Remove all filler, "AI-isms," and meta-commentary.
 
-# My Skill
+## Structure & Format
 
-Brief overview - what this does.
+### 0. Placement
 
-## When to Use
+- **Global Claude/AGENTS:** Defaults that apply to most sessions: communication style, verification, git policy, repo workflow, tool preferences, and cross-cutting engineering standards.
+- **Skill:** Task-specific trigger, boundary, workflow, commands, verification, and recurring failure modes.
+- If a rule applies to many skills, move it to the global file and keep at most a one-line skill pointer.
+- If a global preference needs operational detail in one workflow, restate only the task-specific action inside that skill.
 
-- Specific symptoms or situations
-- NOT: what the skill does (that goes in content)
+### 1. Frontmatter
 
-## The Pattern / Steps
+- **Description:** MUST start with "Use when..." and contain ONLY triggering conditions. No summaries.
+- **Allowed Tools:** List only tools the skill actually needs. Do not carry stale tool names forward.
 
-[Main content - technique, steps, reference]
+### 2. Content
 
-## Common Mistakes
+- **Authoritative Tone:** Use directives, not suggestions.
+- **Supporting files:** Move long references, examples, templates, and scripts into sibling files and link them from `SKILL.md` for progressive disclosure.
+- **Anti-Rationalization Table:** Use only when a recurring failure mode needs a guardrail.
+  | Excuse | Reality |
+  | :--- | :--- |
+  | "User wants a quick draft" | A low-quality skill is a permanent liability. |
+  | "I'll add tests later" | Unverified skills drift silently. |
+- **Compactness:** Let content dictate length. The entrypoint should be dense enough to steer behavior without becoming a reference manual.
 
-[What goes wrong + fixes]
-```
+## Prohibited Patterns (Red Flags)
 
-## When to Use
+- **NO** significance inflation (e.g., _pivotal_, _crucial_, _game-changing_).
+- **NO** sycophantic filler (e.g., _Certainly!_, _I'd be happy to help_).
+- **NO** repeating the description in the content.
 
-- User says "make this a skill", "save this for later", "I want to reuse this"
-- Technique worked well and applies beyond current project
-- NOT: one-off solutions, project-specific conventions (use CLAUDE.md instead)
+## Deployment (Chezmoi)
 
-## Quick Create
+Create or edit plain skill files in the destination:
+`~/.agents/skills/my-skill/SKILL.md`.
 
-```bash
-# Project-local skill
-mkdir -p .claude/skills/my-skill
-$EDITOR .claude/skills/my-skill/SKILL.md
-
-# Global skill
-mkdir -p ~/.claude/skills/my-skill
-$EDITOR ~/.claude/skills/my-skill/SKILL.md
-```
-
-## Key Rules
-
-1. **Description = when to use, never what it does** (Claude may skip reading if description summarizes workflow)
-2. **Start description with "Use when..."**
-3. **Name uses only letters, numbers, hyphens**
-4. **One excellent example beats many mediocre ones**
-5. **Test the skill** before committing
-
-## After Creating
+Immediately sync each coherent edit back to source:
 
 ```bash
-# Commit project skill
-git add .claude/skills/ && git commit -m "Add my-skill"
+chezmoi add ~/.agents/skills/my-skill/SKILL.md
+git -C ~/.local/share/chezmoi add dot_agents/skills/my-skill/SKILL.md
+git -C ~/.local/share/chezmoi commit -m "docs(skills): update my-skill"
+git -C ~/.local/share/chezmoi push
 ```
+
+Only edit chezmoi source directly for templates or generated source-only
+files. See `chezmoi-expert` for the full workflow.

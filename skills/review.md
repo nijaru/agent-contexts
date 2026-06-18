@@ -1,149 +1,57 @@
 ---
 name: review
-description: Code review with refactoring suggestions — correctness, safety, quality, and structural improvements with before/after examples. Runs a reviewer subagent on detected scope or specified files.
-allowed-tools: Read, Grep, Glob, Bash, Task
+description: Use when evaluating code changes for correctness, regressions, safety, maintainability, or when the user explicitly asks for a review.
+allowed-tools: Bash, Read, Grep, Glob, Edit
 ---
 
-# Code Review
+# Review
 
-Single reviewer subagent with fresh eyes. Covers correctness, safety, quality, and refactoring opportunities with before/after examples.
+Find defects and risks before merge or handoff. Default to report mode. Edit only when the user asks to fix, refine, or apply the findings.
 
-## Workflow
+## Boundary
 
-1. **Detect scope** (see below)
-2. **Build/test FIRST** — Run tests once in the parent before launching the reviewer. Include test output in the agent prompt. Tell the agent tests already pass.
-3. **Launch 1 reviewer subagent** with full checklist
-4. **Report summary** with actionable items
+Review is not implementation planning, broad cleanup, or praise. It answers: "What can break, what evidence supports that, and what should change?"
 
-## Scope Detection
+Use `refactor` for behavior-preserving cleanup, `second-pass` for replacing a just-finished implementation with a cleaner one, and `rewrite` when the design itself may be wrong.
 
-```bash
-# Priority order:
-# 1. User provided specific files/paths? -> Review those
-# 2. Feature branch? -> diff vs main
-# 3. Upstream remote? -> diff vs upstream/main
-# 4. Version tags? -> diff vs last tag
-# 5. Unpushed commits? -> diff vs origin/main
-# 6. Staged changes? -> git diff --cached
-# 7. Unstaged changes? -> git diff
-# 8. Nothing -> inform user
-```
+## Preflight
 
-## Reviewer Subagent
+1. Define the review target: staged diff, branch diff, changed files, PR, or named files.
+2. Read local instructions and relevant tests/callers before judging code.
+3. Run a baseline build/test/lint when practical. If skipped, state the reason.
+4. Prefer `hunk diff`/`hunk show` when available for human-facing diffs; use `git diff` as fallback.
 
-Launch using Task tool with `subagent_type: reviewer`. One agent covers all areas.
+## Analysis
 
-### Checklist
+Prioritize issues in this order:
 
-**Correctness:**
+1. Incorrect behavior, data loss, security exposure, crashes, races, resource leaks
+2. API/contract regressions, persistence or migration risks, edge-case gaps
+3. Missing tests for behavior that can realistically break
+4. Maintainability problems that hide defects or make future changes risky
+5. Style only when it causes confusion, inconsistency, or tooling failure
 
-- Logic errors, off-by-one, boundary conditions
-- Null/undefined handling, state consistency
-- Race conditions (if concurrent)
-- Edge cases: empty, max, negative, zero
+Do not list speculative concerns. Every finding needs a concrete file/line, failure mode, and fix direction.
 
-**Safety:**
+## Modes
 
-- Input validation at boundaries
-- Hardcoded secrets, credentials
-- Injection: SQL, XSS, command, path traversal
-- Silent failures, empty catch blocks
-- Error propagation (swallowed vs bubbled)
-- Resource cleanup on error
+- **Report mode:** Findings first, ordered by severity. Do not edit. Include skipped checks and residual risk.
+- **Refine mode:** Apply only targeted fixes for accepted findings. Use relevant language skills, keep behavior fixed unless the finding is a behavior bug, and rerun verification.
 
-**Quality & Refactoring:**
+## Output
 
-- Fits existing patterns? Single responsibility?
-- Over-engineering (future problems?)
-- Naming: unclear names, `_v2`/`_new` suffixes, magic numbers, inconsistent style
-- Size: long functions (>40 lines), large files (>400 lines), deep nesting (>3), many parameters (>4)
-- Smells: duplication (3+ lines, 2+ times), feature envy, primitive obsession, dead code, speculative generality
-- Structure: god objects, multiple responsibilities — flag with before/after
-- Unnecessary allocations
-- O(n^2) where O(n) possible
-- Blocking I/O in async, N+1 queries
-- Language idioms
+Use this shape:
 
-### Prompt
+1. Findings, ordered by severity: `[P0-P3] file:line - issue -> fix`
+2. Open questions or assumptions
+3. Verification run or skipped
 
-```
-Review code for correctness, safety, and quality. For quality/structural issues, provide before/after examples.
+If there are no findings, say that directly and name the remaining test gaps or residual risk.
 
-Scope: [diff or files]
+## Anti-Rationalization
 
-Report issues with confidence >= 80%. Format:
-
-Correctness/safety issues:
-[SEVERITY] file:line - Issue
-  -> Fix
-
-Quality/refactoring issues:
-[SEVERITY] file:line - Issue
-  Before: [code]
-  After: [code]
-
-Severities:
-- ERROR: Must fix (bugs, security, silent failures)
-- WARN: Should fix (smells, performance, structure)
-- NIT: Optional (style, minor)
-
-Be thorough. No false positives. Only flag what you're confident about.
-```
-
-## Output Format
-
-```
-## Review Summary
-
-Scope: [X files, Y lines]
-Issues: ERROR: X, WARN: X, NIT: X
-
-## Critical (must fix)
-
-[ERROR] file:line - Issue
-  -> Fix
-
-## Important (should fix)
-
-[WARN] file:line - Issue
-  Before: [code]
-  After: [code]
-
-## Minor
-
-[NIT] file:line - Issue
-  -> Fix
-
-## Strengths
-
-- What's done well
-
-## Verdict
-
-LGTM / LGTM with nits / Needs work
-
-## Refactoring Plan (if changes warranted)
-
-Priority:
-1. [Change] - file:line
-2. [Change] - file:line
-
-Risk: [Safe / Needs tests first]
-
-Implement these changes?
-```
-
-## Large Reviews (many files across subsystems)
-
-For reviews spanning multiple subsystems, split by **file area** (frontend vs backend, module A vs module B), not by review type.
-
-## Quick Review (small changes)
-
-For < 50 lines, review directly without subagents:
-
-- [ ] Logic correct, edge cases handled
-- [ ] Errors handled, not swallowed
-- [ ] No security issues
-- [ ] No debug statements
-- [ ] Naming clear, no structural issues
-- [ ] Fits existing patterns
+| Excuse | Reality |
+| :--- | :--- |
+| "Tests pass, so there are no issues." | Tests are evidence, not proof. Review contracts, edge cases, and integration paths. |
+| "This is mostly style." | Style-only notes are noise unless they affect correctness, clarity, or local conventions. |
+| "I should fix it while reviewing." | Report first unless the user asked for refinement. |

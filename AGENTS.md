@@ -1,86 +1,131 @@
-# Agent Contexts
+# Agent Instructions
 
-**Organization patterns and templates for AI coding agents**
+Rules apply unless overridden by repo-local `AGENTS.md`/`CLAUDE.md`.
 
-## Purpose
+## Operating Rules
 
-Standardized structure for AI working context. Use to set up any project with ai/ context management.
+- Read before changing: target file, callers, shared utilities, `ai/`/`tk` state.
+- State assumptions when they affect design, scope, APIs, data, or user-visible behavior. Ask when wrong guess would be costly.
+- Reproduce before fixing. Verify actual state before building on it.
+- Surgical changes only. No opportunistic reformat/refactor.
+- Prefer simple local code over abstractions until duplication/complexity proves abstraction needed.
+- Deterministic code for deterministic work. No model calls for routing/retries/validation.
+- Validate at boundaries: user input, external APIs, files, network, subprocesses.
+- Follow codebase conventions. If conflicting, choose newer/more-local; flag other for cleanup.
+- Tests prove intent, not shape. Cover failure paths. Flaky tests are bugs.
+- Fail visibly: disclose skipped checks, stale inputs, partial verification, uncertainty, remaining risk.
+- After substantial work: one cleanup pass (dead code, debug detours, stale names).
+- Clean replacement, not transitional compatibility. No shims, legacy aliases, or deprecation scaffolding unless explicitly asked.
 
-## Quick Reference
+## Style
 
-**For complete guidance:** @PATTERNS.md
+- Lead with answer/decision. No praise, premise validation, or filler.
+- Wrong premise → say so directly. Don't capitulate without new evidence.
+- Specific, concrete, complete. Facts/constraints/examples/commands/paths over generalities.
+- Verify facts, names, dates, numbers, citations before relying on them. Unknown/stale/unverified → say so plainly.
+- Explicit confidence when uncertainty matters.
+- Skip disclaimers/moralizing/hedging unless real risk.
+- No AI slop in any output (thinking, summaries, task descriptions, prose). See patterns below.
 
-**Core pattern:**
+### Anti-patterns
 
-- **ai/** — AI session context (state, design, decisions)
-- **docs/** — User documentation (guides, API, specs)
-- **Task tracking:** `tk` CLI (`.tasks/` directory)
+**Binary contrasts** — "not X, but Y." State Y. Drop the negation.
+**False agency** — inanimate things don't act. Name the actor.
+**Vague declaratives** — "the implications are significant." Name the specific implication.
+**Dramatic fragmentation** — "X. That's it. That's the thing." Complete sentences.
+**Narrator-from-a-distance** — "Nobody designed this." Put the reader in the scene.
+**Emphasis crutches** — "full stop," "let that sink in." If it matters, show why.
+**All adverbs** — kill -ly words. "Really," "just," "literally," "simply," "actually," "fundamentally."
 
-## Project Structure
+## Environment
 
-```
-agent-contexts/
-├── README.md              # Quick start (humans + AI)
-├── PATTERNS.md            # Detailed patterns (AI reference)
-├── AGENTS.md              # This file
-├── CLAUDE.md              # Symlink → AGENTS.md
-├── global/
-│   └── CLAUDE.md          # Template → ~/.claude/CLAUDE.md or project config
-├── agents/                # Reference subagent implementations
-│   ├── researcher.md
-│   ├── designer.md
-│   ├── reviewer.md
-│   └── profiler.md
-└── skills/
-    ├── setup-ai.md        # Initialize AI context for project
-    ├── save.md            # Save session state before compact
-    ├── sprint.md          # Break specs into sprints and tasks
-    ├── review.md          # Code review with reviewer subagent
-    ├── refactor.md        # Analyze and suggest refactorings
-    ├── prune.md           # Clean up cruft and organize ai/
-    ├── writer.md          # Review text for AI patterns
-    └── creating-skills.md # Turn techniques into reusable skills
-```
+| Machine | Specs | Tailscale |
+|---------|-------|----------|
+| Mac | M3 Max, 128GB | `nick@apple` |
+| Fedora | i9-13900KF, 32GB, RTX 4090 | `nick@fedora` |
 
-## ai/ Structure
+Repos: `~/github/<owner>/<repo>`. Clone: `ghc <repo>`.
 
-| File         | When            | Purpose                                  |
-| ------------ | --------------- | ---------------------------------------- |
-| STATUS.md    | **Always**      | Current state, blockers (read FIRST)     |
-| DESIGN.md    | **Recommended** | System architecture, components          |
-| DECISIONS.md | **Recommended** | Architectural decisions                  |
-| SPRINTS.md   | Situational     | Sprint plans (use `/sprint` to generate) |
+## GitHub Accounts
 
-**Subdirectories (on demand):**
+| Account | Email | SSH Key | Use for |
+|---------|-------|---------|--------|
+| `nijaru` | nijaru7@gmail.com | ~/.ssh/id_ed25519 | Primary (personal, OSS) |
+| `readcopyupdate` | readcopyupdate@gmail.com | ~/.ssh/id_ed25519_readcopyupdate | Anonymous work |
 
-- research/ — External research findings
-- design/ — Component specifications
-- review/ — Review findings
-- tmp/ — Temporary artifacts (gitignored)
+- `gh auth switch` toggles the default account for CLI/API commands.
+- Git identity auto-switches for repos under `~/github/readcopyupdate/` via `includeIf` in gitconfig.
+- SSH key auto-switches for `readcopyupdate/*` GitHub URLs via global `url.insteadOf` rules.
+- `git-readcopyupdate` function: force readcopyupdate identity for one-off Git commands outside `~/github/readcopyupdate/`.
 
-## Subagents
+## Stack
 
-For context isolation, parallelism, fresh perspective. ai/ files are shared memory.
+Package manager CLI only. Never hand-edit manifests/lockfiles.
 
-| Agent        | Purpose                          | Persists to  |
-| ------------ | -------------------------------- | ------------ |
-| `researcher` | External knowledge, synthesis    | ai/research/ |
-| `designer`   | Architecture, planning           | ai/design/   |
-| `reviewer`   | Full validation (build/run/test) | ai/review/   |
-| `profiler`   | Deep performance analysis        | ai/review/   |
+- **Python:** `uv` always. `uvx` one-offs, `uv tool install` daily drivers.
+- **TypeScript:** `bun` always. No npm/node.
+- **Rust:** Edition 2024. `anyhow` apps, `thiserror` libs, strong types, no global mutable state.
+- **Go:** `goimports`, then `golines --base-formatter gofumpt`.
+- **C++:** C++23, CMake, Ninja.
+- **JUCE 8:** CMake-first, APVTS params, real-time safe `processBlock`.
+- **UI:** lucide/heroicons. No emoji unless requested.
 
-See `agents/` for reference implementations.
+Load skills for non-trivial code: `python-expert`, `rust-expert`, `go-expert`, `bun-expert`, `cpp-expert`, `cmake-expert`, `juce-expert`, `zig-expert`, `mojo-syntax`.
 
-## Core Principles
+## Tools
 
-1. **Organization over coding** - AI knows syntax, needs structure
-2. **Token efficiency** - Session files minimal, subdirs on demand
-3. **Standardization** - Same ai/ structure across projects
-4. **Machine-optimized** - Tables/lists, not prose
-5. **Single source of truth** - Each type of info has one home
+- `tk`: task tracking (survives compaction).
+- `jb`: long-running jobs (prefer over nohup/&/screen).
+- `mise`: runtime versions. `gh`: GitHub CLI. `hf`: Hugging Face CLI.
+- `hunk`: Git pager/difftool. `hunk diff`, `hunk show`, `hunk session *`.
+- `sg`/`ast-grep`: structural search/refactors.
+- `hyperfine`: CLI benchmarks.
+- `nu`: typed data pipelines (prefer over jq/awk for structured data).
 
-## Usage
+Search: `rg` exact, `og`/`colgrep` semantic. WebSearch for facts, Context7 for docs, Exa for code.
 
-**One project:** Read PATTERNS.md, apply patterns to target project
+## Development
 
-**All projects:** Copy `global/CLAUDE.md` to user-level config, use `/setup-ai` command
+- Fix root causes, not symptoms.
+- Functional core, imperative shell. Side effects at edges.
+- Small interfaces > broad abstractions. Copying > dependency.
+- Let errors propagate. Catch only to recover or add context.
+- Ask before breaking APIs or changing external behavior.
+- No scope creep. Note unrelated issues in task logs/PR comments.
+- No TODOs, commented-out code, or narration comments. Comments explain why, not what.
+- One concern per file. Tests separate.
+- Names: short local, descriptive cross-boundary. Intent suffixes (`_batched`, `_async`).
+- Refactors: clean replacement, not transitional compatibility. Use `refactor`/`second-pass` skill.
+
+## Testing
+
+- Prefer unit or end-to-end tests.
+- Mock only external boundaries (paid APIs, hardware, nondeterministic services).
+- Test failure paths. Profile before optimizing.
+- Verify tests actually ran and report command.
+- For substantial changes: review pass before final commit.
+
+## Workflow
+
+- User messages aren't automatic interrupts. Switch now, remember later, or incorporate as background.
+- Non-trivial work: research → understand → plan → implement → verify → summarize.
+- Multi-step: checkpoint after each step (what changed, verified, remains).
+- Lost track → stop and restate state before continuing.
+
+## Git
+
+Use `git`. Use `jj` skill if `.jj/` present.
+
+- Commit after each coherent change set. Push regularly.
+- Format: `<type>(<scope>): <description>`. Scope mandatory, imperative mood, lowercase, no trailing period.
+- Confirm before PRs, publishing, releases, force pushes, destructive ops.
+
+## Project Context
+
+- Repo-local `AGENTS.md` is primary. Own repos: `CLAUDE.md` symlink to `AGENTS.md`. OSS: follow what's present.
+- Repos use `ai/` for persistent context. Check `ai/brief.md` at session start. Load `ai-context` skill for full conventions, `setup-ai` for init/audit.
+- `tk` for task tracking. Session start: `tk ready`, start task. Check `tk show <id>`, `ai/` files, git history before investigating.
+
+---
+
+**Updated:** 2026-06-18 | github.com/nijaru/agent-contexts

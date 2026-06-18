@@ -16,15 +16,14 @@ project/
 ├── CLAUDE.md → AGENTS.md  # Symlink for Claude Code
 ├── docs/                  # Human documentation
 └── ai/                    # AI context
-    ├── README.md          # Index: pointers to all topic files (~150 chars/entry, no content)
-    ├── STATUS.md          # Phase, focus, blockers (always)
-    ├── DESIGN.md          # Architecture (recommended)
-    ├── DECISIONS.md       # Decision log — Principles + Log sections (recommended)
+    ├── brief.md           # Current state, <80 lines (always)
+    ├── journal.md         # Append-only session log
+    ├── architecture.md    # Architecture (recommended)
+    ├── decisions.md       # Decision log — Principles + Log sections (recommended)
     ├── PLAN.md            # Active plan or sprint index (situational)
     ├── research/          # External research findings
     ├── design/            # Component specifications
     ├── review/            # Review findings
-    ├── sprints/           # Sprint detail files (NN-name.md) — created by /sprint
     └── tmp/               # Temporary artifacts (gitignored)
 ```
 
@@ -34,42 +33,41 @@ Use `tk` for multi-step or cross-session work — persists across compaction.
 
 - `tk add "title"` | `tk ls` | `tk ready` | `tk start <id>` | `tk done <id>`
 
-**Todos/tasks go in tk, not STATUS.md.** STATUS.md is for session state and blockers.
+**Todos/tasks go in tk, not brief.md.** brief.md is for session state and blockers.
 
 ## ai/ Files
 
-| File         | Question              | Create When                       |
-| ------------ | --------------------- | --------------------------------- |
-| README.md    | Where is everything?  | Always — index of all topic files |
-| STATUS.md    | Where are we now?     | Always                            |
-| DESIGN.md    | What are we building? | Non-trivial projects              |
-| DECISIONS.md | Why did we choose X?  | Architectural decisions made      |
-| PLAN.md      | What's the plan?      | Use `/sprint` when spec is ready  |
+| File            | Question                    | Create When                       |
+| --------------- | --------------------------- | --------------------------------- |
+| brief.md        | Where are we now?           | Always — <80 lines, active state  |
+| journal.md      | What happened each session? | Always — append-only log          |
+| architecture.md | What are we building?       | Non-trivial projects              |
+| decisions.md    | Why did we choose X?        | Architectural decisions made      |
+| PLAN.md         | What's the plan?            | Use `/sprint` when spec is ready  |
 
 | Subdir    | Purpose                    | When                 |
 | --------- | -------------------------- | -------------------- |
 | research/ | External research findings | Substantial research |
 | design/   | Component specifications   | Complex components   |
 | review/   | Review findings            | Significant reviews  |
-| sprints/  | Sprint detail files        | When using /sprint   |
 | tmp/      | Temporary artifacts        | Always (gitignored)  |
 
 ## File Content
 
-**README.md:** Index only — pointers, ~150 chars/entry. Format: `- [Title](path) — one-line hook`. No content. Write to file → update README.md immediately.
+**brief.md:** Current state — task, state, files, blockers, next step. Regenerate from journal + decisions. Keep <80 lines, active context only.
 
-**STATUS.md:** Phase, active focus, blockers. Update every session. Keep minimal.
+**journal.md:** Append-only session log. Format: `- [YYYY-MM-DD] Action/Decision/Learning`. Append every session.
 
-**DESIGN.md:** System overview, architecture, components table. Point to design/ for details.
+**architecture.md:** System overview, architecture, components table. Point to design/ for details.
 
-**DECISIONS.md:** Two sections:
+**decisions.md:** Two sections:
 
 - **Principles** — distilled stable decisions, load-bearing context
 - **Log** — recent ~20 entries verbatim: `[date] Context → Decision → Rationale`
 
 When Log > ~20 entries, distill oldest into Principles and remove from Log.
 
-**PLAN.md:** Active plan. Simple: flat document. Complex: sprint index table with detail files in `ai/sprints/` (managed by `/sprint`). Replace when complete — extract outcomes to DECISIONS.md/DESIGN.md first.
+**PLAN.md:** Active plan. Simple: flat document. Complex: sprint index table with detail files in `ai/sprints/` (managed by `/sprint`). Replace when complete — extract outcomes to decisions.md/architecture.md first.
 
 ## Topic File Frontmatter
 
@@ -85,37 +83,37 @@ status: active | resolved | stale
 
 ## Single Source of Truth
 
-| Info            | Lives in     | Not in        |
-| --------------- | ------------ | ------------- |
-| Navigation      | README.md    | anywhere else |
-| Current state   | STATUS.md    | anywhere else |
-| Architecture    | DESIGN.md    | AGENTS.md     |
-| Component specs | design/      | DESIGN.md     |
-| Decisions       | DECISIONS.md | scattered     |
-| Research        | research/    | inline        |
-| Tasks           | .tasks/ (tk) | STATUS.md     |
+| Info            | Lives in        | Not in        |
+| --------------- | --------------- | ------------- |
+| Current state   | brief.md        | anywhere else |
+| Session history | journal.md      | anywhere else |
+| Architecture    | architecture.md | AGENTS.md     |
+| Component specs | design/         | architecture.md |
+| Decisions       | decisions.md    | scattered     |
+| Research        | research/       | inline        |
+| Tasks           | .tasks/ (tk)    | brief.md      |
 
 ## Session Workflow
 
 | Phase  | Actions                                                                         |
 | ------ | ------------------------------------------------------------------------------- |
-| Start  | Read `ai/README.md` → `ai/STATUS.md` → `tk ready` → `tk start <id>`             |
-| During | Research → synthesize → implement → document decisions → update README.md index |
-| End    | `tk done <id>` → update STATUS.md → update README.md if files changed → `/save` |
+| Start  | Read `ai/brief.md` → `tk ready` → `tk start <id>`                               |
+| During | Research → synthesize → implement → document decisions                          |
+| End    | `tk done <id>` → update brief.md → append journal.md → `/save`                  |
 
 ## Project AGENTS.md
 
 Machine-optimized (tables/lists). Include: project overview, structure, stack, commands, verification steps, standards, examples.
 
-Point to ai/ for current state: "See `ai/README.md` for index, `ai/STATUS.md` for current state."
+Point to ai/ for current state: "See `ai/brief.md` for current state."
 
 ## Scaling
 
-| Size     | Session Files                         | Subdirs              |
-| -------- | ------------------------------------- | -------------------- |
-| Minimal  | README.md, STATUS.md                  | tmp/                 |
-| Standard | +DESIGN.md, +DECISIONS.md             | +research/, +design/ |
-| Complex  | +PLAN.md (sprint index via `/sprint`) | +review/, +sprints/  |
+| Size     | Session Files                           | Subdirs              |
+| -------- | --------------------------------------- | -------------------- |
+| Minimal  | brief.md, journal.md                    | tmp/                 |
+| Standard | +architecture.md, +decisions.md         | +research/, +design/ |
+| Complex  | +PLAN.md (sprint index via `/sprint`)   | +review/             |
 
 Start minimal, add as needed.
 
@@ -129,15 +127,14 @@ Start minimal, add as needed.
 
 ## Anti-Patterns
 
-| Don't                         | Do Instead                               |
-| ----------------------------- | ---------------------------------------- |
-| All research in session files | Use research/ for details                |
-| Component specs in DESIGN.md  | DESIGN.md = system, design/ = components |
-| Content in README.md          | README.md = pointers only                |
-| Keep stale topic files        | Delete resolved files, don't archive     |
-| Prose in ai/ files            | Tables, lists, structured                |
-| Duplicate across files        | Single source of truth                   |
-| Store what's in the codebase  | Don't persist derivable facts            |
+| Don't                         | Do Instead                                  |
+| ----------------------------- | ------------------------------------------- |
+| All research in session files | Use research/ for details                   |
+| Component specs in architecture.md | architecture.md = system, design/ = components |
+| Keep stale topic files        | Delete resolved files, don't archive        |
+| Prose in ai/ files            | Tables, lists, structured                   |
+| Duplicate across files        | Single source of truth                      |
+| Store what's in the codebase  | Don't persist derivable facts               |
 
 ## Maintenance
 

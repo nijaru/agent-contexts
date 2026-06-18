@@ -57,37 +57,33 @@ Persistent memory — survives compaction. Update before implementing. Stale fil
 
 ```
 ai/
-├── README.md        # Index: pointers to all topic files (~150 chars/entry, no content)
-├── STATUS.md        # Phase, focus, blockers — updated every session
-├── DESIGN.md        # Current architecture — answers "what is it?"
-├── DECISIONS.md     # Why decisions were made — Principles + Log sections
+├── brief.md         # Current state, <80 lines (always)
+├── journal.md       # Append-only session log
+├── architecture.md  # Current architecture — answers "what is it?"
+├── decisions.md     # Why decisions were made — Principles + Log sections
 ├── PLAN.md          # Active plan. Simple: flat doc. Complex: sprint index (managed by /sprint)
 ├── research/        # Investigation docs
 ├── design/          # Detailed design docs
 ├── review/          # Review outputs
-├── sprints/         # Sprint detail files (NN-name.md) — created by /sprint
 └── tmp/             # Scratch (gitignored)
 ```
 
 ### Session Start
 
-Read `ai/README.md` → `ai/STATUS.md` → load relevant topic files for current task. Only load what the task requires.
+Read `ai/brief.md` → load relevant topic files for current task. Only load what the task requires.
 
 ### File Roles
 
-| File         | Purpose                                                                                                                                         | Update Rule                                                                                                 |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| README.md    | Index only — pointers, ~150 chars/entry. No content.                                                                                            | Update when topic files are added/changed. Verify links are live. Remove dead links.                        |
-| STATUS.md    | Phase, active focus, blockers.                                                                                                                  | Every session.                                                                                              |
-| DESIGN.md    | Current architecture — answers "what is it?"                                                                                                    | When architecture changes.                                                                                  |
-| DECISIONS.md | Why it is that way. Two sections: **Principles** (distilled, stable) + **Log** (recent ~20 entries verbatim, `Context → Decision → Rationale`). | Append to Log. When Log > ~20 entries, run `/setup-ai` to compact into Principles.                          |
-| PLAN.md      | Active plan. Simple: flat document. Complex: sprint index table with detail files in `ai/sprints/` (managed by `/sprint`).                      | Update as sprints progress. When plan is complete, extract outcomes to DECISIONS.md/DESIGN.md then replace. |
+| File           | Purpose                                                                                                                                         | Update Rule                                                                                                 |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| brief.md       | Current state — task, state, files, blockers, next step.                                                                                        | Regenerate from journal + decisions. Keep <80 lines, active context only.                                    |
+| journal.md     | Append-only session log. Format: `- [YYYY-MM-DD] Action/Decision/Learning`.                                                                     | Append every session.                                                                                       |
+| architecture.md | Current architecture — answers "what is it?"                                                                                                    | When architecture changes.                                                                                  |
+| decisions.md   | Why it is that way. Two sections: **Principles** (distilled, stable) + **Log** (recent ~20 entries verbatim, `Context → Decision → Rationale`). | Append to Log. When Log > ~20 entries, distill oldest into Principles and remove from Log.                  |
+| PLAN.md        | Active plan. Simple: flat document. Complex: sprint index table with detail files in `ai/sprints/` (managed by `/sprint`).                      | Update as sprints progress. When plan is complete, extract outcomes to decisions.md/architecture.md then replace. |
 
 ### Index Discipline
 
-README.md is pointers only. Format: `- [Title](path) — one-line hook`
-
-- Write to file → update README.md immediately. Index must stay synchronized.
 - Don't persist derivable facts — if it's grep-able from code or git history, don't write it to ai/.
 - ai/ is hints, not truth — verify against code when it matters.
 
@@ -109,7 +105,7 @@ status: active | resolved | stale
 - Delete resolved files — don't mark done, delete.
 - When ai/ is out of sync or bloated, run `/setup-ai` to audit, consolidate, and rebuild the index.
 
-**Flow:** `research/` → `DESIGN.md` → `/sprint` → `PLAN.md` → code → `review/`
+**Flow:** `research/` → `architecture.md` → `/sprint` → `PLAN.md` → code → `review/`
 
 **Format:** Tables/lists over prose. Answer first, evidence second.
 
@@ -117,13 +113,13 @@ status: active | resolved | stale
 
 ## Task Discipline
 
-Use `tk` for all tasks—persists across compaction. Details in task logs, not STATUS.md.
+Use `tk` for all tasks—persists across compaction. Details in task logs, not brief.md.
 
-**Session start:** Read `ai/README.md` → `ai/STATUS.md` → `tk ready` → `tk start <id>`
+**Session start:** Read `ai/brief.md` → `tk ready` → `tk start <id>`
 
 **Before investigating:** `tk show <id>` for existing logs, check ai/, git history. Never start fresh without checking.
 
-**During work:** `tk log <id> "finding"` immediately—errors, root cause, file paths. Update `ai/STATUS.md` when focus shifts, blockers emerge, or significant progress is made.
+**During work:** `tk log <id> "finding"` immediately—errors, root cause, file paths. Update `ai/brief.md` when focus shifts, blockers emerge, or significant progress is made.
 
 **Creating tasks:** `tk add "title" -d "context"`. Always include description.
 
@@ -158,8 +154,8 @@ For context isolation, parallelism, fresh perspective. ai/ files are shared memo
 
 **Compact/new session at:** Feature complete · Switching codebase areas · Research synthesized · ~150k tokens. Proactively advise the user.
 
-**Before compact:** Update `ai/STATUS.md` and `ai/README.md` (index), `tk done` completed tasks, `tk log` any uncommitted findings.
+**Before compact:** Update `ai/brief.md`, `tk done` completed tasks, `tk log` any uncommitted findings.
 
 ---
 
-**Updated:** 2026-04-04 | github.com/nijaru/agent-contexts
+**Updated:** 2026-06-18 | github.com/nijaru/agent-contexts
