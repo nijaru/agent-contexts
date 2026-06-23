@@ -30,8 +30,8 @@ allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 - **journal.md:** Append timestamped session summary. Format: `- [YYYY-MM-DD] Action/Decision/Learning`.
 - **decisions.md:** Append to Log section: `[date] Context -> Decision -> Rationale`. If Log exceeds ~20 entries, compact into Principles.
 - **architecture.md:** Record architectural changes only.
-- **research/:** Consolidate new findings into the appropriate topic file (Findings / Applied / Open Questions). Create new topic file only if no existing file covers it. Update index.md. No frontmatter on topic files.
-- **design/:** Update component docs as needed. Update index.md. No frontmatter on topic files.
+- **research/:** Consolidate new findings into the appropriate topic file (Findings / Applied / Open Questions). Create new topic file only if no existing file covers it. Update index.md.
+- **design/:** Update component docs as needed. Update index.md.
 
 ### 3. Source Control
 

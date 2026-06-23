@@ -47,8 +47,6 @@ your-project/
 
 **Separation**: `ai/` = AI workspace (tables, lists). `docs/` = Human docs (prose).
 
-**Subagents**: Main agent handles most work. Subagents for context isolation and parallel execution. See `agents/` for reference implementations.
-
 **File tiers**:
 
 | Tier        | Files                              |
@@ -57,11 +55,19 @@ your-project/
 | Recommended | architecture.md, decisions.md      |
 | Situational | PLAN.md (multi-phase planning)     |
 
-## Integration Options
+## Files
 
-### Option 1: Project-Level (one repo)
+| File               | Purpose                            |
+| ------------------ | ---------------------------------- |
+| `README.md`        | This file                          |
+| `PATTERNS.md`      | Detailed organization patterns     |
+| `global/AGENTS.md` | Template to copy into your project |
+| `agents/*.md`      | Reference subagent implementations |
+| `skills/*.md`      | Operational skills (setup-ai, save)|
 
-Add the patterns to your project's AI config file:
+## Integration
+
+Copy `global/AGENTS.md` into your project's config file:
 
 | Tool        | Config File                               |
 | ----------- | ----------------------------------------- |
@@ -71,51 +77,6 @@ Add the patterns to your project's AI config file:
 | Cursor      | `.cursorrules`                            |
 | Cline       | `.clinerules`                             |
 | Windsurf    | `.windsurfrules`                          |
-| Other       | `AGENTS.md`                               |
-
-Copy relevant sections from `global/AGENTS.md` into your config.
-
-### Option 2: User-Level (all projects)
-
-```bash
-# Append patterns to existing config
-cat global/AGENTS.md >> ~/.agents/AGENTS.md
-
-# Or if starting fresh
-mkdir -p ~/.agents
-cp global/AGENTS.md ~/.agents/AGENTS.md
-
-# Copy skills (optional)
-mkdir -p ~/.agents/skills
-cp skills/*.md ~/.agents/skills/
-
-# Copy agent definitions (optional)
-mkdir -p ~/.agents/agents
-cp agents/*.md ~/.agents/agents/
-```
-
-**For other tools:** Append `global/AGENTS.md` to your tool's config file (`.cursorrules`, `.clinerules`, etc.).
-
-## Files
-
-| File               | Audience    | Purpose                            |
-| ------------------ | ----------- | ---------------------------------- |
-| `README.md`        | Humans + AI | Quick start, overview              |
-| `PATTERNS.md`      | AI agents   | Detailed organization patterns     |
-| `global/AGENTS.md` | AI agents   | Template for user/project config   |
-| `agents/*.md`      | AI agents   | Reference subagent implementations |
-| `skills/*.md`      | Claude Code | Skills (`/setup-ai`, `/save`)      |
-
-## Subagents
-
-Reference implementations in `agents/`:
-
-| Agent        | Purpose                | Trigger                                           |
-| ------------ | ---------------------- | ------------------------------------------------- |
-| `researcher` | External knowledge     | Need library docs, best practices, current info   |
-| `designer`   | Architecture, planning | Complex task decomposition, system design         |
-| `reviewer`   | Quality validation     | After implementation, before commit               |
-| `profiler`   | Performance analysis   | Bottlenecks, optimization, benchmarking           |
 
 ## License
 
