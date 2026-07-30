@@ -1,163 +1,77 @@
 ---
 name: setup-ai
-description: |
-  Use when initializing, auditing, consolidating, or migrating repo AI context files
-  such as AGENTS.md, CLAUDE.md, ai/, or related task state.
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+description: Initialize, audit, consolidate, or migrate a repository's AI context and instruction wiring.
 ---
 
 # Setup AI Context
 
-Initialize a new project's AI context, or audit and migrate an existing one. For ongoing operation within an established `ai/`, use `ai-context` instead.
-
-## Detection Phase
-
-Read in parallel:
-
-- **Identity:** `git remote -v`, `README.md` (first paragraph)
-- **Stack:** `package.json`, `Cargo.toml`, `pyproject.toml`, `go.mod`
-- **Existing context:** `ls -la ai/` if it exists, `AGENTS.md`, `CLAUDE.md`
-- **Infrastructure:** `Makefile`, `justfile`, `.claude/settings.json`
-
-Determine mode: **Init** (no ai/ exists) or **Audit** (ai/ exists).
-
-## AGENTS.md / CLAUDE.md Configuration
-
-| Scenario | Action |
-|:---|:---|
-| Neither file exists | Create `AGENTS.md`, symlink `./CLAUDE.md` → `AGENTS.md` |
-| Only `CLAUDE.md` at root | Rename to `AGENTS.md`, create symlink (leave as-is for OSS repos) |
-| Both exist | Merge to `AGENTS.md`, remove old `CLAUDE.md`, create symlink |
-
-## Mode: Init (New Repo)
-
-### 1. Scaffold
-
-```bash
-mkdir -p ai/research ai/design ai/tmp
-echo '*' > ai/tmp/.gitignore
-tk init
-```
-
-Keep ai/ local (not committed):
-
-```bash
-echo 'ai/' >> .git/info/exclude
-echo '.tasks/' >> .git/info/exclude
-```
-
-### 2. Create Root Files
-
-**ai/brief.md:**
-```markdown
-Task: [initial setup]
-State: [what's been done]
-Files: [key files]
-Blockers: [none or specific]
-Next: [next step]
-```
-
-**ai/journal.md:**
-```markdown
-# Session Journal
-
-Write here before compaction or when switching agents. Append-only.
-```
-
-**ai/decisions.md:**
-```markdown
-# Decisions
+Use this skill when initializing a repository with AI context or auditing an established `ai/` directory. For routine work inside an established context, use `ai-context` and `save` instead.
 
 ## Principles
 
-_Distilled from resolved decisions. Stable, load-bearing context._
+- `ai/` stores non-derivable context, not source code or API specifications.
+- Preserve existing instruction files and harness wiring until they have been audited.
+- Create only the surfaces the repository will use.
+- Do not initialize a task system, rename instruction files, create symlinks, or exclude files automatically without repository policy or explicit user direction.
+- Verify current source, Git state, tests, and live configuration before treating context as correct.
 
-## Log
+## Detection
 
-_Recent decisions, ~20 entries max. Format: `[date] Context → Decision → Rationale`_
+Inspect:
+
+- `git remote -v` and the README
+- the complete instruction chain and symlinks
+- existing `ai/`, `.tasks/`, and task tooling
+- project manifests and build/test commands
+- harness configuration and templates
+
+Choose **Init** when no `ai/` exists. Choose **Audit** when it does.
+
+## Init
+
+Create only the required surfaces. A standard small project may use:
+
+```text
+ai/
+├── brief.md
+├── journal.md
+├── decisions.md
+└── architecture.md
 ```
 
-**ai/architecture.md:**
-```markdown
-# Architecture
+Add `research/`, `design/`, or `tmp/` only when current work needs them. Use the repository's policy for tracking or excluding `ai/`. Initialize `.tasks/` only when the user or repository has chosen `tk`.
 
-## System Overview
+The initial files should state their roles and contain no invented project facts. Keep `brief.md` short, make `journal.md` append-only, and give `decisions.md` `Principles` and `Log` sections.
 
-[System overview]
+If both Claude Code and Codex/Pi use the repository, preserve or add a symlink only after checking the existing wiring. Do not rename or merge instruction files automatically.
 
-## Components
+## Audit
 
-[Component map]
-```
+1. Inventory `ai/`, instruction files, symlinks, templates, and task state.
+2. Read all root context files and the topic indexes.
+3. Check for duplicated or contradictory current state.
+4. Ensure `brief.md` is a small curated hot view.
+5. Ensure `journal.md` is factual, append-only, and cold.
+6. Ensure `decisions.md` has stable principles and a bounded recent log.
+7. Ensure `architecture.md` describes the current system rather than a stale implementation.
+8. Merge overlapping research before creating files.
+9. Rewrite stale current-state claims; preserve historical rationale when useful.
+10. Search the full instruction chain for obsolete names and contradictory mandates.
+11. Verify rendered templates, symlinks, and destinations.
 
-**ai/research/index.md** and **ai/design/index.md:**
-```markdown
-# Research Topics
+Topic files should use `Findings`, `Applied`, and `Open Questions` sections and cite sources. No universal frontmatter, IDs, expiry system, or candidate database is required. Add metadata only when a demonstrated workflow needs it.
 
-<!-- Entries added as topic files are created -->
-```
+## Promotion boundary
 
-### 3. Verify
+Treat compaction summaries, provider-managed memories, and subagent reports as inputs to validate. The parent agent promotes only verified, future-relevant material into canonical context.
 
-```bash
-ls -la AGENTS.md CLAUDE.md     # verify symlink
-tk ready                        # verify task tracking
-ls -R ai/                       # verify structure
-```
+## Verification
 
-## Mode: Audit (Existing Repo)
+Report:
 
-Run when ai/ is out of sync, overlapping, or bloated.
-
-### 1. Inventory
-
-```bash
-find ai/ -name "*.md" | sort
-```
-
-Read all root files. List research topic files and check for overlap.
-
-### 2. Structure Migration
-
-Ensure current conventions from `ai-context` are in place:
-
-- `ai/brief.md` exists and is <80 lines
-- `ai/journal.md` exists and is append-only
-- `ai/decisions.md` has **Principles** + **Log** sections
-- `ai/architecture.md` exists
-- `ai/research/` has an `index.md`
-- Topic files follow the consolidated format (Findings / Applied / Open Questions)
-
-### 3. Research Consolidation
-
-The most common audit action. Research files tend to fragment over time:
-
-- **Merge overlapping files.** `hashing-xxhash3.md` + `hashing-blake3.md` → `hashing.md`.
-- **One file per topic area.** If two files cover related topics, merge them.
-- **Check for stale files.** No updates in 3+ months and no references from decisions.md → verify relevance, archive or delete.
-- **Rebuild index.md** after any merges or deletions.
-
-### 4. Stale Detection
-
-For each file in `research/`, `design/`:
-
-- Last modified > 3 months → verify relevance
-- No references from decisions.md or architecture.md → candidate for deletion
-- Content fully absorbed into code or architecture → keep but note as applied
-
-### 5. DECISIONS.md Compaction
-
-If Log section exceeds ~20 entries, compact per `ai-context` rules.
-
-### 6. brief.md Regeneration
-
-Regenerate `ai/brief.md` from journal + decisions per `save` skill checklist.
-
-## Anti-Patterns
-
-| Excuse | Reality |
-|:---|:---|
-| "It's a small project" | Inconsistent structure causes context drift in 3 sessions |
-| "I'll keep old research files just in case" | Overlapping files waste tokens. Consolidate. |
-| "I'll clean this up after the PR" | Post-PR cleanup rarely happens. Clean now. |
-| "This project doesn't need research/" | Then don't create it. Only add directories that will be used. |
+- files created, preserved, changed, or intentionally omitted;
+- the authority chain and loading order;
+- task-system and tracking decisions;
+- stale or contradictory material found;
+- rendered or linked destinations checked;
+- remaining open questions.

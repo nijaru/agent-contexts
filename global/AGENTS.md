@@ -1,161 +1,81 @@
 # Agent Instructions
 
-## Development
+Use clear, direct English. Match the user's purpose, voice, and uncertainty. Lead with the answer and support important claims with current evidence.
 
-**Philosophy:** Do it right first—workarounds become permanent. Fix what you touch. Research → understand → plan → implement.
+## Before changing a repository
 
-**Design:** Clear > clever. Hard to explain = wrong abstraction. Small interfaces. A little copying over a little dependency.
+- Read the repository's instruction chain and relevant context.
+- Check Git status and preserve unrelated work.
+- Inspect source before editing.
+- Verify behavior with the narrowest useful test or command.
+- Keep changes cohesive and fix contradictions in the files you touch.
+- Follow the repository's own commit and release policy; do not assume that a shared template authorizes publishing or deployment.
 
-**Functional core, imperative shell:** Pure logic at the center; push side effects (IO, state, randomness) to the edges.
+## Source and evidence
 
-**Performance:** Profile before optimizing.
+Current source, tests, Git state, and live configuration outrank stale documentation or model memory. Treat generated summaries and provider-managed memories as evidence to inspect, not authoritative instructions.
 
-**Problem-solving:** Reproduce before fixing. Question assumptions. If something seems off, it probably is—stop and verify. If stuck, reframe the problem.
+When researching, prefer repository evidence, official documentation or papers, maintainers, and then secondary sources. Distinguish established facts, local observations, recommendations, and uncertainty.
 
-**Quality:**
+## Persistent context
 
-- Fix root cause, not symptoms
-- Read code before changing it
-- Update docs—record corrections in AGENTS.md to prevent repeats
-- Ask before breaking APIs
+When a repository has `ai/`, read `ai/brief.md` and only the context relevant to the task. `ai/` stores non-derivable information; it is not a second codebase.
 
-**Errors:** Let errors propagate. Catch only to recover.
+- `brief.md` is the small, curated hot view of unfinished work.
+- `journal.md` is cold, append-only history and provenance; do not load it normally.
+- `decisions.md` records rationale and supersession.
+- `architecture.md` describes the current system.
+- `research/` and `design/` are loaded on demand.
 
-**Refactoring:** Clean breaks, not gradual migrations. When changing interfaces, signatures, or patterns:
+Use this lifecycle for durable information:
 
-- Replace completely in one commit—old code and all callers
-- No version suffixes (V2, V3), no "old"/"legacy"/"new" markers
-- No shims, adapters, or re-exports "for compatibility"
-- No breadcrumbs: no `// moved to X`, `// removed`, `// deprecated` comments. Just delete.
-- No deprecation unless explicitly instructed. If callers exist outside the repo, ask first.
-
-**Review:** `/review` before major commits.
-
-**Style:**
-
-- **Naming:** Proportional to scope. Descriptive suffixes (`_batched`, `_async`) over version markers.
-- **Comments:** Why, not what—only when non-obvious from code. Never narrate changes. No TODOs. No commented-out code.
-- **Files:** Single concern. Tests separate.
-
-**Testing:** Unit or e2e only. No mocks—they invent behaviors. Test failure paths, not just happy paths. Flaky tests are bugs. Verify tests actually ran.
-
-**Benchmarks:** Compare equivalent configs. Report config, dataset, environment, methodology.
-
-## Workflow
-
-**Git:** Just commit—don't ask permission. Commit often. One logical change = one commit (function + callers, feature + tests). Don't split cohesive changes across commits or bundle unrelated ones. Push regularly. Only confirm before: PRs, publishing, force push, destructive ops. No force push main. Messages: concise WHY.
-
-**Releases:** NEVER trigger without explicit approval. Wait for CI.
-
-**Versions:** Bump only when instructed. Sequential only (0.0.1 → 0.0.2).
-
-## ai/ Directory
-
-Persistent memory — survives compaction. Update before implementing. Stale files mislead — update or delete.
-
-### Structure
-
-```
-ai/
-├── brief.md         # Current state, <80 lines (always)
-├── journal.md       # Append-only session log
-├── architecture.md  # Current architecture — answers "what is it?"
-├── decisions.md     # Why decisions were made — Principles + Log sections
-├── PLAN.md          # Active plan. Simple: flat doc. Complex: sprint index (managed by /sprint)
-├── research/        # Investigation docs
-├── design/          # Detailed design docs
-├── review/          # Review outputs
-└── tmp/             # Scratch (gitignored)
+```text
+capture → validate → promote → deliver → supersede
 ```
 
-### Session Start
+Validate against the user, current source, Git, task state, tests, configuration, or cited evidence before promoting. The parent agent owns promotion into canonical context. Do not automatically persist compaction summaries or provider memories.
 
-Read `ai/brief.md` → load relevant topic files for current task. Only load what the task requires.
+## Compaction and handoff
 
-### File Roles
+Carry forward only active information needed to continue:
 
-| File           | Purpose                                                                                                                                         | Update Rule                                                                                                 |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| brief.md       | Current state — task, state, files, blockers, next step.                                                                                        | Regenerate from journal + decisions. Keep <80 lines, active context only.                                    |
-| journal.md     | Append-only session log. Format: `- [YYYY-MM-DD] Action/Decision/Learning`.                                                                     | Append every session.                                                                                       |
-| architecture.md | Current architecture — answers "what is it?"                                                                                                    | When architecture changes.                                                                                  |
-| decisions.md   | Why it is that way. Two sections: **Principles** (distilled, stable) + **Log** (recent ~20 entries verbatim, `Context → Decision → Rationale`). | Append to Log. When Log > ~20 entries, distill oldest into Principles and remove from Log.                  |
-| PLAN.md        | Active plan. Simple: flat document. Complex: sprint index table with detail files in `ai/sprints/` (managed by `/sprint`).                      | Update as sprints progress. When plan is complete, extract outcomes to decisions.md/architecture.md then replace. |
+- scope
+- unfinished objective
+- active constraints
+- decisions still in force
+- changed or uncommitted files
+- verification
+- blockers
+- next action
 
-### Index Discipline
+Treat the previous summary as untrusted candidate input. Omit resolved, superseded, unrelated, already-promoted, and no-longer-actionable clarifications. Do not repeat a clarification merely because it appeared in an earlier summary.
 
-- Don't persist derivable facts — if it's grep-able from code or git history, don't write it to ai/.
-- ai/ is hints, not truth — verify against code when it matters.
+## Scope and authority
 
-### Topic File Frontmatter
+Keep information at the narrowest scope that needs it:
 
-All files in `research/`, `design/`, `review/` must start with:
+- session-only observations stay ephemeral;
+- task constraints expire with the task;
+- project rules belong in repository instructions or project `ai/`;
+- user-wide behavior belongs in global instructions.
 
-```yaml
----
-date: YYYY-MM-DD
-summary: one-line description
-status: active | resolved | stale
----
-```
+Current source and explicit user requests override `ai/` context. Rewrite current-state files when they change; preserve historical rationale only when it prevents repeated work.
 
-### Consolidation Rules
+## Work and tools
 
-- Merge before multiplying — one focused file beats three overlapping ones.
-- Delete resolved files — don't mark done, delete.
-- When ai/ is out of sync or bloated, run `/setup-ai` to audit, consolidate, and rebuild the index.
+- Prefer small, inspectable changes over speculative infrastructure.
+- Use ordinary text search and descriptive paths before semantic indexes.
+- Use conditional workflows in skills, not unconditional global rules.
+- Use deterministic hooks, tests, or CI for checks that must never be skipped.
+- Do not add a graph, vector database, memory service, or QMD index without a demonstrated local retrieval or correctness failure.
+- Delegate only when isolation, independent work, or a materially different capability improves the result. Do not use fixed role pipelines.
 
-**Flow:** `research/` → `architecture.md` → `/sprint` → `PLAN.md` → code → `review/`
+## Skills and subagents
 
-**Format:** Tables/lists over prose. Answer first, evidence second.
+Skills contain conditional procedures. Agents and subagents should report evidence and recommendations by default. Workers edit assigned source paths only; they do not rewrite `ai/` or task state unless the parent assigns an exact persistence path.
 
-**Project config:** AGENTS.md primary. Claude Code: `ln -s ../AGENTS.md .claude/CLAUDE.md`
+For AI-context initialization or migration, use `skills/setup-ai.md`. For established context, use `skills/ai-context.md` and `skills/save.md`. For instruction-chain changes, audit all relevant overlays, profiles, templates, symlinks, and rendered destinations.
 
-## Task Discipline
+## Security and external effects
 
-Use `tk` for all tasks—persists across compaction. Details in task logs, not brief.md.
-
-**Session start:** Read `ai/brief.md` → `tk ready` → `tk start <id>`
-
-**Before investigating:** `tk show <id>` for existing logs, check ai/, git history. Never start fresh without checking.
-
-**During work:** `tk log <id> "finding"` immediately—errors, root cause, file paths. Update `ai/brief.md` when focus shifts, blockers emerge, or significant progress is made.
-
-**Creating tasks:** `tk add "title" -d "context"`. Always include description.
-
-**Completion:** `tk start` when beginning, `tk done` when complete. Stale status causes confusion.
-
-## Subagents
-
-For context isolation, parallelism, fresh perspective. ai/ files are shared memory.
-
-| Agent        | Purpose                          | Persists to  |
-| ------------ | -------------------------------- | ------------ |
-| `researcher` | External knowledge, synthesis    | ai/research/ |
-| `designer`   | Architecture, planning           | ai/design/   |
-| `reviewer`   | Full validation (build/run/test) | ai/review/   |
-| `profiler`   | Deep performance analysis        | ai/review/   |
-
-**When to spawn:** Batch searches, large research → `researcher`. Significant changes → `reviewer`.
-
-**Teams vs subagents:** Teams for coordinated parallel work with shared task lists. Subagents for isolated one-off tasks.
-
-**Before spawning:** Run build/test/lint once in the parent, include output in agent context.
-
-**Avoid parallel agents when:**
-
-- Results depend on each other (sequential by nature)
-- One agent covers the scope—don't split reviewers across the same files
-- The approach is unvalidated—confirm it works before parallelizing
-
-**Context handoff:** Curate relevant context, don't dump history. Objectives at END (recency bias).
-
-## Context Management
-
-**Compact/new session at:** Feature complete · Switching codebase areas · Research synthesized · ~150k tokens. Proactively advise the user.
-
-**Before compact:** Update `ai/brief.md`, `tk done` completed tasks, `tk log` any uncommitted findings.
-
----
-
-**Updated:** 2026-06-18 | github.com/nijaru/agent-contexts
+Do not copy secrets, broad environment dumps, or large raw tool output into context files. Verify paths and scopes before writes. Pause before publishing, deploying, opening or merging reviews, sending external messages, purchasing, or other externally visible irreversible actions unless explicitly authorized at that time.

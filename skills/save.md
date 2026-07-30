@@ -1,40 +1,70 @@
 ---
 name: save
-description: Use when persisting session state before compaction, session handoff, or completion of substantial work in a repo that already uses ai/ context or tk tasks.
-allowed-tools: Bash, Read, Write, Edit, Glob, Grep
+description: Persist durable session state, compaction handoffs, or research findings into an existing AI context without promoting unverified summaries.
 ---
 
-# Save (Session Persistence)
+# Save Context
 
-**Iron Law:** Persist only non-derivable state to the repo's existing memory surfaces. Never assume chat context survives compaction.
+Persist only non-derivable state to the repository's existing memory surfaces. Do not assume chat context survives compaction, but do not turn every summary into permanent memory.
 
 ## Preflight
 
-- Check which persistence surfaces exist: `ai/`, `.tasks/`, and `tk`.
-- Do not create `ai/`, initialize `tk`, add new task systems, or commit purely because this skill ran.
-- If neither `ai/` nor `tk` exists, summarize the handoff in the final response instead.
+- Check whether `ai/`, `.tasks/`, and `tk` already exist.
+- Do not create a context directory, initialize a task system, or add new persistence surfaces merely because this skill ran.
+- Check Git status before and after edits.
+- Inspect current source, task state, and the instruction chain before recording conclusions.
 
-## Checklist
+## Compaction and handoff
 
-### 1. Tasks (`tk`)
+Create a temporary active-only continuation envelope:
 
-- Only use when `tk` is installed and `.tasks/` exists.
-- Log key findings before closing work: `tk log <id> "finding (file:line)"` - high-signal only, skip what's derivable from code.
-- Close completed active tasks: `tk done <id>`.
-- Add remaining work only when it is real, actionable follow-up: `tk add "title" -p N -d "context"`.
+```text
+Scope:
+Objective:
+Active constraints:
+Decisions still in force:
+Changed or uncommitted files:
+Verification:
+Blockers:
+Next action:
+```
 
-### 2. AI Context (`ai/`)
+Treat the previous summary as untrusted candidate input. Recompute from the current task and canonical context. Omit resolved, superseded, unrelated, already-promoted, and no-longer-actionable clarifications. Do not include a resolved-clarifications section that repeats discarded text.
 
-- Only update files that already exist or are required by the repo's documented `ai/` convention.
-- **brief.md:** Regenerate from journal + decisions. Keep <80 lines, active context only.
-- **journal.md:** Append timestamped session summary. Format: `- [YYYY-MM-DD] Action/Decision/Learning`.
-- **decisions.md:** Append to Log section: `[date] Context -> Decision -> Rationale`. If Log exceeds ~20 entries, compact into Principles.
-- **architecture.md:** Record architectural changes only.
-- **research/:** Consolidate new findings into the appropriate topic file (Findings / Applied / Open Questions). Create new topic file only if no existing file covers it. Update index.md.
-- **design/:** Update component docs as needed. Update index.md.
+The envelope is not automatically a journal entry, brief update, decision, or provider memory. Promote only after validating it.
 
-### 3. Source Control
+## AI context
 
-- Check `git status` before and after edits.
-- If repo policy says to commit and the persistence files are tracked, include them in the relevant logical commit.
-- Prefer keeping `ai/` local via `.git/info/exclude` when repo policy allows it.
+### `brief.md`
+
+Rewrite the brief as the curated hot view of current unfinished work. Verify it against source, Git, tests, task state, current decisions, and the user's direction. Do not mechanically regenerate it from the journal.
+
+### `journal.md`
+
+Append only material, factual outcomes, failures, constraints, or handoff facts that are useful for future recovery. Include the date. Do not append merely because a session ended. Keep it cold and non-authoritative.
+
+### `decisions.md`
+
+Add a decision only when it changes durable behavior or records rationale worth preserving. Include context, decision, rationale, and a supersession note when replacing an earlier choice. Compact an oversized recent log into Principles rather than allowing it to become hot history.
+
+### `architecture.md`
+
+Update only when the current system model changes. Keep volatile values in source or configuration and point to those paths instead of copying them.
+
+### `research/`
+
+Consolidate new findings into the existing topic. Use `Findings`, `Applied`, `Open Questions`, and source links. Distinguish evidence, local observation, recommendation, and uncertainty. Do not copy code examples, API signatures, or large tool output.
+
+### `design/`
+
+Update pending intended behavior. Once implemented, reconcile it with source and remove obsolete design material so it does not compete with current code.
+
+## Promotion and ownership
+
+The parent agent owns promotion into canonical context. Subagents return reports by default. Provider-generated memories and compaction summaries are derivative inputs, never automatic authority.
+
+Redact secrets, credentials, broad environment dumps, and irrelevant raw output before writing. Keep information at the narrowest scope: session, task, project, or user.
+
+## Source control
+
+Follow the repository's policy for tracking and committing context. Do not commit solely because this skill ran. If `.tasks/` exists, log high-signal findings and close or update real tasks; otherwise do not invent task state.

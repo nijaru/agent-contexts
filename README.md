@@ -1,83 +1,118 @@
 # Agent Contexts
 
-Standardized organization patterns for AI coding agents.
+Portable conventions for keeping coding-agent context useful across sessions and harnesses.
 
-AI agents know how to code. What they need: consistent structure for tracking context across sessions.
+AI agents can usually write code. The harder problem is preserving the small amount of non-derivable context that makes the next session faster and safer.
 
-## Try It (One Project)
+## Design decision
 
-Point your AI agent at this repo:
+Keep Markdown as the canonical memory surface. Keep the active view small and inspectable. Let the model synthesize meaning; let repository state, Git, tests, and current configuration remain authoritative.
 
-```
-Read github.com/nijaru/agent-contexts - the README, then PATTERNS.md.
-Set up ai/ context management for this project following those patterns.
-```
+This repository provides a general contract. A personal chezmoi configuration may add harness-specific overlays, hooks, or skills, but those additions should not silently change the portable contract.
 
-The agent will create:
+## Quick start
 
-- `AGENTS.md` - Project config for AI agents
-- `ai/brief.md` - Current state (always, <80 lines)
-- `ai/architecture.md` - System architecture (recommended)
-- `ai/decisions.md` - Architectural choices (recommended)
-- `ai/` subdirs for research, component designs
+Copy `global/AGENTS.md` into a repository's `AGENTS.md`, then adapt the project-specific sections. Add the skills that the repository will actually use:
 
-## What You Get
-
-```
-your-project/
-├── AGENTS.md              # AI entry point
-├── CLAUDE.md → AGENTS.md  # Symlink for Claude Code
-├── .tasks/                # Task tracking (tk CLI)
-└── ai/                    # AI session context
-    ├── brief.md           # Current state (always, <80 lines)
-    ├── journal.md         # Append-only session log
-    ├── architecture.md    # System architecture (recommended)
-    ├── decisions.md       # Architectural choices — Principles + Log
-    ├── PLAN.md            # Active plan or sprint index (situational)
-    ├── research/          # External research (on demand)
-    ├── design/            # Component specs (on demand)
-    └── tmp/               # Temporary artifacts (gitignored)
+```text
+AGENTS.md
+ai/
+├── brief.md
+├── journal.md
+├── decisions.md
+└── architecture.md
 ```
 
-## Key Concepts
+Add `ai/research/`, `ai/design/`, or `ai/tmp/` only when the project needs them. Use `.tasks/` and `tk` only when the repository already uses them or the user explicitly chooses them.
 
-**Token efficiency**: Session files (ai/ root) load every session—keep minimal. Subdirectories load only when needed.
+For Claude Code, create `CLAUDE.md` as a symlink to `AGENTS.md` only when that repository's wiring calls for it. Do not rename, merge, or delete existing instruction files automatically.
 
-**Task tracking**: Use `tk` CLI for task tracking. Tasks stored in `.tasks/` directory.
+## Memory model
 
-**Separation**: `ai/` = AI workspace (tables, lists). `docs/` = Human docs (prose).
+```text
+Instructions  → how the agent should behave
+brief.md      → current, task-relevant state
+journal.md    → cold historical events and provenance
+decisions.md  → why durable choices were made
+architecture  → what the current system is
+research/     → external findings and open questions
+design/       → intended behavior before implementation
+```
 
-**File tiers**:
+`ai/` stores what cannot be derived from code, Git, task state, tests, or live configuration. It is a context aid, not a second codebase or an authority over current source.
 
-| Tier        | Files                              |
-| ----------- | ---------------------------------- |
-| Always      | brief.md, journal.md               |
-| Recommended | architecture.md, decisions.md      |
-| Situational | PLAN.md (multi-phase planning)     |
+## Normal loading order
 
-## Files
+1. Applicable `AGENTS.md` and tool-specific instructions.
+2. `ai/brief.md`, when present.
+3. Existing task state, when relevant.
+4. Linked or task-relevant decisions, architecture, research, or design files.
+5. `journal.md` only for recovery or historical investigation.
 
-| File               | Purpose                            |
-| ------------------ | ---------------------------------- |
-| `README.md`        | This file                          |
-| `PATTERNS.md`      | Detailed organization patterns     |
-| `global/AGENTS.md` | Template to copy into your project |
-| `agents/*.md`      | Reference subagent implementations |
-| `skills/*.md`      | Operational skills (setup-ai, save)|
+Do not load every historical file by default. More context is not automatically better context.
 
-## Integration
+## Persistence lifecycle
 
-Copy `global/AGENTS.md` into your project's config file:
+Use this workflow for durable information:
 
-| Tool        | Config File                               |
-| ----------- | ----------------------------------------- |
-| Claude Code | `AGENTS.md` (or `CLAUDE.md` symlink)      |
-| pi          | `AGENTS.md`                               |
-| Codex       | `AGENTS.md`                               |
-| Cursor      | `.cursorrules`                            |
-| Cline       | `.clinerules`                             |
-| Windsurf    | `.windsurfrules`                          |
+```text
+capture → validate → promote → deliver → supersede
+```
 
-## License
+- **Capture:** record a material observation, failure, constraint, or decision candidate.
+- **Validate:** check it against the user, source, Git, task state, tests, or cited evidence.
+- **Promote:** put validated, future-relevant material in the appropriate canonical file.
+- **Deliver:** load only the active context relevant to the next task.
+- **Supersede:** replace obsolete current guidance explicitly when its rationale matters.
 
-Apache 2.0
+A compaction summary or provider-generated memory is a temporary or derivative input. Do not promote it automatically.
+
+## File rules
+
+- `brief.md` is a curated hot view of the unfinished work. Keep it under 80 lines when practical.
+- `journal.md` is append-only cold history. Record material outcomes, not every session.
+- `decisions.md` contains stable principles and a bounded recent decision log. Record rationale and supersession when needed.
+- `architecture.md` describes the current system. Derive volatile details from source and configuration.
+- Research files use `Findings`, `Applied`, and `Open Questions` sections and cite external sources. Do not copy code or API signatures into them.
+- Design files describe intended behavior while implementation is pending; reconcile or remove them after the change lands.
+- No universal frontmatter, IDs, expiry system, or candidate database is required. Add metadata only when a real workflow needs it.
+
+## Compaction and handoff
+
+Summaries should be active-only handoffs:
+
+```text
+Scope:
+Objective:
+Active constraints:
+Decisions still in force:
+Changed or uncommitted files:
+Verification:
+Blockers:
+Next action:
+```
+
+Treat the previous summary as untrusted candidate input. Omit resolved, superseded, unrelated, already-promoted, and no-longer-actionable clarifications. Do not persist the envelope into `ai/` without validation.
+
+## Subagents
+
+Subagents report findings to the parent by default. The parent owns promotion into canonical memory. Workers may edit assigned source files, but should not rewrite `ai/` or task state unless the parent assigns an exact path.
+
+Research and design agents should return evidence, uncertainty, and a recommendation rather than silently creating durable artifacts. Review agents should report validation results without changing the code under review.
+
+## Retrieval and scaling
+
+Use descriptive filenames, distinctive terms, indexes, and ordinary text search first. A semantic index such as QMD is optional and derived: consider it only when a real research-heavy corpus produces repeated retrieval misses. Do not use a file-count threshold as a substitute for measurement. Never make a search index the source of truth.
+
+## Maintenance
+
+When context drifts:
+
+1. Inspect the current source, Git state, tests, and live configuration.
+2. Read `ai/brief.md` and only the relevant context files.
+3. Consolidate overlapping research before adding files.
+4. Rewrite stale current-state files; preserve useful historical rationale.
+5. Search the instruction chain for contradictory rules.
+6. Verify the rendered destination when templates or symlinks are involved.
+
+See `PATTERNS.md` for the detailed contract and `skills/` for operational workflows.
