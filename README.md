@@ -23,6 +23,8 @@ ai/
 └── architecture.md
 ```
 
+The `agents/` directory contains reusable profiles, and `skills/` contains focused operational guidance. Copy only the files a repository needs.
+
 Add `ai/research/`, `ai/design/`, or `ai/tmp/` only when the project needs them. Use `.tasks/` and `tk` only when the repository already uses them or the user explicitly chooses them.
 
 For Claude Code, create `CLAUDE.md` as a symlink to `AGENTS.md` only when that repository's wiring calls for it. Do not rename, merge, or delete existing instruction files automatically.
